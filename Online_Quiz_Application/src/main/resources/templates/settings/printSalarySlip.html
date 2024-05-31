@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Print Salary slip</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- calendar file css -->
+<link rel="stylesheet" th:href="@{/js/semantic.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', function() {
+	var grossSalary = document.getElementById('grossSalary');
+	var gross = grossSalary.textContent;
+	var td = document.getElementById('tds');
+	var tds = td.textContent;
+	var cal=gross*tds/100;
+	var ded = document.getElementById('deduction');
+	var deduc = ded.textContent;
+	var deduction=parseFloat(deduc)+parseFloat(cal);
+	document.getElementById('deduction').textContent=deduction;
+	
+	//convert numbers to words
+	var num=parseInt($('#net').text()); 
+	console.log(num);
+	convertToWords(num);
+    function convertToWords(num){
+    fetch(`https://api.funtranslations.com/translate/numbers.json?text=${num}`)
+   .then(response => response.json())
+   .then(data => {
+    $('#amount').text(data.contents.translated+" Only");
+    })
+    .catch(error => {
+     console.log('An error occurred:', error);
+     });
+}
+
+});
+	
+</script>
+
+<script type="text/javascript">
+	function printDiv(divName) {
+		document.getElementById('printableArea').style.display = "block";
+		// Store the current CSS media type
+		/* var originalMediaType = document.body.style.media;
+		document.body.style.media = "print"; // Set the media type to 'print'
+
+		var printContents = document.getElementById(divName).innerHTML;
+		var originalContents = document.body.innerHTML;
+		document.body.innerHTML = printContents; */
+		 document.getElementById('printButton').style.display = 'none';
+		 window.print();
+	    document.getElementById('printButton').style.display = 'block';
+		/* document.body.style.media = originalMediaType;
+		document.body.innerHTML = originalContents; */
+	}
+</script>
+<style>
+body {
+	-ms-overflow-style: none; /* Internet Explorer 10+ */
+	scrollbar-width: none; /* Firefox */
+}
+
+body::-webkit-scrollbar {
+	display: none; /* Safari and Chrome */
+}
+
+.tbl th, .tbl td {
+	border: 2px solid black !important;
+}
+
+#tbl3 th, #tbl3 td {
+	border: none !important;
+	border-collapse: collapse;
+}
+
+#tbl3 td {
+	width: 50%;
+}
+
+.sal {
+	text-decoration: underline;
+	text-decoration-style: double;
+}
+
+@media print {
+	tr {
+		page-break-inside: avoid;
+	}
+	#printButton {
+		display: none !important;
+	}
+	.print-hr {
+		border: 1px solid black !important;
+	}
+
+	/*  .custom-date-input {
+	      appearance: none;
+	  -webkit-appearance: none;
+	  -moz-appearance: none;
+	  border: none;
+	  background: transparent;
+	  padding: 0;
+	  margin: 0;
+	}  */
+}
+
+@page {
+	margin-top: 2rem !important;
+	margin-bottom: 0px !important;
+}
+
+@media print {
+	.col-md-4 {
+		display: inline-block;
+		width: 30%; /* Adjust the width as needed */
+		/*  margin-right: 2%; 
+	                vertical-align: top; */
+	}
+	h6 {
+		margin-top: 0;
+	}
+	.col-md-7 {
+		display: inline-block;
+		width: 60%;
+	}
+	.col-md-5 {
+		display: inline-block;
+		width: 35%;
+	}
+	.col-md-3 {
+		display: inline-block;
+		width: 30%;
+		/* margin-left:5%;
+	                margin-top:5%; */
+	}
+	.col-md-9 {
+		display: inline-block;
+		width: 65%;
+	}
+}
+</style>
+</head>
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+			<!-- end sidebar -->
+
+			<!-- right content -->
+			<div id="content">
+
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+				<!-- end topbar -->
+
+				<div class="container-fluid" id="printableArea">
+					<div class="row mt-3">
+						<div class="col-md-7 mt-3">
+							<h3>
+								<b class="text-uppercase" th:text="${company.companyName}"></b>
+							</h3>
+						</div>
+
+
+						<div class="col-md-5 mt-3">
+							<h6 class="text-right">
+								<b><a th:href="${company.website}"
+									style="color: black; text-decoration: none;"
+									th:text="${company.website}"> </a></b> &nbsp;<i
+									class="fa fa-circle-o-notch" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>Email</b>:-&nbsp;<a th:href="'mailto:' + ${company.email}"
+									style="color: black; text-decoration: none;"> <strong
+									th:text="${company.email}"></strong>
+								</a> &nbsp;<i class="fa fa-envelope-o" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>Tel</b>: <strong th:text="${company.phoneNumber}"></strong>
+								&nbsp;<i class="fa fa-phone" style="font-size: 1.1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>H.O</b>:&nbsp;<b th:text="${company.headOffice}"></b> &nbsp;<i
+									class="fa fa-university" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>B.O</b>:&nbsp;<b th:text="${company.branchOffice}"></b>
+								&nbsp;<i class="fa fa-bank" style="font-size: 1rem;"></i>
+							</h6>
+						</div>
+
+
+						<div class="col-md-3 mt-2">
+							<h6>
+								<b>PAN</b>: <strong th:text="${company.panNumber}"> </strong>
+							</h6>
+						</div>
+
+						<div class="col-md-5 mt-2">
+							<h6 class="text-right">
+								<b>GSTIN</b>: <strong th:text="${company.gstinNumber}"></strong>
+							</h6>
+						</div>
+						<div class="col-md-12 ">
+							<hr class="print-hr"
+								style="height: 2px; border-width: 1px; color: black; background-color: black">
+						</div>
+
+						<div class="col-md-12 ">
+							<h4 class="text-center mt-1 sal">SALARY SLIP</h4>
+						</div>
+
+
+						<div class="col-md-12">
+							<table class="table table-borderless " id="tbl3">
+								<thead>
+								</thead>
+								<tbody>
+
+									<tr>
+										<th>Employee Name:</th>
+										<td class="text-capitalize font-weight-bold"
+											th:text="${salary.employee.employeeName}"></td>
+									</tr>
+
+									<tr>
+										<th>Employee ID:</th>
+										<td class="text-capitalize font-weight-bold"
+											th:text="${salary.employee.employeeId}"></td>
+									</tr>
+
+									<tr>
+										<th>Designation:</th>
+										<td class="text-capitalize font-weight-bold"
+											th:text="${salary.employee.designation}"></td>
+									</tr>
+
+									<tr>
+										<th>Year:</th>
+										<td class="text-capitalize font-weight-bold"
+											th:text=" ${#temporals.format(salary.salaryMonth, 'yyyy')}"></td>
+									</tr>
+
+									<tr>
+										<th>Month:</th>
+										<td class="text-capitalize font-weight-bold"
+											th:text=" ${#temporals.format(salary.salaryMonth, 'MMMM')}"></td>
+									</tr>
+									<tr>
+										<th>Payment Reference No:</th>
+										<td class="text-capitalize font-weight-bold"
+											th:text="${salary.paymentReferenceNo}"></td>
+										<!-- <td> <input type="number"
+													name="PaymentReference" class="form-control custom-date-input"
+													id="PaymentReference" placeholder="Enter Payment Reference No." required="required" ></td> -->
+									</tr>
+									<tr>
+										<th>Payment Date:</th>
+										<td class="text-capitalize font-weight-bold"
+											th:text="${salary.paymentDate}"></td>
+										<!-- <td> <input
+													type="date" name="PaymentDate" class="form-control custom-date-input"
+													 id="PaymentDate"
+													placeholder=" Enter Payment Date" required="required"></td> -->
+									</tr>
+
+									<tr>
+										<th>Bank Account No:</th>
+										<td class="text-capitalize font-weight-bold"
+											th:text="${salary.empBankDetails.accountNumber}"></td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+
+						<div class="col-md-12 ">
+							<h4 class=" mt-1">BREAKUP OF SALARY</h4>
+						</div>
+						<div class=" col-md-12 table table-responsive">
+							<table class="table table-bordered mt-2 tbl">
+								<thead>
+									<tr>
+										<th class="text-capitalize font-weight-bold">Earnings</th>
+										<th class="text-capitalize font-weight-bold">Amount</th>
+										<th class="text-capitalize font-weight-bold">Deductions</th>
+										<th class="text-capitalize font-weight-bold">Amount</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<th>Basic Salary</th>
+										<td th:text="${salary.basicSalary}"></td>
+										<th>PF(p.m)</th>
+										<td th:text="${salary.pf}"></td>
+
+									</tr>
+									<tr>
+
+										<th>EPF</th>
+										<td th:text="${salary.epfEmployerShare}"></td>
+										<th>TDS/IT(%)</th>
+										<td id="tds" th:text="${salary.tds}"></td>
+
+									</tr>
+									<tr>
+										<th>DA / TA /HRA</th>
+										<td th:text="${salary.da}+${salary.ta}+${salary.hra}"></td>
+										<th>Professional Tax</th>
+										<td th:text="${salary.professionalTax}"></td>
+									</tr>
+
+									<tr>
+										<th>Overtime</th>
+										<td th:text="${salary.overtimeAmount}"></td>
+										<th>Loan</th>
+										<td th:text="${salary.loan}"></td>
+									</tr>
+									<tr>
+										<th>Gross Salary<br>(Total Additions)
+										</th>
+										<td class="font-weight-bold" id="grossSalary"
+											th:text="${salary.netAmount}"></td>
+										<th>Total Deductions</th>
+										<td id="deduction" class="font-weight-bold"
+											th:text="${salary.pf}+${salary.professionalTax}+${salary.loan}"></td>
+
+									</tr>
+									<tr>
+
+										<th class="text-right" colspan="3"><strong>Net
+												Payable Salary</strong></th>
+										<!-- <td id="net">${#numbers.words(10)}"</td> -->
+										<td id="net" class="font-weight-bold"
+											th:text="${salary.netPayableMonthly}"></td>
+
+
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class=" col-md-9">
+							<div class="row">
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">Amount In Words:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold" id="amount"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">Name of Beneficiary:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${salary.employee.company.companyName}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">Bank Name:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${salary.bankDetails.bankName + ', ' + salary.bankDetails.address}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">A/C No:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${salary.bankDetails.accountNumber}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">IFSC Code:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${salary.bankDetails.ifscCode}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">AD Code:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${salary.bankDetails.adCode}"></strong>
+								</div>
+
+							</div>
+
+						</div>
+
+
+
+						<!-- <div class="col-md-12 ">
+										<h5 class="text-capitalize">
+											Amount In Words: &nbsp;<strong id="amount"
+												th:text="${salary.netPayableMonthly}"></strong>
+										</h5>
+									</div> -->
+						<div class="col-md-3 mt-5 "
+							th:if="${salary.employee.company.imageName} != null">
+
+							<!-- <div class=" col-md-11  float-right text-right">
+									<div  -->
+
+							<img
+								th:src="@{'/salary/getimage/'+${salary.employee.company.imageName}}"
+								height="150px" width="200px" style="overflow: hidden;">
+							<!-- </div>
+									
+								    </div> -->
+							<h5 class="">
+								<strong> Authorised Signatory</strong>
+							</h5>
+						</div>
+
+					</div>
+				</div>
+				<!-- Container-fluid close -->
+
+				<!-- print button -->
+				<div class="row m-5">
+					<div class="col-md-12 ">
+						<button class="btn-primary float-right"
+							onclick="printDiv('printableArea')" id="printButton">
+							<i class="fa fa-print" aria-hidden="true"> Print</i>
+						</button>
+
+					</div>
+				</div>
+				<!-- print button close -->
+
+			</div>
+			<!-- content-close -->
+		</div>
+		<!-- inner-container close -->
+	</div>
+	<!-- full container-close -->
+
+
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<script th:src="@{/js/dynamicField.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');	
+	</script>
+	<script type="text/javascript">
+	
+	$(document).ready(function() {
+		$("#PaymentDate").flatpickr({
+			format : "Y-m-d",
+			altFormat: "F j, Y",
+			altInput : true,
+			allowInput : true
+		});
+		
+		$("#PaymentDate").on("keyup", function() {
+		    $(this).flatpickr.open();
+		  });
+	});
+	
+	document.getElementById("PaymentDate").addEventListener("focus", function() {
+		  this.type = "date";
+		});
+
+		document.getElementById("PaymentDate").addEventListener("blur", function() {
+		  if (this.value === "") {
+		    this.type = "text";
+		  }
+		});
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/custom.js}"></script>
+
+</body>
+</html>

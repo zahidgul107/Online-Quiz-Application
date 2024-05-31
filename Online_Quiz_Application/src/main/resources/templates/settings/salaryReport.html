@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Salary Report</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2>Salary Report</h2>
+								</div>
+								<div id="error-alert-container"></div>
+								
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+
+
+						</div>
+
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+
+						<form action="#" th:action="@{/salary/salaryReport}"
+							th:object="${salarySlipDto}" method="POST">
+
+							<div class="form-row">
+
+								<div class=" startDate form-group col-md-6">
+									<label for="employee"> Start Date</label> <input type="date"
+										name="fromDate" id="fromDate" class="form-control fromDate"  th:field="*{fromDate}"
+										placeholder="Select start date" readonly>
+								</div>
+								<div class="form-group endDate col-md-6">
+									<label for="employee"> End Date</label> <input type="date"
+										id="toDate" class="form-control toDate" name="toDate"  th:field="*{toDate}"
+										placeholder="Select end date" readonly>
+
+								</div>
+								</div>
+								<div class="form-row">
+								<div class="container text-center download p-4 text-success">
+									<label for="employee"> </label>
+									<button class="border-0 p-1 rounded-circle csv"
+										type="submit">
+										<i class="btn fa fa-download  fa-2x text-success"
+											data-bs-toggle="tooltip" data-bs-placement="bottom"
+											data-bs-title="Download csv"></i>
+									</button>
+								</div>
+
+							</div>
+
+						</form>
+
+					</div>
+
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/flatpickr.js}"></script>
+
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+
+
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
+		integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script th:src="@{/customJs/restrictDatepicker.js}"></script>
+	<script th:src="@{/customJs/showErrorMessage.js}"></script>
+		
+	
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<script>
+		flatpickr("#datepicker", {
+			dateFormat : "Y-m-d",
+			disable : [ function(date) {
+				// Disable specific dates if needed
+				return (date.getDate() !== 1); // Disable weekends
+			} ],
+			locale : {
+				firstDayOfWeek : 1
+			// Monday as the first day of the week
+			},
+			onChange : function(selectedDates, dateStr, instance) {
+
+				var date = new Date(dateStr);
+				var formattedDate = date.toISOString().split('T')[0];
+				console.log(formattedDate);
+				document.getElementById('datepicker').value = formattedDate;
+				
+
+			}
+		});
+
+		flatpickr("#datepicker2", {
+
+			dateFormat :"Y-m-d",
+			minDate : "1900",
+			maxDate : "2099",
+
+			locale : {
+				firstDayOfWeek : 1
+			// Monday as the first day of the week
+			},
+			onChange : function(selectedDates, dateStr, instance) {
+				// Handle the date change event
+				var date = new Date(dateStr);
+				var formattedDate = date.toISOString().split('T')[0];
+				console.log(formattedDate);
+				document.getElementById('datepicker2').value = formattedDate;
+
+				console.log(formattedDate);
+			}
+		});
+		flatpickr("#datepicker3", {
+
+			enableTime : true,
+			dateFormat : "Y-m-d",
+
+			locale : {
+				firstDayOfWeek : 1
+			// Monday as the first day of the week
+			},
+			onChange : function(selectedDates, dateStr, instance) {
+				// Handle the date change event
+				/* var date = new Date(dateStr);
+				var formattedDate = date.toISOString().split('T')[0];
+				console.log(formattedDate);
+				document.getElementById('datepicker2').value = formattedDate;
+
+				console.log(formattedDate); */
+			}
+		});
+		flatpickr("#datepicker4", {
+			enableTime : true,
+			dateFormat : "Y-m-d",
+
+			locale : {
+				firstDayOfWeek : 1
+			// Monday as the first day of the week
+			},
+			onChange : function(selectedDates, dateStr, instance) {
+				// Handle the date change event
+				/* var date = new Date(dateStr);
+				var formattedDate = date.toISOString().split('T')[0];
+				console.log(formattedDate);
+				document.getElementById('datepicker4').value = formattedDate;
+
+				console.log(formattedDate); */
+			}
+		});
+		//uncheck radios on load
+		/* window.addEventListener('load', function() {
+			var option1 = document.getElementById('flexRadioDefault1');
+			var option2 = document.getElementById('flexRadioDefault2');
+			var option3 = document.getElementById('flexRadioDefault3');
+			
+			console.log("1="+option1.checked+" ==2=="+option2.checked+"===3==="+option3.checked)
+			
+			if(option1.checked) {
+				option2.checked = false;
+				option3.checked = false;
+				check();
+			} else if (option2.checked) {
+				option1.checked = false;
+				option3.checked = false;
+				check();
+			} else if(option3.checked) {
+				option1.checked = false;
+				option2.checked = false;
+				check();
+			} else {
+				option1.checked = false;
+				option2.checked = false;
+				option3.checked = false;
+			    changeOnLoad();
+			}
+
+
+		});
+
+		///////////////////////////////////////////////////
+
+		function showOptions() {
+			var selection = document
+					.querySelector('input[name="selection"]:checked').value;
+			console.log(selection)
+			var months = document.getElementById('months');
+			var years = document.getElementById('years');
+
+			if (selection === 'month') {
+				$('.months').removeClass('d-none');
+				$('.month').attr('required', 'true');
+				$('.endDate,.startDate').addClass('d-none');
+				$('.years').addClass('d-none');
+				$('.fromDate,.toDate,.year').val(null);
+				check();
+
+			} else if (selection === 'year') {
+				$('.months').addClass('d-none');
+				$('.years').removeClass('d-none');
+				$('.endDate,.startDate').addClass('d-none');
+				$('.fromDate,.toDate,.month').val(null);
+				check();
+
+			} else if (selection === 'financialYear') {
+				$('.months').addClass('d-none');
+				$('.years').addClass('d-none');
+				$('.endDate,.startDate').removeClass('d-none');
+				$('.month,.year').val(null);
+				check();
+
+			}
+		} */
+		
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+<script type="text/javascript">
+
+
+/* $(document).ready(function() {
+	
+    changeOnLoad();
+    console.log("value datepicker===="+$('#datepicker').val());
+    console.log("value datepicker==2=="+$('#datepicker2').val());
+    console.log("value datepicker==4=="+$('#datepicker4').val());
+    
+    if ($('#datepicker').val() != '' || $('#datepicker2').val()!='' ) {
+    	console.log("month/yearrr");
+    	changePropForMonthYear();    
+	  }
+
+    if ($('#datepicker4').val() != '') {
+    	console.log("financial year  ");
+    	changePropForFinancial();
+	  }
+	  
+    $('#datepicker').change(function() {
+    	changePropForMonthYear();    
+	});
+    
+    $('#datepicker2').change(function() {
+    	changePropForMonthYear();    
+	});
+    
+    $('#datepicker4').change(function() {
+    	changePropForFinancial();    
+	});
+    
+}); */
+
+
+
+
+</script> 
+
+</body>
+
+</html>

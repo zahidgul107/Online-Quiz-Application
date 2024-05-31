@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Employee | Expenses</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2 th:text="${edit}?'Update Employee':'Add Employee'"></h2>
+
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+
+
+						</div>
+
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+
+
+						<!-- <form th:object="${employee}" th:action="@{/employee/addEmployee}"
+							method="post"> -->
+						<form th:object="${employee}" th:method="post"
+							data-bvalidator-validate="true"
+							th:action="@{${edit != null} ? '/employee/updateEmployee' : '/employee/addEmployee'}"
+							enctype="multipart/form-data">
+
+							<div class="form-row">
+								<input type="hidden" th:field="*{id}">
+								<div class=" col-md-6 text-center pt-5">
+
+									<label for="file" class="btn btn-outline-danger"
+										data-bs-toggle="tooltip" data-bs-placement="top"
+										data-bs-title="Image Size should be less than 50kb">Upload
+										Image</label> <input type="file" name="myfile" id="file"
+										placeholder=" " class="form-control file "
+										accept="image/jpeg,image/png,image/jpg"
+										style="height: 2.8rem; display: none;">
+
+
+								</div>
+								<div class=" col-md-6 " th:if="${employee.image} != null">
+									<div class=" col-md-4 offset-md-4">
+										<div
+											style="border: 2px solid black; height: 150px; width: 150px; border-radius: 4px; overflow: hidden;">
+											<input type="hidden" th:field="*{image}"> <img
+												id="ImagePreview"
+												th:src="@{'/employee/getimage/'+${employee.image}}"
+												height="150px" width=" 150px">
+										</div>
+									</div>
+								</div>
+								<div class=" col-md-6 " th:if="${employee.image} == null">
+									<div class=" col-md-4 offset-md-4">
+										<div
+											style="border: 2px solid black; height: 150px; width: 150px; border-radius: 4px; overflow: hidden;">
+
+											<img alt="ImagePreview" class="imgPreview" id="ImagePreview"
+												height="150px" width=" 150px">
+										</div>
+									</div>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="companyName">Employee Id</label> <input type="text"
+										class="form-control" id="inputEmail4" th:field="*{employeeId}"
+										name="employeeId" placeholder="Enter Employee Id"
+										required="required">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="companyName">Employee Name</label> <input
+										type="text" class="form-control" id="inputEmail4"
+										th:field="*{employeeName}" name="employeeName"
+										placeholder="Enter Employee Name" required="required">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="phoneNumber">Phone Number</label> <input
+										type="number" name="phoneNumber" class="form-control"
+										id="inputPassword4" th:field="*{phoneNumber}"
+										placeholder="Enter Phone Number" required="required">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="email">Email</label> <input type="email"
+										name="email" class="form-control" id="inputPassword4"
+										th:field="*{email}" placeholder="Email" required="required">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="joiningDate">Joining Date</label> <input
+										type="date" name="joiningDate" class="form-control"
+										th:field="*{joiningDate}" id="joindt"
+										placeholder=" Enter Joining Date" required="required">
+								</div>
+
+								<div class="form-group col-md-6" th:if="${edit != null}">
+									<label for="exitDate">Exit Date</label> <input type="date"
+										name="exitDate" class="form-control" id="extdt"
+										th:field="*{exitDate}" placeholder=" Enter Exit Date">
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="address">Address</label> <input type="text"
+										name="address" class="form-control" th:field="*{address}"
+										id="inputPassword4" placeholder=" Enter Address">
+								</div>
+
+								<!-- <div class="form-group col-md-6">
+									<label for="accountNumber"> Account number</label> <input
+										type="number" name="accountNumber" class="form-control"
+										id="inputPassword4" th:field="*{accountNumber}"
+										placeholder=" Enter Account Number" required="required">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="ifscCode"> IFSC Code </label> <input type="text"
+										name="ifscCode" class="form-control" id="inputPassword4"
+										th:field="*{ifscCode}" placeholder=" Enter IFSC Code">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="branchName"> Branch Name</label> <input type="text"
+										name="branchName" class="form-control" id="inputPassword4"
+										th:field="*{branchName}" placeholder=" Enter Branch Name">
+								</div> -->
+
+								<div class="form-group col-md-6">
+									<label for="panNumber">Pan Number</label> <input type="text"
+										name="panNumber" class="form-control" id="inputPassword4"
+										th:field="*{panNumber}" placeholder=" Enter pan Number"
+										required="required">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="aadhaarNumber">Aadhaar Number</label> <input
+										type="number" name="aadhaarNumber" class="form-control"
+										id="inputPassword4" th:field="*{aadhaarNumber}"
+										placeholder=" Enter aadhaar number" required="required">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="designation">Designation</label> <input type="text"
+										name="designation" class="form-control" id="inputPassword4"
+										th:field="*{designation}"
+										placeholder=" Enter employee designation" required="required">
+								</div>
+
+
+								<div class="form-group col-md-6">
+									<label>Employee Group</label> <select
+										id="employeeGroupDropdown" class="form-control"
+										th:field="*{employeeGroup}">
+										<option value="">Select Employee Group</option>
+										<option th:each="group : ${empGroup}" th:value="${group.id}"
+											th:text="${group.groupName}"></option>
+									</select>
+								</div>
+								
+								</div>
+								
+								<div style="overflow: auto;" class="ctTable">
+								<table class="table 1 countryTable">
+									<thead>
+										<tr>
+											<th scope="col">Bank Name</th>
+											<th scope="col">Account Number</th>
+											<th scope="col">IFSC Code</th>
+											<th scope="col">Bank Address</th>
+											<th scope="col">Actions</th>
+										</tr>
+									</thead>
+									<tbody class='tbody1'>
+										<tr th:if="${edit} == true" class="tblRow"
+											th:each="bank, stat: ${employee.employeeBankDetails}">
+											<td>
+											<input type="hidden" th:attr="name='employeeBankDetails[__${stat.index}__].id'" th:value="${bank.id}" />
+											<input type="hidden" th:attr="name='employeeBankDetails[__${stat.index}__].employee'" th:value="${bank.employee.id}" />
+											<input type="text" id="bankName" class="bankName"
+												th:attr="name='employeeBankDetails[' + ${stat.index} + '].bankName'"
+												th:value="${bank.bankName}" required /></td>
+											<td><input type="text" class="accountNumber"
+													th:attr="name='employeeBankDetails[' + ${stat.index} + '].accountNumber'"
+													th:value="${bank.accountNumber}" required></td>
+											<td><input type="text" class="ifscCode"
+												th:attr="name='employeeBankDetails[' + ${stat.index} + '].ifscCode'"
+												th:value="${bank.ifscCode}" required /></td>
+											<td><input type="text" class="address"
+												th:attr="name='employeeBankDetails[' + ${stat.index} + '].address'"
+												th:value="${bank.address}" required /></td>
+											<td><i class="fa fa-trash text-danger removeState"></i></td>
+										</tr>
+									</tbody>
+								</table>
+								<button type="button" class="btn btn-info  "
+									id="addItemButtonCt">Add Employee Bank Account</button>
+							</div>
+								
+								
+								
+								<div class="form-row">
+								
+								<div class="form-group col-md-12 pt-4">
+									<label for="experience">Experience</label> <select
+										id="experience" class="form-control selectDropdown"
+										name="experience">
+										<option value="" >Choose Experience...</option>
+										<option value="Fresher"
+											th:selected="${employee.experience == 'Fresher'}">Fresher</option>
+										<option value="experienced"
+											th:selected="${employee.experience != 'Fresher' && employee.experience != null}">Experienced</option>
+									</select>
+								</div>
+
+								<div class="form-group col-md-12" id="experienceFields">
+									<div class="form-row">
+										<div class="form-group col-md-4" id="experienceFromField">
+											<label for="experienceFrom">Experience From</label> <input
+												type="date" name="experienceFrom" class="form-control exp"
+												th:field="*{experienceFrom}" placeholder="Enter From"
+												th:value="${employee.experienceFrom}">
+										</div>
+
+										<div class="form-group col-md-4" id="experienceToField">
+											<label for="experienceTo">Experience To</label> <input
+												type="date" name="experienceTo" class="form-control exp"
+												th:field="*{experienceTo}" placeholder="Enter To"
+												th:value="${employee.experienceTo}">
+										</div>
+										
+											<div class="form-group col-md-4 "  th:if="${employee.experience != 'Fresher' && employee.experience != null}" id="experienceYears">
+											<label for="experienceYears">Experience In Years</label> <input
+												type="text" th:value="${employee.experience}"  class="form-control" readonly="readonly" id="experienceYears">
+										</div>
+									</div>
+								</div>
+
+                                 
+                                 <div class=" col-md-12">
+                                 <label for="experienceTo">Employee Certificate (if any )</label>
+								<div class="input-group col-md-12"s>
+									<div class="input-group-prepend">
+										<div class="input-group-text ">
+											<i class="fa fa-upload"></i>
+										</div>
+									</div>
+									
+									<input type="file" accept="application/pdf" name="c_image"
+										id="companyName" placeholder=" " class="form-control "
+										style="height: 2.8rem;"> <input type="hidden"
+										th:field="*{certificates}" th:value="${employee.certificates}">
+									<div class="input-group-append">
+										<span class="input-group-text">Upload Certificates </span>
+									</div>
+								</div>
+								
+								</div>
+								
+								<div style="display:flex; justify-content:center; align-items:center">
+								<div style="text-align: center; margin-top: 10px;">
+										<a th:if="${employee.certificates != null}"
+											th:href="@{'/employee/getimage/' + ${employee.certificates}}"
+											class="btn btn-primary" download> Download PDF </a>
+									</div>
+									</div>
+
+								
+								
+								
+								<div class="col-md-12 " th:if="${edit != null}">
+								<h5 style="text-align:center; margin-bottom:10px; margin-top:15px">Issued Certificate</h5>
+								<div class="input-group col-md-12 "  >
+									<div class="input-group-prepend">
+										<div class="input-group-text ">
+											<i class="fa fa-upload"></i>
+										</div>
+									</div>
+									<input type="file" accept="application/pdf" name="i_image"
+										id="companyName" placeholder=" " class="form-control "
+										style="height: 2.8rem;"> <input type="hidden"
+										th:field="*{issueCertificate}" th:value="${employee.issueCertificate}">
+									<div class="input-group-append">
+										<span class="input-group-text">Upload Issued Certificates </span>
+									</div>
+								</div>
+								
+								<div>
+								<div style="display:flex; justify-content:center; align-items:center">
+								<div style="text-align: center; margin-top: 20px;">
+										<a th:if="${employee.issueCertificate != null}"
+											th:href="@{'/employee/getimage/' + ${employee.issueCertificate}}"
+											class="btn btn-primary" download> Download PDF </a>
+									</div>
+									</div>
+								</div>
+								
+								<div class=" col-md-12 mt-3 info">
+									<ol>
+										<li><strong>Note:*</strong></li>
+
+										<li><small>1. Upload PDF Document Only.</small></li>
+										<li><small>2. In Case Of multiple Certificates,
+												Create PDF, then Upload.</small></li>
+									</ol>
+								</div>
+								
+								</div>
+
+
+							</div>
+
+							
+
+
+
+							<div class="row" style="margin-top:30px">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary"
+										th:text=" ${edit}?'Update Employee':'ADD Employee'"></button>
+								</div>
+							</div>
+						</form>
+
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+
+
+	<script>
+		/* 	$(document).ready(function() {
+				$("#experienceFields").hide();
+				$("#experience").change(function() {
+					if ($(this).val() === "experienced") {
+						$("#experienceFields").show();
+					} else {
+						$("#experienceFields").hide();
+					}
+				});
+			}); */
+			
+		 $(document).ready(function() {
+			    $('#experience').change(function() {
+			      var selectedValue = $(this).val();
+			      console.log("experrrrrrrrr"+selectedValue);
+			      if (selectedValue === 'Fresher') {
+			    	 $("#experienceFromField").find('input').removeAttr('required');
+			    	 $("#experienceToField").find('input').removeAttr('required');
+			    	// $("#experienceFrom").removeAttr('required');
+				   //   $("#experienceTo").removeAttr('required');
+			        $('#experienceFields').hide();
+			       console.log("fresher");
+			        var experienceFrom = $('input[name="experienceFrom"]').val();
+			        var experienceTo = $('input[name="experienceTo"]').val();
+			        var experience = experienceFrom && experienceTo ? getExperienceFormatted(experienceFrom, experienceTo) : selectedValue;
+			        $('input[name="experience"]').val(selectedValue);
+			        $('#experienceYears').val(null);
+			      
+			      } else {
+			        $('#experienceFields').show();
+			   	 $("#experienceFromField").find('input').attr('required','true');
+		    	 $("#experienceToField").find('input').attr('required','true');
+			       // $("#experienceFrom").attr('required','true');
+			       // $("#experienceTo").attr('required', 'true');
+			       // $('input[name="experience"]').val(selectedValue);
+			      }
+			    });
+			    $('#experience').trigger('change');
+			  });
+		//Preview Image Starts Here............//
+		var imageInput = document.getElementById('file');
+		var imagePreview = document.getElementById('ImagePreview');
+
+		imageInput.addEventListener('change', function() {
+			var file = this.files[0];
+			var reader = new FileReader();
+
+			reader.onload = function() {
+				imagePreview.src = reader.result;
+			}
+
+			reader.readAsDataURL(file);
+		});
+
+		//Preview Image ends Here............//
+
+		var dropdown = document.getElementById("employeeGroupDropdown");
+		dropdown.addEventListener("change", function() {
+			var selectedId = this.value;
+		});
+
+		$(document).ready(function() {
+			$("#joindt,#extdt,.exp").flatpickr({
+				format : "Y-m-d",
+				altFormat : "Y-m-d",
+				altInput : true,
+				allowInput : true
+			});
+		});
+		
+		//Remove Row from Employee Bank Account table
+		$('tbody').on('click','.removeState',function() {
+					$(this).closest('tr').remove();
+					$(".tbody1").find(".tblRow").each(function(index, elem) {
+						var bankName = $(this).children().find(".bankName");
+									$(bankName).attr('name','employeeBankDetails[' + index + '].bankName');
+						var accountNumber = $(this).children().find(".accountNumber");
+									$(accountNumber).attr('name','employeeBankDetails[' + index + '].accountNumber');
+						var ifscCode = $(this).children().find(".ifscCode");
+										$(ifscCode).attr('name','employeeBankDetails[' + index + '].ifscCode');
+						var address = $(this).children().find(".address");
+										$(address).attr('name','employeeBankDetails[' + index + '].address');
+				});
+		});
+
+		// Adding Bank Account Row
+		$("#addItemButtonCt").click(function() {
+					var table = $("table .tbody1");
+					var itemIndex = $("table .tbody1 tr").length;
+
+					var row = $("<tr class='tblRow'>");
+					row.append('<td><input type="text" id="bankName" class="bankName" name="employeeBankDetails[' + itemIndex + '].bankName" required /></td>');
+					row.append('<td><input type="text" class="accountNumber" name="employeeBankDetails[' + itemIndex + '].accountNumber" required></td>');
+					row.append('<td><input type="text" class="ifscCode" name="employeeBankDetails[' + itemIndex + '].ifscCode" required /></td>');
+					row.append('<td><input type="text" class="address" name="employeeBankDetails[' + itemIndex + '].address" required /></td>');
+					row.append('<td><i class="fa fa-trash text-danger removeState"></td>');
+					table.append(row);
+
+				});
+		
+	/* 	$( "form" ).on( "submit", function( event ) {
+		console.log( $( this ).serializeArray() );
+		event.preventDefault();
+	  } ); */
+</script>
+
+
+
+</body>
+
+</html>

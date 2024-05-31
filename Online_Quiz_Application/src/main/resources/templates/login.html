@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+
+
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Login | Expense Management</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<!-- calendar file css -->
+<link rel="stylesheet" th:href="@{/js/semantic.min.css}" />
+<link th:href="@{/css/aos.css}" rel="stylesheet">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+      <style>
+      body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.card {
+  width: 300px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h2 {
+  color: green;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px;
+  background-color: green;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.switch {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.switch a {
+  color: #007BFF;
+  text-decoration: none;
+}
+#header1 {
+ background-image:url(images/bg2.jpg);
+ background-size: cover;
+   height:100vh;
+  position: relative;
+  background-size: cover;
+  padding-bottom:5em;
+  overflow-y:hidden;
+}
+.overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+      .backBtn{
+      box-sizing:border-box;
+      width:50px;
+      height:6px;
+      
+      
+      }
+      </style>
+      
+</head>
+<body class="inner_page login " id="header1"
+	 loading="eager">
+
+		<div class="container-fluid overlay">
+					<div class="backBtn"><a class=" btn btn-outline-success text-white rounded-circle mt-2" onclick="history.back()" title="Go Back"><i class="fa fa-reply "></i></a></div>
+
+
+
+			<!-- <div class="center">
+				<div class="login_section2" data-aos="fade-down"
+                      data-aos-duration="3000" 
+					style=" margin-bottom: 2rem;background-color: rgba(255, 255, 255, 0.9);">
+
+
+					
+
+					<div class="login_form ">
+
+						<form id="login-form" class="form" th:action="@{/login}"
+							action="#" method="post">
+								<h3 class="text-dark mb-5 center text-muted font-italic">Login</h3>
+							<fieldset>
+								<div class="field">
+									<label class="label_field">User Name</label> <input type="text"
+										name="username" placeholder="User Name" required="required" />
+								</div>
+								<div class="field">
+									<label class="label_field">Password</label> <input
+										type="password" name="password" placeholder="Password"
+										required="required" />
+								</div>
+								<div class="field">
+									<label class="label_field hidden">hidden label</label> <label
+										class="form-check-label"><input type="checkbox"
+										class="form-check-input"> Remember Me</label> <a
+										class="forgot" th:href="@{/resetPasswordRequest}">Forgot
+										Password?</a>
+								</div>
+								<div class="field margin_0">
+									<label class="label_field hidden">hidden label</label>
+									<button class="main_bt btn-block rounded-0">Sign In</button>
+								</div>
+							</fieldset>
+						</form>
+
+					</div>
+				</div> -->
+			<div class="container" >
+			
+		
+			
+			
+				<div class="card pt-5 pb-5"  data-aos="fade-down"
+                      data-aos-duration="3000" 
+					>
+						<div class="row w-100 mx-auto">
+						<div th:if="${fail} != null" th:utext="${fail}"
+							class=" col-md-12  alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+							role="alert" style="width: fit-content;"></div>
+						<div th:if="${success} != null" th:utext="${success}"
+							class=" col-md-12  alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+							role="alert" style="width: fit-content;"></div>
+						<div th:if="${param.error}!= null"
+							class=" col-md-12 alert alert-danger text-center m-3">
+							<span>INVALID CREDENTIAL</span>
+						</div>
+					</div>
+					<h2 class="mb-5">Login</h2>
+					<form th:action="@{/login}" method="post">
+						<label for="username">Username</label> <input type="text"
+							id="username" name="username" placeholder="Enter your username"> <label
+							for="password" >Password</label> <input class="mb-3" type="password"
+							id="password" name="password" placeholder="Enter your password">
+
+						<button type="submit">Login</button>
+					</form>
+					<div class="switch">
+						Forgot Password?<a th:href="@{/resetPasswordRequest}" >Click
+							here</a>
+					</div>
+				</div>
+
+				<div class="card" style="display: none;">
+					<h2>Register Form</h2>
+					<form>
+						<label for="fullname">Full Name</label> <input type="text" name="fullname"
+							id="fullname" placeholder="Enter your full name"> <label
+							for="email">Email</label> <input type="email" id="email" name="email"
+							placeholder="Enter your email"> <label for="new-password">New
+							Password</label> <input type="password" id="password"name="password"
+							placeholder="Enter your new password">
+
+						<button type="submit">Register</button>
+					</form>
+					<div class="switch">
+						Already have an account? <a href="#" onclick="switchCard()">Login
+							here</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<!-- <div class="container-fluid" >
+			<div class="footer">
+				<p>
+					Copyright © 2023 by ASTE<br>
+					<br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a>
+				</p>
+			</div>
+		</div> -->
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/Aos.js}"></script>
+	<script th:src="@{/js/initAos.js}"></script>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+	<script>
+	function switchCard() {
+		  const loginCard = document.querySelector('.container .card:nth-child(1)');
+		  const registerCard = document.querySelector('.container .card:nth-child(2)');
+
+		  if (loginCard.style.display === 'none') {
+		    loginCard.style.display = 'block';
+		    registerCard.style.display = 'none';
+		  } else {
+		    loginCard.style.display = 'none';
+		    registerCard.style.display = 'block';
+		  }
+		}
+
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	
+	<script th:src="@{/js/custom.js}"></script>
+</body>
+</html>

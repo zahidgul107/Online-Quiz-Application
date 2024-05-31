@@ -1,0 +1,58 @@
+.tbl th, .tbl td {
+	border: 2px solid black !important;
+}
+
+.tbl1 {
+	border: 2px solid black !important;
+}
+
+@media print {
+	tr {
+		page-break-inside: avoid;
+	}
+	#printButton {
+		display: none !important;
+	}
+	.print-hr {
+		border: 1px solid black !important;
+	}
+}
+
+@page {
+	margin-top: 2rem !important;
+	margin-bottom: 0px !important;
+}
+ @media print {
+            .col-md-4 {
+                display: inline-block;
+                width: 30%; /* Adjust the width as needed */
+               /*  margin-right: 2%; 
+                vertical-align: top; */
+            }
+            h6 {
+                margin-top: 0; 
+            }
+             .col-md-7 {
+                display: inline-block;
+                width: 60%; 
+              
+            }
+             .col-md-5 {
+                display: inline-block;
+                width: 35%; 
+              
+            }
+             .col-md-3 {
+                display: inline-block;
+                width: 30%; 
+                margin-left:5%;
+                margin-top:5%;
+              
+            }
+             .col-md-9 {
+                display: inline-block;
+                width: 65%; 
+              
+            }
+            
+        }

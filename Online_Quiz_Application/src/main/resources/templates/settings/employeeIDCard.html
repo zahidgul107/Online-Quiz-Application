@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Employee Identity Card | Expenses</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+
+<style type="text/css">
+    body {
+	-ms-overflow-style: none; /* Internet Explorer 10+ */
+	scrollbar-width: none; /* Firefox */
+}
+
+body::-webkit-scrollbar {
+	display: none; /* Safari and Chrome */
+}
+ .container {
+   /*  height: 100vh; */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  /*   background-color: #e6ebe0; */
+    flex-direction: row;
+    flex-flow: wrap;
+
+} 
+
+.front{
+    height: 27rem;
+    width: 250px;
+    position: relative;
+    border-radius: 20px;
+     background-color: white;
+}
+
+.top{
+    height: 30%;
+    width: 100%;
+    background-color: #4CAF50;
+    position: relative;
+    z-index: 5;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+}
+
+ .bottom{
+     height: 70%; 
+    width: 100%;
+    /* background-color: white; */
+    position: absolute; 
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+} 
+
+.top img{
+    height: 80px;
+    width: 100px;
+    background-color: #e6ebe0;
+    border-radius: 50%;
+    position: absolute;
+    top:78px;
+    left: 75px;
+}
+#printableArea.green-background{
+ background-color: #4CAF50;
+}
+@media print {
+    #printableArea.green-background {
+    -webkit-print-color-adjust: exact; /* For Chrome and Safari */
+      color-adjust: exact; /* For Firefox */
+      background-color: green !important;
+    }
+  }
+
+.bottom p{
+    position: relative;
+    top: 50px;
+    text-align: center;
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 16px;
+    text-emphasis: spacing;
+}
+.desg{
+    position: relative;
+    margin-top: -12px;
+    text-align: center;
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 16px;
+    text-emphasis: spacing;
+} 
+  
+.desg1{
+    margin-top: -20px;
+} 
+.bottom .desi{
+    font-size:12px;
+    color: grey;
+    font-weight: normal;
+}
+.bottom .no{
+    font-size: 15px;
+    font-weight: normal;
+}
+.barcode img
+{
+     height: 10; 
+    width: 100px;
+    text-align: center;
+    margin: 25px;
+}
+.barcode{
+    text-align: center;
+    position: relative;
+    top: 10px;
+}
+
+.back
+{
+    height: 27rem;
+    width: 250px;
+    background-color: white;
+    position: relative;
+    border-radius: 20px;
+}
+.qr img{
+    /* height: 60px;
+    width: 100%;
+    margin: 5px; */
+    background-color: white;
+}
+.Details {
+    color: black;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+}
+
+
+.details-info{
+    text-align: left;
+    padding: 5px;
+    line-height: 20px;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+.padding{
+    padding-right: 20px;
+}
+
+@media screen and (max-width:400px)
+{
+    .container{
+        height: 130vh;
+    }
+    .container .front{
+        margin-top: 50px;
+    }
+}
+@media screen and (max-width:600px)
+{
+    .container{
+        height: 130vh;
+    }
+    .container .front{
+        margin-top: 50px;
+    }
+
+}
+
+@media print {
+	tr {
+		page-break-inside: avoid;
+	}
+}
+
+@page {
+	margin-top: 2rem !important;
+	margin-bottom: 0px !important;
+}
+</style>
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2 class="chead">Employee Identity Card</h2>
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+						</div>
+					</div>
+
+					<div class=" container" id="">
+							<div class="padding">
+								<div class="front border border-success">
+									<div class="top" id="printableArea">
+										<h3 class="Details text-uppercase" th:text="${employee.company.companyName}"></h3>
+										<img th:src="@{'/employee/getimage/'+${employee.image}}">
+									</div>
+									<div class="bottom">
+										<p th:text="${employee.employeeName}"></p>
+										<p class="desg" th:text="${employee.designation}"></p>
+										<p class="desg" th:text="${employee.employeeId}"></p>
+										<div class="barcode">
+											<img
+												th:src="'data:image/png;base64,' + ${barcodeImageBase64}">
+										</div>
+									
+										
+										<h6 class="text-center desg1" th:text="${employee.address}"></h6>
+									</div>
+								</div>
+							</div>
+							<div class="back border border-success">
+								<h3 class="Details text-uppercase" th:text="${employee.company.companyName}"></h3>
+								<hr class="hr bg-success">
+								<div class="details-info">
+									<h5>Email:</h5>
+									<h6 th:text="${employee.email}"></h6>
+									<h5>
+										Mobile No: 
+									</h5>
+									<h6 th:text="${employee.phoneNumber}"></h6>
+								</div>
+								
+								<h5 class="text-center" style="margin-top:25px;">
+										Office Address:
+									</h5>
+								<hr class="hr bg-success" style="width:100%;">
+								<h6 class="text-center"
+										th:text="${employee.company.state +', ' + employee.company.address + ', '+ employee.company.pincode}"></h6>
+								
+							</div>
+						
+					
+					</div>
+				
+                     	<div class="row m-5">
+					      <div class="col-md-12 ">
+						   <button class="btn-primary float-right" id="print"  >
+							<i class="fa fa-print" aria-hidden="true"> Print</i>
+						   </button>
+					     </div>
+				       </div>
+                    
+				<!-- footer -->
+				<!-- <div class="container-fluid">
+					<div class="footer">
+						<p>
+							Copyright © 2023 by ASTE<br>
+							<br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a>
+						</p>
+					</div>
+				</div> -->
+				<!-- end footer -->
+				
+			</div>
+			<!-- end dashboard inner -->
+		</div></div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+	
+	<script type="text/javascript">
+	 $("#print").click(function(){
+		 $("#print, .chead").hide();
+		 $("#printableArea").addClass("green-background");
+		 window.print();
+		  $("#print, .chead").show();
+		}); 
+		
+		
+	</script>
+</body>
+
+</html>

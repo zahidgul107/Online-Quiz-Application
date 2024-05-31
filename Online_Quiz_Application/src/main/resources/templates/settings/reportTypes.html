@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Report Types | Expenses</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link th:href="@{/css/aos.css}" rel="stylesheet">
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+				<div th:replace="fragments/sidebar :: sidebar"></div>
+			
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+				
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2>Types Of Reports</h2>
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+						</div>
+						
+						<div class="row column1">
+						
+							
+							
+							<div class="col-md-6 col-lg-3">
+							<a th:href="@{/invoice/invoiceReport}">
+								<div class="full counter_section margin_bottom_30" data-aos="fade-down" data-aos-duration="3000">
+									<div class="couter_icon">
+										<div>
+											<i class="fa fa-newspaper red_color"></i>
+										</div>
+									</div>
+									<div class="counter_no">
+										<div>
+											<p class="total_no" ></p>
+											<p class="head_couter mt-4"><a th:href="@{/invoice/invoiceReport}" th:text="${session.company.type =='Company'}?'Invoice Report':'Bills Report'"></a></p>
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+							
+							<div th:if="${session.company.type == 'Shop'}" class="col-md-6 col-lg-3">
+							<a th:href="@{/invoice/serviceBillReport}">
+								<div class="full counter_section margin_bottom_30" data-aos="fade-down" data-aos-duration="3000">
+									<div class="couter_icon">
+										<div>
+											<i class="fa fa-tasks red_color"></i>
+										</div>
+									</div>
+									<div class="counter_no">
+										<div>
+											<p class="total_no" ></p>
+											<p class="head_couter mt-4">Service Bill Report</p>
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+							
+								<div class="col-md-6 col-lg-3">
+								<a th:href="@{/po/poReport}">
+								<div class="full counter_section margin_bottom_30" data-aos="fade-up" data-aos-duration="3000">
+									<div class="couter_icon">
+										<div>
+											<i class="fa fa-list orange_color"></i>
+										</div>
+									</div>
+									<div class="counter_no">
+										<div>
+											<p class="total_no"></p>
+											<p class="head_couter mt-4">PO Report</p> 
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+							<div class="col-md-6 col-lg-3">
+								<a th:href="@{/salary/salaryReport}">
+								<div class="full counter_section margin_bottom_30" data-aos="fade-down" data-aos-duration="3000">
+									<div class="couter_icon">
+										<div>
+											<i class="fa fa-comments-dollar purple_color2"></i>
+										</div>
+									</div>
+									<div class="counter_no">
+										<div>
+											<p class="total_no" ></p>
+											<p class="head_couter mt-4">Salary Report</p> 
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+							
+							
+							<div class="col-md-6 col-lg-3">
+							<a th:href="@{/expenses/searchReport/pageno=1}">
+								<div class="full counter_section margin_bottom_30" data-aos="fade-up" data-aos-duration="3000">
+									<div class="couter_icon">
+										<div>
+											<i class="fa fa-money-bills green_color"></i>
+										</div>
+									</div>
+									<div class="counter_no">
+										<div>
+											<p class="total_no" ></p>
+											<p class="head_couter mt-4">Expense Report</p> 
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+							
+							<div class="col-md-6 col-lg-3">
+							<a th:href="@{/dashboard/bankReports}">
+								<div class="full counter_section margin_bottom_30" data-aos="fade-up" data-aos-duration="3000">
+									<div class="couter_icon">
+										<div>
+											<i class="fa fa-paper-plane text-info"></i>
+										</div>
+									</div>
+									<div class="counter_no">
+										<div>
+											<p class="total_no" ></p>
+											<p class="head_couter mt-4">Bank Report</p> 
+										</div>
+									</div>
+								</div>
+								</a>
+							</div>
+							
+							
+						</div>
+					
+					
+					
+						
+					</div>
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br> <!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/Aos.js}"></script>
+	<script th:src="@{/js/initAos.js}"></script>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+</body>
+
+</html>

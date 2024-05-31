@@ -1,0 +1,48 @@
+<div>
+<div class="topbar" th:fragment="myHeader">
+					<nav class="navbar navbar-expand-lg navbar-light">
+						<div class="full">
+							<button type="button" id="sidebarCollapse" class="sidebar_toggle">
+								<i class="fa fa-bars"></i>
+							</button>
+							<div class="logo_section">
+								<!-- <a href="index.html"><img class="img-responsive rounded-circle"
+									th:src="@{/images/logoaste.png}" alt="#" /></a> -->
+									<h5 class=" m-3 p-1 text-success two_chars " th:text="${session.company}?${session.company.companyName}:'ASTE'"></h5>
+							</div>
+							<div class="right_topbar">
+								<div class="icon_info">
+									<ul class="logout_btn">
+										<!-- <li><a href="#"><i class="fa fa-bell"></i><span
+												class="badge">0</span></a></li>
+										<li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+										<li><a href="#"><i class="fa fa-envelope"></i><span
+												class="badge">0</span></a></li> -->
+												<li><a th:href="@{/logout}" data-toggle="tooltip"
+       data-placement="bottom" data-title="Logout "><i class="fa fa-sign-out" ></i><span
+												class="badge"></span></a></li>
+									</ul>
+									<ul class="user_profile_dd">
+										<li><a class="dropdown-toggle" data-bs-toggle="dropdown"><img height="35px"
+										width="35px"
+												class="img-responsive rounded-circle"
+												th:src="@{${session.user.imageName} != null} ? '/user/getimage/' + ${session.user.imageName} : '/images/user_profile/user.jpg'"
+ alt="#" /><span
+												class="name_user" th:text="${session.user}?${session.user.name}:'ASTE'"></span></a>
+											<div class="dropdown-menu">
+												<a class="dropdown-item" th:href="@{/user/viewUser}">My Profile</a>
+												<a class="dropdown-item" th:href="@{/user/edituser}">Update User</a>
+												<a class="dropdown-item" th:href="@{/dashboard/editCompany}" th:text="${session.company.type =='Company'}?'Update Company':'Update Shop'"></a>
+												
+												
+												
+													<a class="dropdown-item" th:href="@{/logout}"><span>Log Out</span> <i
+													class="fa fa-sign-out"></i></a>
+											</div></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+</div>

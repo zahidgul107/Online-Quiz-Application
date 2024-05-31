@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<!-- site metas -->
+<title>Print Performa Bill | Expenses Management</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+ <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" /> 
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<link rel="stylesheet" th:href="@{/css/print.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<script type="text/javascript">
+
+	function printDiv(divName) {
+		document.getElementById('printableArea').style.display = "block";
+		
+		window.print();
+		
+	}
+</script>
+<style>
+</style>
+</head>
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+
+				<div class="container-fluid" id="printableArea">
+
+					<div class="row mt-3">
+						<div class="col-md-7 mt-4">
+
+							<h3 class="mt-2">
+								<b class="text-uppercase"
+									th:text="${invoice.company.companyName}"></b>
+							</h3>
+						</div>
+						<div class="col-md-5 mt-4">
+							<h6 class="text-right">
+								<b><a th:href="${invoice.company.website}"
+									style="color: black; text-decoration: none;"
+									th:text="${invoice.company.website}"> </a></b> &nbsp;<i
+									class="fa fa-circle-o-notch" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>Email</b>:-&nbsp;<a
+									th:href="'mailto:' + ${invoice.company.email}"
+									style="color: black; text-decoration: none;"> <strong
+									th:text="${invoice.company.email}"></strong>
+								</a> &nbsp;<i class="fa fa-envelope-o" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>Tel</b>: <strong th:text="${invoice.company.phoneNumber}"></strong>
+								&nbsp;<i class="fa fa-phone" style="font-size: 1.1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>H.O</b>:&nbsp;<b th:text="${invoice.company.headOffice}"></b>
+								&nbsp;<i class="fa fa-university" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>B.O</b>:&nbsp;<b th:text="${invoice.company.branchOffice}"></b>
+								&nbsp;<i class="fa fa-bank" style="font-size: 1rem;"></i>
+							</h6>
+						</div>
+
+						<div class="col-md-4 mt-4">
+							<h6>
+								<b>Registration No</b>:<strong th:text="${invoice.company.registrationNumber}"></strong>
+							</h6>
+						</div>
+						<div class="col-md-3 mt-4">
+							<h6>
+								<b>PAN</b>: <strong th:text="${invoice.company.panNumber}"></strong>
+							</h6>
+						</div>
+
+						<div class="col-md-5 mt-4">
+							<h6 class="text-right">
+								<b>GSTIN</b>: <strong th:text="${invoice.company.gstinNumber}"></strong>
+							</h6>
+						</div>
+						<div class="col-md-12 mt-2">
+							<hr class="print-hr"
+								style="height: 2px; border-width: 2px; color: gray; background-color: black">
+						</div>
+						<!-- <div class="col-md-6 ">
+							<h5 class=" mt-3">From:</h5>
+						</div> -->
+					
+
+						<div class="col-md-12 mt-4">
+							<table class="table table-bordered tbl1 " id="tbl3">
+								<thead>
+									<tr>
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th colspan="8"><h6>
+											Buyer Name:<strong class="float-right"	th:text="${invoice.buyerName}">
+											</strong></h6>
+											
+											</th>
+										<th colspan="4"><h6>
+												Bill Date:<strong class="float-right"
+													th:text="${invoice.invoiceDate}"></strong>
+											</h6>
+											<h6>
+												Bill No:<strong class="float-right"
+													th:text="${invoice.invoiceNumber}"></strong>
+											</h6>
+																						</th>
+
+									</tr>
+								</tbody>
+							</table>
+						</div>
+                                               <div class="col-md-12 ">
+							<h5 class=" mt-3">Performa:</h5>
+						</div>
+
+					<div  class="col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+
+						
+							
+								<thead>
+									<tr>
+										<th class="font-weight-bold">S.No</th>
+										<th class="font-weight-bold">Particulars</th>
+										<th class="font-weight-bold">weight</th>
+										<th class="font-weight-bold">Rate</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold">Deduction</th>
+										<th class="font-weight-bold">Total Amount</th>
+										
+									</tr>
+								</thead>
+								<tbody class="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										
+										<td class="font-weight-bold amountt" th:text="${item.amount}" ></td>
+										
+										<td class="font-weight-bold " th:text="${item.deduction}" ></td>
+										
+										<td class="font-weight-bold " th:text="${item.totalAmount}" ></td>
+									</tr>
+
+								</tbody>
+								
+								
+								
+								
+								<tr>
+									<th colspan="6" class="text-right"
+										> Total Amount</th>
+									<td colspan="1" id="totalAmount" class="font-weight-bold totalAmount" 
+										 th:text="${invoice.totalAmount}"></td>
+								</tr> 
+
+							</table>
+						</div>
+						
+					
+						
+				
+						
+					
+						
+						
+						  <!--=================== signature =====================-->
+						  
+			
+						
+					
+						
+					
+						
+					
+					
+							
+							<div class="col-md-11  mt-2 p-4 float-right text-right"
+							th:if="${invoice.company.imageName} != null">
+								
+								<div class=" col-md-11  float-right text-right">
+									<div 
+										style="height: 150px; width: 150px; border-radius: 4px; overflow: hidden;float: right;">
+										<img 
+											th:src="@{'/invoice/getimage/'+${invoice.company.imageName}}"
+											height="150px" width="170px">
+									</div>
+									
+								</div>
+								<h5 class="">
+									<strong> Authorised Signatory</strong>
+								</h5>
+							</div>
+					</div>
+
+				</div>
+
+				<div class="row m-5">
+					<div class="col-lg-12 ">
+						<button class="btn-primary float-right" id="printButton"
+							onclick="printDiv('printableArea')">
+							<i class="fa fa-print" aria-hidden="true"> Print</i>
+						</button>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+	<!-- jQuery -->
+	 <script th:src="@{/js/jquery.min.js}"></script> 
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<!-- custom js -->
+
+  <script th:src="@{/js/custom.js}"></script> 
+	<script type="text/javascript">
+      $(document).ready(function(){
+	    var val=0;
+ 	  $(".it tr").each(function(){ 
+	   val= val+parseFloat( $(this).find(('.amountt')).text());	
+	    console.log("amount=====", val)
+      });
+ 	  console.log("totalAmount ======",val)
+ 	    $('.ta').text(val);
+ 	});
+</script>
+</body>
+</html>

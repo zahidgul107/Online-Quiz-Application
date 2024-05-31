@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Search salary</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<script>
+	function printDiv(divName) {
+		document.getElementById('printableArea').style.display = "block";
+
+		// Store the current CSS media type
+		var originalMediaType = document.body.style.media;
+		document.body.style.media = "print"; // Set the media type to 'print'
+
+		var printContents = document.getElementById(divName).innerHTML;
+		var originalContents = document.body.innerHTML;
+		document.body.innerHTML = printContents;
+
+		// Add a CSS style for landscape mode
+		var landscapeStyle = "@page { size: landscape; }";
+		var styleElement = document.createElement("style");
+		styleElement.appendChild(document.createTextNode(landscapeStyle));
+		document.head.appendChild(styleElement);
+
+		window.print();
+
+		// Restore the original CSS media type and page contents
+		document.body.style.media = originalMediaType;
+		document.body.innerHTML = originalContents;
+	}
+</script>
+
+
+
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2>Filter Salary(Year/Month)</h2>
+
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+
+
+						</div>
+
+					</div>
+					
+					<div class=" card  border-0 d-flex mb-2 text-center col-md-3 p-2">
+						<strong class="font-weight-bold">Total Salaries : <span
+							class="badge badge-success p-2 rounded-circle">
+								[[${totalItems}]]</span></strong>
+					</div>
+					
+					<div class="card form p-4 border-0 shadow-lg">
+
+						<form action="#" th:action="@{/salary/searchSalary}"
+							th:object="${salarySlipDto}" method="POST">
+
+							<div class="form-row">
+								<div class="form-group col-md-6">
+
+									<label> Employee</label>
+								     <select th:field="*{empId}" name="empId" class="form-select form-control" aria-label="Default select example" required=>
+									      <option value="">Select Employee</option>
+					                      <option  th:each="emp : ${empList}" th:text="${emp.employeeName + ' (' + emp.employeeId+')'}" th:value="${emp.id}" />
+				                     </select>
+			
+								</div>
+
+
+								<div class="form-group col-md-6">
+									<label for="employee"> Filter By </label>
+									<div class="row d-flex form-control"
+										style="margin-left: inherit;">
+										<div class="col-md-2 text-center">
+											<div class="form-check">
+												<input class="form-check-input" onclick="showOptions()"
+													type="radio" name="selection" id="flexRadioDefault1"
+													value="month"> <label class="form-check-label"
+													for="flexRadioDefault1"> Month </label>
+											</div>
+										</div>
+										<div class="col-md-5 text-center">
+											<div class="form-check">
+												<input class="form-check-input" type="radio"
+													name="selection" onclick="showOptions()"
+													id="flexRadioDefault2" value="year" > <label
+													class="form-check-label" for="flexRadioDefault2">
+												    Calendar Year</label>
+											</div>
+										</div>
+										<div class="col-md-5 text-center">
+											<div class="form-check">
+												<input class="form-check-input" type="radio"
+													name="selection" onclick="showOptions()"
+													id="flexRadioDefault3" value="financialYear" >
+												<label class="form-check-label" for="flexRadioDefault3">
+													Financial Year</label>
+											</div>
+										</div>
+
+									</div>
+								</div>
+
+
+
+
+
+								<div class=" months form-group col-md-6 d-none">
+									<label for="employee"> Month</label> <input type="date"
+										name="month" id="datepicker" class="form-control month" th:field="*{month}"
+										placeholder="Select Year and Month" required />
+								</div>
+								<div class="form-group years col-md-6 d-none">
+									<label for="employee"> Year </label> <input type="date"
+										id="datepicker2" class="form-control year" name="year" th:field="*{year}"
+										placeholder="Select Year" readonly>
+
+								</div>
+								<div class=" startDate form-group col-md-3 d-none">
+									<label for="employee"> Start Date</label> <input type="date"
+										name="fromDate" id="fromDate" class="form-control fromDate"  th:field="*{fromDate}"
+										placeholder="Select start date" readonly>
+								</div>
+								<div class="form-group endDate col-md-3 d-none">
+									<label for="employee"> End Date</label> <input type="date"
+										id="toDate" class="form-control toDate" name="toDate"  th:field="*{toDate}"
+										placeholder="Select end date" readonly>
+
+								</div>
+								<div
+									class="form-group  col-md-6 text-center d-none  download p-4 text-success">
+									<label for="employee"> </label>
+									<button class="border-0 p-1 rounded-circle csv" name="csv"
+										type="submit">
+										<i class="btn fa fa-download  fa-2x text-success"
+											data-bs-toggle="tooltip" data-bs-placement="bottom"
+											data-bs-title="Download csv"></i>
+									</button>
+
+								</div>
+								
+									<div
+									class="form-group  col-md-6 text-center d-none  downloadfinancial p-4 text-success">
+									<label for="employee"> </label>
+									<button class="border-0 p-1 rounded-circle financialYearCsv" name="financialYearCsv"
+										type="submit">
+										<i class="btn fa fa-download  fa-2x text-success"
+											data-bs-toggle="tooltip" data-bs-placement="bottom"
+											data-bs-title="Download csv"></i>
+									</button>
+
+								</div>
+
+							</div>
+
+							<div class="row">
+								<div class="container  searchSalary text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary  searchSalaryBtn"
+										name="searchSalary">Search Salary</button>
+								</div>
+							</div>
+
+
+							<div class="row">
+								<div class="container d-none searchFinancialSalary text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary searchFinancialSalary"
+										name="searchFinancialSalary">Search Salary</button>
+								</div>
+							</div>
+						</form>
+
+					</div>
+
+
+
+
+					<div class="card form p-4 border-0 shadow-lg mt-4">
+						<table id="example" class="display table table-striped" style="width: 100%">
+							<thead>
+								<tr>
+
+									<th>Employee Name</th>
+									<th>Salary Month</th>
+									<th>Basic Salary</th>
+									<th>Total Working Days</th>
+									<th>Leave Days</th>
+									<th>Net Amount</th>
+									<th>Net Payable</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								<th:block th:each="salary : ${salaries}">
+									<tr>
+
+										<td th:text="${salary.employee.employeeName}"></td>
+										<td th:text="${salary.salaryMonth}"></td>
+										<td th:text="${salary.basicSalary}"></td>
+										<td th:text=${salary.totalWorkingDays}></td>
+										<td th:text="${salary.leaveDays}"></td>
+										<td th:text=${salary.netAmount}></td>
+										<td th:text=${salary.netPayableMonthly}></td>
+									</tr>
+									<th:block>
+							</tbody>
+
+						</table>
+					</div>
+
+
+					<div class="card form p-4 border-0 shadow-lg mt-4 d-none"
+						id="printableArea">
+						<table id="example" class=" table-bordered display" style="width: 100%">
+							<thead>
+								<tr>
+
+
+									<th class="text-center">Salary Month</th>
+									<th class="text-center">Employee Name</th>
+									<th class="text-center">Employee Group</th>
+									<th class="text-center">Designation</th>
+									<th class="">Total Working Days</th>
+									<th class="text-center">Salary Per Day</th>
+									<th class="text-center">Leave Days</th>
+									<th class="text-center">Basic Salary</th>
+									<th class="">EPF Employer Share</th>
+									<th class="text-center">HRA</th>
+									<th class="text-center">DA</th>
+									<th class="text-center">TA</th>
+									<th class="text-center">Overtime Amount</th>
+									<th class="text-center">Overtime Rate</th>
+									<th class="text-center">Net Amount</th>
+									<th class="text-center">Loan</th>
+									<th class="text-center">PF</th>
+									 <th class="text-center">Net Payable Monthly</th>
+								</tr>
+							</thead>
+							<tbody>
+								<th:block th:each="salary : ${salaries}">
+									<tr>
+
+
+										<td  class="text-center" th:text="${salary.salaryMonth}"></td>
+										<td  class="text-center" th:text="${salary.employee.employeeName}"></td>
+										<td  class="text-center" th:text="${salary.employee.employeeGroup.groupName}"></td>
+										<td  class="text-center" th:text="${salary.employee.designation}"></td>
+										<td  class="text-center" th:text=${salary.totalWorkingDays}></td>
+										<td  class="text-center" th:text=${salary.salaryPerDay}></td>
+										<td  class="text-center" th:text="${salary.leaveDays}"></td>
+										<td  class="text-center" th:text="${salary.basicSalary}"></td>
+										<td  class="text-center" th:text=${salary.epfEmployerShare}></td>
+										<td  class="text-center" th:text=${salary.hra}></td>
+										<td  class="text-center" th:text=${salary.da}></td>
+										<td  class="text-center" th:text=${salary.ta}></td>
+										<td  class="text-center" th:text=${salary.overtimeAmount}></td>
+										<td  class="text-center" th:text=${salary.overtimeRatePerHour}></td>
+										<td  class="text-center" th:text=${salary.netAmount}></td>
+										<td  class="text-center" th:text="${salary.loan}"></td>
+										<td  class="text-center" th:text="${salary.pf}"></td>
+										 <td  class="text-center" th:text=${salary.netPayableMonthly}></td>
+
+
+
+
+
+
+									</tr>
+									<th:block>
+							</tbody>
+
+						</table>
+					</div>
+
+
+					<div class="row mt-5">
+						<div class="col-lg-12 ">
+							<button class="btn-primary float-right"
+								onclick="printDiv('printableArea')">
+								<i class="fa fa-print" aria-hidden="true"> Print</i>
+							</button>
+
+						</div>
+					</div>
+
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/flatpickr.js}"></script>
+
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+		<script th:src="@{/customJs/restrictDatepicker.js}"></script>
+	
+
+
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
+		integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<script>
+		flatpickr("#datepicker", {
+			dateFormat : "Y-m-d",
+			disable : [ function(date) {
+				// Disable specific dates if needed
+				return (date.getDate() !== 1); // Disable weekends
+			} ],
+			locale : {
+				firstDayOfWeek : 1
+			// Monday as the first day of the week
+			},
+			onChange : function(selectedDates, dateStr, instance) {
+
+				var date = new Date(dateStr);
+				var formattedDate = date.toISOString().split('T')[0];
+				console.log(formattedDate);
+				document.getElementById('datepicker').value = formattedDate;
+				
+
+			}
+		});
+
+		flatpickr("#datepicker2", {
+
+			dateFormat :"Y-m-d",
+			minDate : "1900",
+			maxDate : "2099",
+
+			locale : {
+				firstDayOfWeek : 1
+			// Monday as the first day of the week
+			},
+			onChange : function(selectedDates, dateStr, instance) {
+				// Handle the date change event
+				var date = new Date(dateStr);
+				var formattedDate = date.toISOString().split('T')[0];
+				console.log(formattedDate);
+				document.getElementById('datepicker2').value = formattedDate;
+
+				console.log(formattedDate);
+			}
+		});
+		flatpickr("#datepicker3", {
+
+			enableTime : true,
+			dateFormat : "Y-m-d",
+
+			locale : {
+				firstDayOfWeek : 1
+			// Monday as the first day of the week
+			},
+			onChange : function(selectedDates, dateStr, instance) {
+				// Handle the date change event
+				/* var date = new Date(dateStr);
+				var formattedDate = date.toISOString().split('T')[0];
+				console.log(formattedDate);
+				document.getElementById('datepicker2').value = formattedDate;
+
+				console.log(formattedDate); */
+			}
+		});
+		flatpickr("#datepicker4", {
+			enableTime : true,
+			dateFormat : "Y-m-d",
+
+			locale : {
+				firstDayOfWeek : 1
+			// Monday as the first day of the week
+			},
+			onChange : function(selectedDates, dateStr, instance) {
+				// Handle the date change event
+				/* var date = new Date(dateStr);
+				var formattedDate = date.toISOString().split('T')[0];
+				console.log(formattedDate);
+				document.getElementById('datepicker4').value = formattedDate;
+
+				console.log(formattedDate); */
+			}
+		});
+		//uncheck radios on load
+		window.addEventListener('load', function() {
+			var option1 = document.getElementById('flexRadioDefault1');
+			var option2 = document.getElementById('flexRadioDefault2');
+			var option3 = document.getElementById('flexRadioDefault3');
+			
+			console.log("1="+option1.checked+" ==2=="+option2.checked+"===3==="+option3.checked)
+			
+			if(option1.checked) {
+				option2.checked = false;
+				option3.checked = false;
+				check();
+			} else if (option2.checked) {
+				option1.checked = false;
+				option3.checked = false;
+				check();
+			} else if(option3.checked) {
+				option1.checked = false;
+				option2.checked = false;
+				check();
+			} else {
+				option1.checked = false;
+				option2.checked = false;
+				option3.checked = false;
+			    changeOnLoad();
+			}
+
+
+		});
+
+		///////////////////////////////////////////////////
+
+		function showOptions() {
+			var selection = document
+					.querySelector('input[name="selection"]:checked').value;
+			console.log(selection)
+			var months = document.getElementById('months');
+			var years = document.getElementById('years');
+
+			if (selection === 'month') {
+				$('.months').removeClass('d-none');
+				$('.month').attr('required', 'true');
+				$('.endDate,.startDate').addClass('d-none');
+				$('.years').addClass('d-none');
+				$('.fromDate,.toDate,.year').val(null);
+				check();
+
+			} else if (selection === 'year') {
+				$('.months').addClass('d-none');
+				$('.years').removeClass('d-none');
+				$('.endDate,.startDate').addClass('d-none');
+				$('.fromDate,.toDate,.month').val(null);
+				check();
+
+			} else if (selection === 'financialYear') {
+				$('.months').addClass('d-none');
+				$('.years').addClass('d-none');
+				$('.endDate,.startDate').removeClass('d-none');
+				$('.month,.year').val(null);
+				check();
+
+			}
+		}
+		
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+<script type="text/javascript">
+$(document ).ready(function() {
+	
+	var to =$(".toDate").val();
+	var from =$(".fromDate").val();
+	console.log("to date======"+from+"--------to--------"+to);
+	var month =$(".month").val();
+	var year=$(".year").val();
+	console.log("month======"+month);
+	console.log("year======"+year);
+	if(month!=""){
+		var option1 = document.getElementById('flexRadioDefault1');
+		option1.checked = true;
+		$('.months').removeClass('d-none');
+		enableMonthYearClass();
+	}
+	if(year!=""){
+		var option2 = document.getElementById('flexRadioDefault2');
+		option2.checked = true;
+		$('.years').removeClass('d-none');
+		enableMonthYearClass();
+	}
+	if(to!=""){
+		console.log("inside financial year==="+to)
+		var option3 = document.getElementById('flexRadioDefault3');
+		option3.checked = true;
+		$('.endDate,.startDate').removeClass('d-none');
+		enableFinancialClass();
+		
+	}
+
+}); 
+
+
+$(document).ready(function() {
+	
+    changeOnLoad();
+    console.log("value datepicker===="+$('#datepicker').val());
+    console.log("value datepicker==2=="+$('#datepicker2').val());
+    console.log("value datepicker==4=="+$('#datepicker4').val());
+    
+    if ($('#datepicker').val() != '' || $('#datepicker2').val()!='' ) {
+    	console.log("month/yearrr");
+    	changePropForMonthYear();    
+	  }
+
+    if ($('#datepicker4').val() != '') {
+    	console.log("financial year  ");
+    	changePropForFinancial();
+	  }
+	  
+    $('#datepicker').change(function() {
+    	changePropForMonthYear();    
+	});
+    
+    $('#datepicker2').change(function() {
+    	changePropForMonthYear();    
+	});
+    
+    $('#datepicker4').change(function() {
+    	changePropForFinancial();    
+	});
+    
+});
+function changePropForMonthYear(){
+	    enableMonthYearClass();
+	    console.log("enable search");
+	    $('.searchSalaryBtn').prop('disabled', false);
+	    $('.csv').attr('disabled',false);
+	    $('.searchFinancialSalary').attr('disabled',true);
+	    $('.financialYearCsv').prop('disabled', true);
+	    
+}	    
+
+function changePropForFinancial(){
+	    enableFinancialClass();
+	    console.log("enable financial search");
+		$('.searchSalaryBtn').prop('disabled', true);
+	    $('.csv').attr('disabled',true);
+	    $('.searchFinancialSalary').attr('disabled',false);
+	    $('.financialYearCsv').prop('disabled', false);
+	    
+}
+
+function changeOnLoad(){
+		$('.searchSalaryBtn').prop('disabled', true);
+	    $('.csv').attr('disabled',true);
+	    $('.searchFinancialSalary').attr('disabled',true);
+	    $('.financialYearCsv').prop('disabled', true);
+}
+
+function check(){
+	 if ($('#datepicker').val() != '' ||$('#datepicker2').val()!='' ) {
+		 changePropForMonthYear();    
+	 }
+	 else if ($('#datepicker4').val() != '') {
+	    	changePropForFinancial();
+		  }
+	 else{
+		 changeOnLoad();
+	 }
+	 
+}
+
+function enableFinancialClass(){
+	  $('.downloadfinancial').removeClass('d-none');
+	  $('.searchFinancialSalary').removeClass('d-none');
+	  $('.download').addClass('d-none');
+	  $('.searchSalary').addClass('d-none');
+	 
+}
+
+function enableMonthYearClass(){
+	  $('.download').removeClass('d-none');
+	  $('.searchSalary').removeClass('d-none');
+	  $('.downloadfinancial').addClass('d-none');
+	  $('.searchFinancialSalary').addClass('d-none');
+}
+
+
+
+
+</script> 
+
+</body>
+
+</html>

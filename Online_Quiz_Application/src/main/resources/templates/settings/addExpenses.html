@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Add Expenses</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2 th:text="${edit}?'Update Expenses ':'Add Expenses'"></h2>
+
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+
+
+						</div>
+
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+					
+						<form th:object="${expenses}" th:method="post"
+							data-bvalidator-validate="true"
+						th:action="@{${edit != null} ? '/expenses/update' : '/expenses/add'}">
+						
+						<div class="form-row">
+						  <input type="hidden" th:field="*{id}">
+						  <input type="hidden" th:field="*{company}">
+						  <div class="form-group col-md-6">	
+							 <label>Category</label>
+							  <select th:field="*{category}" class="form-select form-control" aria-label="Default select example" required="required">
+							      <option value="">Select Category</option>
+			                      <option  th:each="cat : ${categoryList}" th:text="${cat.name}" th:value="${cat.id}" />
+			                 </select>
+			              </div>
+			              
+			                <div class="form-group col-md-6">	
+							 <label>Party</label>
+							  <select th:field="*{party}" class="form-select form-control" aria-label="Default select example">
+			                      <option value="">Select Party</option>
+			                      <option th:each="party : ${partyList}" th:text="${party.partyName+'('+party.phoneNumber+')'}" th:value="${party.id}" />        
+			                 </select>
+			              </div>
+			              
+                          <div class="form-group col-md-6">
+							 <label for="employee"> Particulars </label>
+							 <input type="text" class="form-control" id="emp" th:field="*{particulars}" placeholder=" Enter Particulars" required="required">
+					      </div>
+								
+							<div class="form-group col-md-6">
+							   <label for="month">Month</label>
+							   <input type="date" class="form-control picker" id="month" th:field="*{month}" name="month" placeholder="Enter Month" required="required">
+							</div>
+								
+							<div class="form-group col-md-6">
+								<label for="amount">Amount</label> 
+								<input type="number" name="amount" class="form-control" id="amount" th:field="*{amount}" placeholder=" Enter Amount" required="required">
+							</div>					
+								
+							<div class="form-group col-md-6">
+								<label for="gst">GST(%)</label> 
+								<input type="number" name="gst" class="form-control" id="gst" th:field="*{gst}" placeholder=" Enter GST" required="required">
+							</div>
+							
+							<div class="form-group col-md-6">
+								<label for="gstAmount">GST Amount</label> 
+								<input type="number" name="gstAmount" class="form-control" id="gstAmount" th:field="*{gstAmount}" placeholder=" Enter GST"  readonly="readonly">
+							</div>
+							
+							<div class="form-group col-md-6">
+							   <label for="paymentDate">Payment Date</label>
+							   <input type="date" class="form-control picker" id="paymentDate" th:field="*{paymentDate}" name="paymentDate" placeholder="Enter Payment Date" required="required">
+							</div>
+								
+							<div class="form-group col-md-6 ">
+								<label for="totalAmount"> Total Amount</label> 
+								<input type="number" name="totalAmount" class="form-control" id="totalAmount" th:field="*{totalAmount}" placeholder=" Enter Total Amount" required="required" readonly="readonly">
+							</div>
+							 
+                                   
+                                    
+							<div class="form-group col-md-6">
+									<label> Choose Payment Through: </label>
+									<div class="row " style="margin:0 2px">
+                                    <div class="col-md-12 form-control ">
+									<div class="row">
+									
+										<div class="col-md-3">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" th:field="*{typeOfPayment}" required
+													id="inlineRadio1" value="cash" />
+												<label class="form-check-label" for="inlineRadio1">Cash</label>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" th:field="*{typeOfPayment}" required
+													id="inlineRadio2" value="bank" />
+												<label class="form-check-label" for="inlineRadio2">Bank</label>
+											</div>
+										</div>
+										</div>
+									</div>
+							</div></div>
+							
+							
+							
+							<div class="form-group col-md-6 bank d-none">
+									<label>Select Company Debit Account</label> <select class="form-control" id="bank"
+										th:field="*{compBankDetails}" >
+										<option value="">Select Company Debit Account</option>
+										<option th:each="bank : ${compBankList}" th:value="${bank.id}"
+											th:text="${bank.bankName}+'('+${ bank.accountNumber}+')'"></option>
+									</select>
+								</div>
+								
+								
+
+
+							</div>
+
+							<div class="row">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary" th:text=" ${edit}?'Update':'Submit'"></button>
+								</div>
+							</div>
+
+
+						</form>
+
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+		
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".picker").flatpickr({
+		format : "Y-m-d",
+		altFormat : "Y-m-d",
+		altInput : true,
+		allowInput : true
+	});
+	
+	$("#amount").keyup(function() {	
+		Calculate();			
+	});
+	
+	$("#gst").keyup(function() {	
+		Calculate();	
+	});
+	 
+	function Calculate(){
+	   var amount= parseFloat($("#amount").val());
+	   var gst=parseFloat($("#gst").val());
+
+	  
+		   var gstval=gst/100;
+			if (typeof gstval === "undefined" || isNaN(gstval)) {
+				gstval = 0;
+			}
+
+		   var tamount=(amount*gstval);
+		   var roundedTAmount = tamount.toFixed(2);
+		   $("#gstAmount").val(roundedTAmount);
+		   var ttamount=parseFloat(amount)+parseFloat(tamount);
+		   var roundedTTAmount = ttamount.toFixed(2);
+			$("#totalAmount").val(roundedTTAmount); 
+	 
+	}
+	  
+
+
+//conditional code on cash and bank on change
+$(document).on("change", ".form-check-input", function () {
+
+	if ($("#inlineRadio1").is(":checked")) {
+		$(".bank").addClass("d-none");
+		$("#bank").val(null);
+	} else if ($("#inlineRadio2").is(":checked")) {
+		$(".bank").removeClass("d-none");
+	}
+});
+
+//conditional code on cash and bank document ready function
+	if ($("#inlineRadio1").is(":checked")) {
+		$(".bank").addClass("d-none");
+	} else if ($("#inlineRadio2").is(":checked")) {
+		$(".bank").removeClass("d-none");
+	}
+
+
+});
+</script>
+
+</body>
+
+</html>

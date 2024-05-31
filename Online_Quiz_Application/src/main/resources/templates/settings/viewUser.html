@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>My Profile</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2>My Profile</h2>
+
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+
+
+						</div>
+
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+
+						<form th:method="post" data-bvalidator-validate="true">
+
+							<div class="form-row">
+
+								<div class="form-group col-md-6">
+									<label for="employee"> Name</label> <input type="text"
+										class="form-control" id="emp" th:field=${user.name} placeholder=" " readonly>
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="employee"> Username </label> <input type="text" th:field=${user.username}
+										class="form-control" id="emp" placeholder=" " readonly>
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="employee"> Email </label> <input type="text" th:field=${user.email}
+										class="form-control" id="emp" placeholder=" " readonly>
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="employee">Phone Number </label> <input type="text" th:field=${user.phoneNumber}
+										class="form-control" id="emp" placeholder=" " readonly>
+								</div>
+
+
+							</div>
+							<hr />
+							<fieldset>
+								<legend th:text="${session.company.type =='Company'}? 'Company Details:':'Shop Details'">Company Details:</legend>
+							    <div class="form-row"   >
+									<div class="form-group col-md-6" th:if="${user.company.type=='Company'}">
+										<label for="employee"> Company Name</label> <input type="text" th:field=${user.company.companyName} class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6" th:if="${user.company.type=='Company'}">
+										<label for="employee">CIN Number </label> <input type="text"
+										th:field=${user.company.cinNumber}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+								
+						          <div class="form-group col-md-6" th:if="${user.company.type=='Shop'}">
+										<label for="employee"> Shop Name</label>
+										 <input type="text" th:field=${user.company.companyName} class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									
+									<div class="form-group col-md-6" th:if="${user.company.type=='Shop'}" >
+										<label for="employee">Registration Number </label> <input type="text"
+										th:field=${user.company.registrationNumber}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+								
+								<div class="form-group col-md-6">
+										<label for="employee"> PAN Number </label> <input type="text"
+										th:field=${user.company.panNumber}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="employee"> GSTIN Number</label> <input type="text"
+										th:field=${user.company.gstinNumber}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="employee">Email </label> <input type="email"
+										th:field=${user.company.email}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="employee"> Phone No </label> <input type="text"
+										th:field=${user.company.phoneNumber}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="employee"> Website</label> <input type="text"
+										th:field=${user.company.website}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="employee"> Address</label> <input type="text"
+										th:field=${user.company.address}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="employee">Country </label> <input type="text"
+										th:field=${user.company.country}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="employee"> PIN Code </label> <input type="text"
+										th:field=${user.company.pincode}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="employee"> State</label> <input type="text"
+										th:field=${user.company.state}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6" th:if="${user.company.type=='Company'}">
+										<label for="employee"> IE Code</label> <input type="text"
+										th:field=${user.company.ieCode}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>				
+									<div class="form-group col-md-6">
+										<label for="employee">Head Office </label> <input type="text"
+										th:field=${user.company.headOffice}	class="form-control" id="emp" placeholder=" " readonly>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="employee"> Branch Office </label> <input
+										th:field=${user.company.branchOffice}	type="text" class="form-control" id="emp" placeholder=" "
+											readonly>
+									</div>
+									
+					</div>
+
+							</fieldset>
+						</form>
+
+
+
+
+
+
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<script>
+		/* $('form').submit(function(event) {
+		    event.preventDefault();
+		    var formData = $(this).serializeArray();
+		    console.log(formData);
+		}); */
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+
+
+</body>
+
+</html>

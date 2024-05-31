@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Category | Expenses</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2 th:text="${edit}?'Update Category':'Create Category'"></h2>
+
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+
+
+						</div>
+
+					</div>
+					
+					<div class=" card  border-0 d-flex mb-2 text-center col-md-3 p-2">
+						<strong class="font-weight-bold">Total Categories : <span
+							class="badge badge-success p-2 rounded-circle">
+								[[${totalItems}]]</span></strong>
+					</div>
+					
+					<div class="card form p-4 border-0 shadow-lg">
+
+						<form th:object="${category}" th:method="post"
+							data-bvalidator-validate="true"
+							th:action="@{${edit != null} ? '/category/updateCategory' : '/category/addCategory'}"
+							enctype="multipart/form-data">
+
+							<div class="form-row">
+								<input type="hidden" th:field="*{id}">
+								<input type="hidden" th:field="*{company.id}">
+								<div class="form-group offset-md-3 col-md-6">
+									<label for="name">Category Name</label> <input
+										type="text" class="form-control" id="inputEmail4"
+										th:field="*{name}" name="employeeName"
+										placeholder="Enter Category Name" required="required">
+								</div>
+								
+								</div>
+
+							<div class="row">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary"
+										th:text=" ${edit}?'Update':'ADD'"></button>
+								</div>
+							</div>
+
+
+						</form>
+
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+
+						<div class="card form p-4 border-0 shadow-lg">
+							<table id="example" class="display table table-striped" style="width: 100%">
+								<thead>
+									<tr>
+										<th>Category Name</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr th:each="cat:${categoryList}">
+										<td th:text="${cat.name}"></td>
+									
+										<td><a th:href="@{/category/edit/{id}(id=${cat.id})}"
+											class="" style="width: 90px;" data-bs-toggle="tooltip"
+											data-bs-placement="bottom" data-bs-title="Update Category"><i
+												class="fa fa-edit text-success"></i></a> &nbsp; <a
+											th:href="@{/category/delete/{id}(id=${cat.id})}" class=""
+											style="width: 90px;" data-bs-toggle="tooltip"
+											data-bs-placement="bottom" data-bs-title="Delete Category"><i class="fa fa-trash text-danger"></i></a></td>
+									</tr>
+								</tbody>
+								<tfoot>
+
+								</tfoot>
+							</table>
+
+						</div>
+						 <div class="row">
+
+							<th:block th:if="${totalPages > 1}">
+								<div class=" offset-md-4 col-md-9 mb-5">
+									<ul class="pagination">
+
+										<li class="page-item"><a class="page-link"
+											th:href="@{/category/view/pageno=1}">First</a></li>
+
+										<li class="page-item"><a class="pe-3 page-link"
+											th:if="${currentPage > 1}"
+											th:href="@{'/category/view/pageno=' + ${currentPage - 1}}"><<</a>
+											<a class="page-link disabled" th:unless="${currentPage > 1}"><<</a>
+										</li>
+
+										<li class="page-item"><a class="pe-3 page-link disabled"
+											th:if="${currentPage >= 1 && currentPage <= 1}"><<</a></li>
+
+										<th:block th:with="maxPagesOnEachSide=1">
+											<li class="page-item"
+												th:each="i: ${#numbers.sequence(1, totalPages)}"><a
+												class="page-link"
+												th:if="${i >= currentPage - maxPagesOnEachSide && i <= currentPage + maxPagesOnEachSide && i != currentPage}"
+												th:href="@{'/category/view/pageno=' + ${i}}">[[${i}]]</a> <a
+												class="page-link active" th:if="${i == currentPage}">[[${i}]]</a>
+											</li>
+										</th:block>
+
+										<li class="page-item"><a class="pe-3 page-link"
+											th:if="${currentPage < totalPages}"
+											th:href="@{'/category/view/pageno=' + ${currentPage + 1}}">>></a>
+											<a class="page-link" th:unless="${currentPage < totalPages}">>></a>
+										</li>
+
+										<li class="page-item"><a class="page-link"
+											th:if="${currentPage < totalPages}"
+											th:href="@{'/category/view/pageno=' + ${totalPages}}">Last</a> <a
+											class="page-link" th:unless="${currentPage < totalPages}">Last
+										</a></li>
+									</ul>
+								</div>
+							</th:block>
+						</div>
+
+
+                  <!--  <div class="row">
+    <th:block th:if="${totalPages > 1}">
+        <div class="offset-md-4 col-md-9 mb-5">
+            <ul class="pagination">
+
+                First Page Link
+                <li class="page-item"><a class="page-link" th:href="@{/category/view/pageno=1}">First</a></li>
+
+                Previous Page Link
+                <li class="page-item">
+                    <a class="pe-3 page-link" th:if="${currentPage > 1}" th:href="@{'/category/view/pageno=' + ${currentPage - 1}}"><<</a>
+                    <a class="page-link disabled" th:unless="${currentPage > 1}"><<</a>
+                </li>
+
+                Page Links
+                <th:block th:with="maxPagesOnEachSide=1">
+                    <li class="page-item" th:each="i: ${#numbers.sequence(1, totalPages)}">
+                        <a class="page-link"
+                           th:if="${i == currentPage}"
+                           style="color: green; font-weight: bold;"  
+                           th:href="@{'/category/view/pageno=' + ${i}}">
+                            [[${i}]]
+                        </a>
+                        <a class="page-link active" th:if="${i != currentPage}" th:href="@{'/category/view/pageno=' + ${i}}">
+                            [[${i}]]
+                        </a>
+                    </li>
+                </th:block>
+
+                Next Page Link
+                <li class="page-item">
+                    <a class="pe-3 page-link" th:if="${currentPage < totalPages}" th:href="@{'/category/view/pageno=' + ${currentPage + 1}}">>></a>
+                    <a class="page-link" th:unless="${currentPage < totalPages}">>></a>
+                </li>
+
+                Last Page Link
+                <li class="page-item">
+                    <a class="page-link" th:if="${currentPage < totalPages}" th:href="@{'/category/view/pageno=' + ${totalPages}}">Last</a>
+                    <a class="page-link" th:unless="${currentPage < totalPages}">Last</a>
+                </li>
+            </ul>
+        </div>
+    </th:block>
+</div> -->
+
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+<script>
+			$(document).ready(function() {
+				$('#example').DataTable({
+					scrollY : '400px',
+					scrollCollapse : true,
+					paging : false,
+				});
+				/*  $('#example').DataTable({
+				        data: dataSet,
+				        columns: [
+				            { title: 'Name' },
+				            { title: 'Position' },
+				            { title: 'Office' },
+				            { title: 'Extn.' },
+				            { title: 'Start date' },
+				            { title: 'Salary' },
+				        ],
+				    }); */
+
+			});
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+	<!-- basic -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<!-- mobile metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<!-- site metas -->
+	<title>Add Performa Bills | Expenses</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+	<!-- site icon -->
+	<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+	<!-- bootstrap css -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+	<!-- site css -->
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
+	<!-- responsive css -->
+	<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+	<!-- color css -->
+	<link rel="stylesheet" th:href="@{/css/colors.css}" />
+	<!-- select bootstrap -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+	<!-- scrollbar css -->
+	<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+	<!-- custom css -->
+	<link rel="stylesheet" th:href="@{/css/custom.css}" />
+	<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2 th:text="${edit}?'Update Performa Bill':'Perfoma Tax Bill'"></h2>
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class="col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center"
+								role="alert" style="width: fit-content"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class="col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center"
+								role="alert" style="width: fit-content"></div>
+						</div>
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+						<form th:object="${invoice}" th:method="post" data-bvalidator-validate="true"
+							th:action="@{${edit != null} ? '/invoice/updatePerformaBill' : '/invoice/addPerformaBill'}"
+							enctype="multipart/form-data">
+							<div class="form-row">
+							 <input type="hidden" th:field="*{id}">
+								<input type="hidden" th:field="*{company.id}">
+								
+								<div class="form-group col-md-6">
+									<label for="name">Bill Number:</label> <input
+										type="text" class="form-control" id="invoiceNumber"
+										th:field="*{invoiceNumber}" name="invoiceNumber"
+										placeholder="Enter invoice Number" required="required">
+								</div>
+								
+								
+								<div class="form-group col-md-6">
+									<label for="invoiceDate">Bill Date:</label>
+									<input type="date" id="datepicker4" class="form-control"th:field="*{invoiceDate}"
+									       name="invoiceDate"
+										required />
+								</div>
+								        <div class="form-group col-md-6">
+									<label for="buyerName">Buyer Name</label>
+									<input type="text" id="buyerName" class="form-control"th:field="*{buyerName}" name="buyerName"
+										 required />
+								</div>
+
+							</div>
+							
+
+							<div class="d-flex justify-content-center align-items-center margin: 17px">
+								<h5 style="margin-top: 2rem; margin-bottom: 1rem">
+									Invoice Items
+								</h5>
+							</div>
+
+						
+									<div style="overflow: auto;" class="ctTable">
+								<table class="table 1 countryTable">
+									<thead>
+										<tr>
+											<th scope="col">S.No</th>
+											<th scope="col">Particulars</th>
+										    <th scope="col">Weight</th>
+											<th scope="col" class="unitPrice">Rate</th>
+											<th scope="col">Other Charges</th>
+											<th scope="col">Amount</th>
+											<th scope="col">Discount</th>
+											<th scope="col">Total Amount</th>
+											<th scope="col">Actions</th>
+										</tr>
+						
+									</thead>
+									<tbody class='tbody1'>
+										<tr th:if="${edit} == true" class="tblRow"
+											th:each="invoiceItem, stat: ${invoice.invoiceItems}">
+											<td>                   
+											<!-- <input type="text" th:attr="name='invoiceItem[__${stat.index}__].id'" th:value="${invoiceItem.id}" />  --> 
+											<input type="number" class="item" 
+													th:attr="name='invoiceItems[' + ${stat.index} + '].item'"
+													th:value="${invoiceItem.item}" required></input>
+											</td>
+											
+											<td><input  type="text" class="description" 
+													th:attr="name='invoiceItems[' + ${stat.index} + '].description'"
+													th:value="${invoiceItem.description}" required></input>
+											</td>
+											<td><input  type="number" class="quantity" 
+													th:attr="name='invoiceItems[' + ${stat.index} + '].quantity'"
+													th:value="${invoiceItem.quantity}" required></input>
+											</td>
+											
+											<td>
+											
+												<input type="number" class="units"
+												th:attr="name='invoiceItems[' + ${stat.index} + '].units'"
+												th:value="${invoiceItem.units}" required />
+											</td>
+											
+											<td>											
+												<input type="number" class="otherCharges"
+												th:attr="name='invoiceItems[' + ${stat.index} + '].otherCharges'"
+												th:value="${invoiceItem.otherCharges}" />
+											</td>
+												
+											
+											<td><input type="number" class="amount"
+												th:attr="name='invoiceItems[' + ${stat.index} + '].amount'"
+												th:value="${invoiceItem.amount}" required ="true" readonly ="readonly" />
+											</td>
+	
+											<td>
+												<input type="number" class="discount"
+												th:attr="name='invoiceItems[' + ${stat.index} + '].discount'"
+												th:value="${invoiceItem.discount}"   />
+											</td>
+												
+											<td>
+												<input type="number" class="totalAmount"
+												th:attr="name='invoiceItems[' + ${stat.index} + '].totalAmount'"
+												th:value="${invoiceItem.totalAmount}" required ="true" readonly ="readonly" />
+											</td>
+												
+											<td><i class="fa fa-trash text-danger removeState"></i></td>
+										</tr>
+
+
+
+									</tbody>
+								</table>
+								<button type="button" class="btn btn-info  "
+									id="addItemButtonCt">Add Item</button>
+							</div>
+
+							<br />
+							<br />
+							<div class="row">
+								<div class="form-group col-md-4">
+									<label for="invoiceDate">Total Amount:</label>
+									<input type="number" id="totalAmount" class="form-control" name="totalAmount"
+									 th:field="*{totalAmount}" 	required ="true" readonly ="readonly" />
+								</div>  
+									           
+							</div>
+
+							<div class="row">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary"
+										th:text=" ${edit}?'Update':'Add Bill'"></button>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE
+								
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar("#sidebar");
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+	<script th:src="@{/customJs/countryList.js}"></script>
+
+	<script th:inline="javascript">
+	     
+	$(document).on("keyup", ".quantity", function () {
+		var tr = $(this).closest("tr");
+		var quantity = parseFloat($(this).val());
+		var units = parseFloat($(tr).find(".units").val());
+		var otherCharges = parseFloat($(tr).find(".otherCharges").val());
+		
+		if (typeof quantity === "undefined" || isNaN(quantity) || quantity == '' ) {
+			quantity = 0;
+		}
+		if (typeof units === "undefined" || isNaN(units) || units == '') {
+			units = 0;
+		}
+		if (typeof otherCharges === "undefined" || isNaN(otherCharges) || otherCharges == '') {
+			otherCharges = 0;
+		}
+		var quant=quantity;
+		var amount = ((quant*units) + otherCharges).toFixed(2);
+		$(tr).find(".amount").val(amount);
+		//calculateTotalSum(tr);
+		calculateAmount(tr);
+});
+  
+		//Calculate amount on rate
+		 $(document).on("keyup", ".units", function () {
+    	   var tr = $(this).closest("tr");
+			var units = parseFloat($(this).val());
+			var quantity = parseFloat($(tr).find(".quantity").val());
+			var otherCharges = parseFloat($(tr).find(".otherCharges").val());
+			
+			if (typeof quantity === "undefined" || isNaN(quantity)) {
+				quantity = 0;
+			}
+			if (typeof units === "undefined" || isNaN(units)) {
+				units = 0;
+			}
+			if (typeof otherCharges === "undefined" || isNaN(otherCharges)) {
+				otherCharges = 0;
+			}
+			
+			var quant=quantity;
+			var amount = ((quant*units) + otherCharges).toFixed(2);
+			$(tr).find(".amount").val(amount);
+			//calculateTotalSum(tr);
+		calculateAmount(tr);
+		
+	});
+		
+		//Calculate amount on otherCharges
+		 $(document).on("keyup", ".otherCharges", function () {
+    	   var tr = $(this).closest("tr");
+			var otherCharges = parseFloat($(this).val());
+			var quantity = parseFloat($(tr).find(".quantity").val());
+			var units = parseFloat($(tr).find(".units").val());
+			
+			if (typeof otherCharges === "undefined" || isNaN(otherCharges)) {
+				otherCharges = 0;
+			}
+			if (typeof quantity === "undefined" || isNaN(quantity)) {
+				quantity = 0;
+			}
+			if (typeof units === "undefined" || isNaN(units)) {
+				units = 0;
+			}
+			
+			var quant=quantity;
+			var amount = ((quant*units) + otherCharges).toFixed(2);
+			$(tr).find(".amount").val(amount);
+			//calculateTotalSum(tr);
+		calculateAmount(tr);
+		
+	});
+		
+		
+		  $(document).on("keyup", ".discount", function () {
+	        	    var tr = $(this).closest("tr");
+					var discount = parseFloat($(this).val());
+					var quantity = parseFloat($(tr).find(".quantity").val());
+					var units=parseFloat($(tr).find(".units").val());
+					var amount=parseFloat($(tr).find(".amount").val());
+					var otherCharges=parseFloat($(tr).find(".otherCharges").val());
+					if (typeof quantity === "undefined" || isNaN(quantity)) {
+						quantity = 0;
+					}
+					if (typeof units === "undefined" || isNaN(units)) {
+						units = 0;
+					}
+					if (typeof amount === "undefined" || isNaN(amount)) {
+						amount = 0;
+					}
+					if(typeof discount === "undefined" || isNaN(discount)){
+						discount=0;
+					}
+					if(typeof otherCharges === "undefined" || isNaN(otherCharges)){
+						otherCharges=0;
+					}
+					var quant=quantity;
+					var amount = ((quant*units) + otherCharges).toFixed(2);
+					var totalAmount = (amount-discount).toFixed(2);
+					$(tr).find(".totalAmount").val(totalAmount);
+					//calculateAmount(tr);
+					calculateTotalSum(tr);
+				
+			});
+		  $(document).on("keyup change", ".quantity, .units, .discount, .otherCharges", function () {
+			    var tr = $(this).closest("tr");
+			    var quantity = parseFloat($(tr).find(".quantity").val()) || 0;
+			    var units = parseFloat($(tr).find(".units").val()) || 0;
+			    var discount = parseFloat($(tr).find(".discount").val()) || 0;
+			    var otherCharges = parseFloat($(tr).find(".otherCharges").val()) || 0;
+
+			    var amount = ((quantity * units) + otherCharges).toFixed(2);
+			    var totalAmount = (amount - discount).toFixed(2);
+
+			    $(tr).find(".amount").val(amount);
+			    $(tr).find(".totalAmount").val(totalAmount);
+
+			    calculateTotalSum();
+			});
+
+
+			// Calculate sumTotal
+			function calculateTotalSum() {
+			    var sumTotal = 0;
+			    $(".totalAmount").each(function () {
+			        var totalAmount = parseFloat($(this).val()) || 0;
+			        sumTotal += totalAmount;
+			    });
+
+			    $("#totalAmount").val(sumTotal.toFixed(2));
+			}
+
+			// Update totalAmount on amount change
+			$(document).on("keyup", ".amount", function () {
+			    calculateTotalSum();
+			});
+
+			//Calculate Amount
+			function calculateAmount(tr) {
+				var tr = tr;
+				var amount = parseFloat($(tr).find(".amount").val());
+				if (typeof amount === "undefined" || isNaN(amount)) {
+					units = 0;
+				}
+				
+				var quantity = parseFloat($(tr).find(".quantity").val());
+				var units=parseFloat($(tr).find(".units").val());
+				var amount=parseFloat($(tr).find(".amount").val());
+				var otherCharges = parseFloat($(tr).find(".otherCharges").val());
+				if (typeof quantity === "undefined" || isNaN(quantity)) {
+					quantity = 0;
+				}
+				if (typeof units === "undefined" || isNaN(units)) {
+					units = 0;
+				}
+				if (typeof amount === "undefined" || isNaN(amount)) {
+					amount = 0;
+				}
+				if(typeof otherCharges === "undefined" || isNaN(otherCharges)){
+					otherCharges=0;
+				}
+				var totalAmount = parseFloat(
+					amount );
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+			
+				calculateTotalSum();
+						    
+			}
+		
+		// Remove Row from a table
+		$('tbody').on(
+				'click',
+				'.removeState',
+				function() {
+					$(this).closest('tr').remove();
+
+					calculateTotalSum(); // Update the subtotal when a row is removed
+					calculateAmount();
+					if ($('.tbody1 tr').length < 1) {
+						$('#totalAmount').val(0);
+
+					}
+					$(".tbody1").find(".tblRow")
+							.each(
+									function(index, elem) {
+										
+										var item = $(this).children().find(".item");
+										$(item).attr("name", "invoiceItems[" + index + "].item");
+										
+										var description = $(this).children().find(".description");
+										$(description).attr(
+											"name",
+											"invoiceItems[" + index + "].description"
+										);
+										
+										var itemType = $(this).children().find(".quantity");
+										$(itemType).attr("name","invoiceItems[" + index + "].quantity"); 
+										var units = $(this).children().find(".units");
+										$(units).attr("name", "invoiceItems[" + index + "].units");
+										var otherCharges = $(this).children().find(".otherCharges");
+										$(otherCharges).attr("name", "invoiceItems[" + index + "].otherCharges");
+										
+										var amount = $(this).children().find(".amount");
+										$(amount).attr("name", "invoiceItems[" + index + "].amount");
+										
+										var discount = $(this).children().find(".discount");
+										$(discount).attr("name","invoiceItems[" + index + "].discount");
+										
+										var totalAmount = $(this).children().find(".totalAmount");
+										$(totalAmount).attr(
+											"name",
+											"invoiceItems[" + index + "].totalAmount");
+});
+				});
+
+		$("#addItemButtonCt")
+				.click(
+						function() {
+							var table = $("table .tbody1");
+							var itemIndex = $("table .tbody1 tr").length;
+
+							var row = $("<tr class='tblRow'>");
+							row.append(
+								'<td><input type="text" class="item"  name="invoiceItems[' +
+								itemIndex +
+								'].item" required /></td>'
+							);
+							
+							row.append(
+									'<td><input type="text" class="description" name="invoiceItems[' +
+									itemIndex +
+									'].description" required /></td>'
+								);
+							
+							row.append(
+									'<td><input type="number" step="0.01" class="quantity" name="invoiceItems[' +
+									itemIndex +
+									'].quantity" required /></td>'
+								);
+						
+							row.append(
+								'<td><input type="number" step="0.01" class="units" name="invoiceItems[' +
+								itemIndex +
+								'].units"  required /></td>'
+							);
+							
+							row.append(
+									'<td><input type="number" step="0.01" class="otherCharges" name="invoiceItems[' +
+									itemIndex +
+									'].otherCharges" /></td>'
+								);
+							
+							
+							row.append(
+								'<td><input type="number" class="amount" name="invoiceItems[' +
+								itemIndex +
+								'].amount" required  readonly/></td>'
+							);
+							
+							row.append(
+									'<td><input type="number" class="discount" name="invoiceItems[' +
+									itemIndex +
+									'].discount"   /></td>'
+								);
+							
+							 row.append(
+								'<td><input type="number"   class="totalAmount" name="invoiceItems[' +
+								itemIndex +
+								'].totalAmount"   readonly/></td>'
+							); 
+							row.append(
+								'<td ><i class="fa fa-trash text-danger removeState" ></td>'
+							);
+
+							table.append(row);
+						
+						});
+      
+
+		$("#datepicker4").flatpickr({
+			format : "Y-m-d",
+			altFormat : "Y-m-d",
+			altInput : true,
+			allowInput : true
+		});
+		 
+	</script>
+	
+</body>
+</html>

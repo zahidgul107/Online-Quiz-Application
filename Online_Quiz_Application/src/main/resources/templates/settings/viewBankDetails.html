@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>View Bank Details</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2>View Bank Details</h2>
+								</div>
+							</div>
+						</div>
+						<div class="alert alert-success w-50 mx-auto" role="alert"
+							th:text="${success}" th:if="${success}"></div>
+						<div class="alert alert-danger w-50 mx-auto" role="alert"
+							th:text="${fail}" th:if="${fail}"></div>
+
+
+					</div>
+					
+					<div class=" card  border-0 d-flex mb-2 text-center col-md-3 p-2">
+						<strong class="font-weight-bold">Total Bank Accounts : <span
+							class="badge badge-success p-2 rounded-circle">
+								[[${totalItems}]]</span></strong>
+					</div>
+						
+					<div class="card form p-4 border-0 shadow-lg">
+
+						<div class="card form p-4 border-0 shadow-lg">
+							<table id="example" class="display" style="width: 100%">
+								<thead>
+									<tr>
+										<th>Bank Name</th>
+										<th>Account Number</th>
+										<th>IFSCCode</th>
+										<th>ADCode</th>
+										<th>Address</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr th:each="bank:${bankDetails}">
+										<td th:text="${bank.bankName}"></td>
+										<td th:text="${bank.accountNumber}"></td>
+										<td th:text="${bank.ifscCode}"></td>
+										<td th:text="${bank.adCode}"></td>
+										<td th:text="${bank.address}"></td>
+										<td><a th:href="@{/bank/edit/{id}(id=${bank.id})}"
+											class="" style="width: 90px;" data-bs-toggle="tooltip"
+											data-bs-placement="bottom" data-bs-title="Update Bank Details"><i
+												class="fa fa-edit text-success"></i></a> &nbsp; <a
+											th:href="@{/bank/delete/{id}(id=${bank.id})}" class=""
+											style="width: 90px;" data-bs-toggle="tooltip"
+											data-bs-placement="bottom" data-bs-title="Delete Bank Details"><i class="fa fa-trash text-danger"></i></a></td>
+									</tr>
+								</tbody>
+								<tfoot>
+
+								</tfoot>
+							</table>
+
+						</div>
+						<div class="row">
+
+							<th:block th:if="${totalPages > 1}">
+								<div class="col-md-9 mb-5">
+									<ul class="pagination">
+
+										<li class="page-item"><a class="page-link"
+											th:href="@{/bank/view/pageno=1}">First</a></li>
+
+										<li class="page-item"><a class="pe-3 page-link"
+											th:if="${currentPage > 1}"
+											th:href="@{'/bank/view/pageno=' + ${currentPage - 1}}"><<</a>
+											<a class="page-link disabled" th:unless="${currentPage > 1}"><<</a>
+										</li>
+
+										<li class="page-item"><a class="pe-3 page-link disabled"
+											th:if="${currentPage >= 1 && currentPage <= 1}"><<</a></li>
+
+										<th:block th:with="maxPagesOnEachSide=1">
+											<li class="page-item"
+												th:each="i: ${#numbers.sequence(1, totalPages)}"><a
+												class="page-link"
+												th:if="${i >= currentPage - maxPagesOnEachSide && i <= currentPage + maxPagesOnEachSide && i != currentPage}"
+												th:href="@{'/bank/view/pageno=' + ${i}}">[[${i}]]</a> <a
+												class="page-link active" th:if="${i == currentPage}">[[${i}]]</a>
+											</li>
+										</th:block>
+
+										<li class="page-item"><a class="pe-3 page-link"
+											th:if="${currentPage < totalPages}"
+											th:href="@{'/bank/view/pageno=' + ${currentPage + 1}}">>></a>
+											<a class="page-link" th:unless="${currentPage < totalPages}">>></a>
+										</li>
+
+										<li class="page-item"><a class="page-link"
+											th:if="${currentPage < totalPages}"
+											th:href="@{'/bank/view/pageno=' + ${totalPages}}">Last</a> <a
+											class="page-link" th:unless="${currentPage < totalPages}">Last
+										</a></li>
+									</ul>
+								</div>
+							</th:block>
+						</div>
+
+
+
+
+					</div>
+					<!-- end dashboard inner -->
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- jQuery -->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/popper.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<!-- wow animation -->
+		<script th:src="@{/js/animate.js}"></script>
+		<!-- select country -->
+		<script th:src="@{/js/bootstrap-select.js}"></script>
+		<!-- owl carousel -->
+		<script th:src="@{/js/owl.carousel.js}"></script>
+		<!-- chart js -->
+		<script th:src="@{/js/Chart.min.js}"></script>
+		<script th:src="@{/js/Chart.bundle.min.js}"></script>
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/analyser.js}"></script>
+		<script th:src="@{/js/alertClose.js}"></script>
+		<script
+			src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+
+		<!-- nice scrollbar -->
+		<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+		<script>
+			$(document).ready(function() {
+				$('#example').DataTable({
+					scrollY : '400px',
+					scrollCollapse : true,
+					paging : false,
+				});
+				/*  $('#example').DataTable({
+				        data: dataSet,
+				        columns: [
+				            { title: 'Name' },
+				            { title: 'Position' },
+				            { title: 'Office' },
+				            { title: 'Extn.' },
+				            { title: 'Start date' },
+				            { title: 'Salary' },
+				        ],
+				    }); */
+
+			});
+			var ps = new PerfectScrollbar('#sidebar');
+		</script>
+		<!-- custom js -->
+
+		<script th:src="@{/js/chart_custom_style1.js}"></script>
+		<script th:src="@{/js/custom.js}"></script>
+		<script th:src="@{/js/tooltip.js}"></script>
+</body>
+
+</html>
