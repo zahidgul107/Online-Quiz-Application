@@ -1,0 +1,200 @@
+<div>
+	<nav id="sidebar" th:fragment="sidebar">
+		<div class="sidebar_blog_1">
+			<div class="sidebar-header">
+				<div class="logo_section">
+					<a th:href="@{/dashboard/}"><img
+						class="logo_icon img-responsive" th:src="@{/images/logoaste.png}"
+						alt="#" /></a>
+				</div>
+			</div>
+
+			<div class="sidebar_user_info">
+				<div class="icon_setting"></div>
+				<div class="user_profle_side">
+					<div class="user_img">
+						<img class="img-responsive" height="75px" width="75px" th:src="@{${session.user.imageName} != null} ? '/user/getimage/' + ${session.user.imageName} : '/images/user_profile/user.jpg'"
+ alt="#" />
+					</div>
+					<div class="user_info">
+						<a th:href="@{/dashboard/}">
+							<h6 th:text="${session.user}? ${session.user.name}:'ASTE'"></h6>
+						</a>
+						<p>
+							<span class="online_animation"></span> Online
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="sidebar_blog_2">
+			<!-- 	<h4>General</h4> -->
+			<ul class="list-unstyled components">
+				<li class="active"><a th:href="@{/dashboard/}"><i
+						class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a></li>
+				<!-- 	<ul class="collapse list-unstyled" id="dashboard">
+								<li><a th:href="@{/dashboard/register}">> <span>Default
+											Dashboard</span></a></li>
+								<li><a href="dashboard_2.html">> <span>Dashboard
+											style 2</span></a></li>
+							</ul></li> -->
+				<!-- <li><a href="widgets.html"><i
+						class="fa fa-clock-o orange_color"></i> <span>Widgets</span></a></li> -->
+				<li><a href="#element" data-bs-toggle="collapse"
+					aria-expanded="false" class="dropdown-toggle"><i
+						class="fa fa-diamond purple_color"></i> <span th:text="${session.company.type =='Company'}?'Invoices':'Bills'"></span></a>
+					<ul class="collapse list-unstyled" id="element">
+						<li><a th:href="@{/invoice/createInvoice}">> <span th:text="${session.company.type =='Company'}?' Add Invoice':' Add Bill'">
+									Invoice </span></a></li>
+						<li><a th:href="@{/invoice/viewInvoice}">> <span th:text="${session.company.type =='Company'}?' View Invoices':' View Bills'">
+									Invoice </span></a></li>
+						
+					</ul></li>
+
+                   <li th:if="${session.company.type == 'Shop'}" class="active"><a href="#taxbill" data-bs-toggle="collapse"
+					aria-expanded="false" class="dropdown-toggle"><i
+						class="fa fa-tint red_color"></i> <span>Service Tax Bill</span></a>
+					<ul class="collapse list-unstyled" id="taxbill">
+						<li><a th:href="@{/invoice/addServiceBill}">> <span>Add Service Tax Bill 
+									</span></a></li>
+						<li><a th:href="@{/invoice/viewServiceBill}">> <span>View Service Tax Bill 
+									</span></a></li>
+					</ul></li>
+					
+					<li th:if="${session.company.type == 'Shop'}" class="active"><a href="#dailybill" data-bs-toggle="collapse"
+					aria-expanded="false" class="dropdown-toggle"><i
+						class="fa fa-fire  green_color"></i> <span>Performa Bill</span></a>
+					<ul class="collapse list-unstyled" id="dailybill">
+						<li><a th:href="@{/invoice/addPerformaBill}">> <span>Add Performa  Bill 
+									</span></a></li>
+						<li><a th:href="@{/invoice/viewPerformaBill}">> <span>View Performa Bill 
+									</span></a></li>
+					</ul></li>
+
+
+				<li class="active"><a href="#banks" data-bs-toggle="collapse"
+					aria-expanded="false" class="dropdown-toggle"><i
+						class="fa fa-bank yellow_color"></i> <span>Bank Details </span></a>
+					<ul class="collapse list-unstyled" id="banks">
+						<li><a th:href="@{/bank/add}">> <span>Add Bank
+									Details</span></a></li>
+						<li><a th:href="@{/bank/view/pageno=1}">> <span>View
+									Bank Details</span></a></li>
+					</ul></li>
+					
+					<li class="active"><a href="#purchases" data-bs-toggle="collapse"
+					aria-expanded="false" class="dropdown-toggle"><i
+						class="fa fa-copy text-success"></i> <span>Purchase Order </span></a>
+					<ul class="collapse list-unstyled" id="purchases">
+						<li><a th:href="@{/po/createPurchase}">> <span>Create Purchase
+									</span></a></li>
+						<li><a th:href="@{/po/viewPurchase/pageno=1}">> <span>View Purchase
+									</span></a></li>
+					</ul></li>
+
+
+
+				<li><a href="#apps" data-bs-toggle="collapse"
+					aria-expanded="false" class="dropdown-toggle"><i
+						class="fa fa-object-group blue2_color"></i> <span>Receivables</span></a>
+					<ul class="collapse list-unstyled" id="apps">
+						<li><a th:href="@{/bills/add}">> <span>Add Receivables</span></a></li>
+						<li><a th:href="@{/bills/search/pageno=1}">> <span>View Receivables</span></a></li>
+						<!-- <li><a href="media_gallery.html">> <span>Media
+									Gallery</span></a></li> -->
+					</ul></li>
+
+
+				<!-- <li><a href="price.html"><i
+								class="fa fa-briefcase blue1_color"></i> <span>Pricing
+									Tables</span></a></li> -->
+
+				<li class="active"><a href="#additional_page"
+					data-bs-toggle="collapse" aria-expanded="false"
+					class="dropdown-toggle"><i class="fa fa-clone text-light"></i>
+						<span>Employee Details </span></a>
+					<ul class="collapse list-unstyled" id="additional_page">
+						<li><a th:href="@{/employee/addEmployee}">> <span>Add
+									Employee</span></a></li>
+						<li><a th:href="@{/employee/viewEmployees/pageno=1}">> <span>View
+									Employee</span></a></li>
+						<li><a th:href="@{/salary/employeeSalarySlip}">> <span>
+									Filter Salary By(Year/Month)</span></a></li>
+					</ul></li>
+
+
+				<li class="active"><a href="#Exp_page"
+					data-bs-toggle="collapse" aria-expanded="false"
+					class="dropdown-toggle"><i class="fa fa-table red_color"></i>
+						<span>Expenses </span></a>
+					<ul class="collapse list-unstyled" id="Exp_page">
+						<li><a th:href="@{/expenses/add}">> <span>Add
+									Expenses</span></a></li>
+						<li><a th:href="@{/expenses/view/pageno=1}">> <span>View
+									Expenses</span></a></li>
+						<li><a th:href="@{/expenses/search}">> <span>
+									Search Expenses</span></a></li>
+					</ul></li>
+
+
+				<li class="active"><a th:href="@{/category/addCategory}"
+					
+					class=""><i class="fa fa-list text-success"></i>
+						<span>Category </span></a></li>
+					
+
+
+                           <li class="active"><a href="#party" data-bs-toggle="collapse"
+					aria-expanded="false" class="dropdown-toggle"><i
+						class="fa fa-map purple_color2"></i> <span>Party </span></a>
+					<ul class="collapse list-unstyled" id="party">
+						<li><a th:href="@{/party/add}">> <span>Add 
+									Party</span></a></li>
+						<li><a th:href="@{/party/view/pageno=1}">> <span>View
+									Party</span></a></li>
+					</ul></li>    
+					
+					
+					
+					
+				
+							<li class="active"><a th:href="@{/dashboard/reports}"><i
+						class="fa fa-file orange_color"></i> <span>Reports</span></a>
+						</li>
+					<!-- <ul class="collapse list-unstyled" id="report">
+						
+						<li><a  th:href="@{/invoice/invoiceReport}">> <span>Invoice Report
+									</span></a></li>
+									<li><a th:href="@{/po/poReport}">> <span>PO Report
+									</span></a></li>
+									<li><a th:href="@{/salary/salaryReport}">> <span>Salary Report
+									</span></a></li>
+									<li><a th:href="@{/expenses/searchReport/pageno=1}">> <span>Expenses Report
+									</span></a></li>
+									<li><a th:href="@{/bills/search}">> <span>Bills Receivable Report
+									</span></a></li>
+									<li><a th:href="@{/expenses/expensesBankReportXlsx}">> <span>Expense Report By Bank
+									</span></a></li>
+					</ul> -->
+					
+					
+                           <li class="active settings"><a href="#settings" data-bs-toggle="collapse"
+					aria-expanded="false" class="dropdown-toggle"><i
+						class="fa fa-cog red_color"></i> <span>Settings</span></a>
+					<ul class="collapse list-unstyled" id="settings">
+						<li><a th:href="@{/user/viewUser}">> <span>
+									My Profile</span></a></li>
+						<li><a th:href="@{/user/edituser}">> <span>Update User
+									</span></a></li>
+										<li><a th:href="@{/dashboard/editCompany}">> <span>Update Company
+									</span></a></li>
+										<li><a th:href="@{/logout}">> <span>Logout
+									</span></a></li>
+					</ul></li>
+
+
+			</ul>
+		</div>
+
+	</nav>
+</div>

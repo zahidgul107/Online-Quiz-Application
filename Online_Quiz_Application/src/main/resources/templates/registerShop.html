@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Register Shop</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+
+<link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<!-- calendar file css -->
+<link rel="stylesheet" th:href="@{/js/semantic.min.css}" />
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+<body class="inner_page login">
+	<div th:replace="fragments/registerHeader :: regHeader"></div>
+
+	<div class="full_container ">
+		<div class="row column_title ">
+			<div class="col-md-12">
+				<div class="page_title ">
+					<h2 class="pl-3">Register Shop</h2>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+
+
+			<div class="center  ">
+
+				<div class="section" style="margin-top: 1.7rem; margin-bottom: 2rem;">
+
+					<div class="row w-50 mx-auto">
+						<div th:if="${fail} != null" th:utext="${fail}"
+							class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+							role="alert" style="width: fit-content;"></div>
+						<div th:if="${success} != null" th:utext="${success}"
+							class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+							role="alert" style="width: fit-content;"></div>
+
+
+					</div>
+
+					<!-- <div class="logo_login">
+						<div class="center">
+							<h4 class="text-white text-uppercase"
+								style="letter-spacing: 3px;">Register Company</h4>
+						</div>
+					</div> -->
+
+
+					<div class="login_form ">
+
+						<form th:object="${company}" th:action="@{/saveCompany}"
+							method="post">
+
+									  <input type="hidden" class="form-control"name="type" th:value="Shop">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label for="companyName">Shop Name</label> <input
+										type="text" class="form-control" id="inputEmail4"
+										th:field="*{companyName}" placeholder="Enter Shop Name" required
+										autofocus="autofocus">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="regNumber">Registration Number</label> <input type="text"
+										th:field="*{registrationNumber}" class="form-control" id="inputPassword4"
+										placeholder="Enter Registration Number" required autofocus="autofocus">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="panNumber">PAN Number</label> <input type="text"
+										th:field="*{panNumber}" class="form-control" id="inputPassword4"
+										placeholder="Pan Number" required autofocus="autofocus">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="gstinNumber">GSTIN Number</label> <input
+										type="text" th:field="*{gstinNumber}" class="form-control"
+										id="inputPassword4" placeholder=" Enter Gstin Number"
+										autofocus="autofocus">
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="email">Email</label> <input type="email"
+										th:field="*{email}" class="form-control" id="inputPassword4"
+										placeholder=" Enter Email" required autofocus="autofocus">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="phoneNumber">Phone Number</label> <input
+										type="text" th:field="*{phoneNumber}" class="form-control"
+										id="inputPassword4" placeholder=" Enter Phone Number" required
+										autofocus="autofocus">
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="website"> Website </label> <input type="text"
+										th:field="*{website}" class="form-control" id="inputPassword4"
+										placeholder=" Enter website " autofocus="autofocus">
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="address">Address </label> <input type="text"
+										th:field="*{address}" class="form-control" id="inputPassword4"
+										placeholder=" Enter Address" required autofocus="autofocus">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="country">Country</label> <input type="text"
+										th:field="*{country}" class="form-control" id="inputPassword4"
+										placeholder=" Enter Country" required autofocus="autofocus">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="state">State</label> <input type="text"
+										th:field="*{state}" class="form-control" id="inputPassword4"
+										placeholder=" Enter State" required autofocus="autofocus">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="pincode">Pin code</label> <input type="number"
+										th:field="*{pincode}" class="form-control" id="inputPassword4"
+										placeholder=" Enter pin code" required autofocus="autofocus">
+								</div>
+							
+							
+								<div class="form-group col-md-6">
+									<label for="headOffice">Head Office</label> <input type="text"
+										th:field="*{headOffice}" class="form-control" id="inputPassword4"
+										placeholder=" Enter Head Office" required
+										autofocus="autofocus">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="branchOffice">Branch Office</label> <input
+										type="text" th:field="*{branchOffice}" class="form-control"
+										id="inputPassword4" placeholder=" Enter  branch Office"
+										required autofocus="autofocus">
+								</div>
+
+
+							</div>
+
+
+
+
+
+							<div class="row">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary">Submit</button>
+								</div>
+							</div>
+
+
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- footer -->
+		<div class="container-fluid">
+			<div class="footer">
+				<p>
+					Copyright © 2023 by ASTE<br>
+					<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<script th:src="@{/js/dynamicField.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/custom.js}"></script>
+</body>
+</html>

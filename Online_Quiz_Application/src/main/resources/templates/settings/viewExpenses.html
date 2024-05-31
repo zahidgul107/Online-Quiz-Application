@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>View Expenses</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2>View Expenses</h2>
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+
+
+						</div>
+
+					</div>
+					<div class=" card  border-0 d-flex mb-2 text-center col-md-3 p-2">
+						<strong class="font-weight-bold">Total Expenses: <span
+							class="badge badge-success p-2 rounded-circle">
+								[[${totalItems}]]</span></strong>
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+						<table id="example" class="table table-responsive display"
+							style="width: 100%">
+							<thead>
+								<tr>
+									<th scope="col">Category</th>
+									<th scope="col">Party</th>
+									<th scope="col">Month</th>
+									<th scope="col">Payment Date</th>
+									<th scope="col">Payment Type</th>
+									<th scope="col">Amount</th>
+									<th scope="col">GST(%)</th>
+									<th scope="col">GST Amount</th>
+									<th scope="col">Total Amount</th>
+									<th scope="col">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<th:block th:each="expenses : ${expensesList}">
+									<tr>
+										<td th:text=${expenses.category.name}></td>
+										<td
+											th:text="${expenses.party.partyName+'('+expenses.party.phoneNumber+')'}"></td>
+										<td th:text="${expenses.month}"></td>
+										<td th:text=${expenses.paymentDate}></td>
+										<td th:text=${expenses.typeOfPayment}></td>
+										<td th:text=${expenses.amount}></td>
+										<td th:text=${expenses.gst}></td>
+										<td th:text=${expenses.gstAmount}></td>
+										<td th:text=${expenses.totalAmount}></td>
+
+
+										<td><a
+											th:href="@{/expenses/edit/{id}(id=${expenses.id})}" class=""
+											style="width: 90px;"><i class="fa fa-edit text-success"
+												data-bs-toggle="tooltip" data-bs-placement="bottom"
+												data-bs-title="Update Expenses "></i></a> &nbsp; <a
+											th:href="@{/expenses/delete/{id}(id=${expenses.id})}"
+											class="" style="width: 90px;"><i
+												class="fa fa-trash text-danger" data-bs-toggle="tooltip"
+												data-bs-placement="bottom" data-bs-title="Delete Expenses"></i></a>
+										</td>
+									</tr>
+									<th:block>
+							</tbody>
+
+						</table>
+					</div>
+
+					<div class="row">
+
+						<th:block th:if="${totalPages > 1}">
+							<div class="col-md-9 mb-5">
+								<ul class="pagination">
+
+									<li class="page-item"><a class="page-link"
+										th:href="@{/expenses/view/pageno=1}">First</a></li>
+
+									<li class="page-item"><a class="pe-3 page-link"
+										th:if="${currentPage > 1}"
+										th:href="@{'/expenses/view/pageno=' + ${currentPage - 1}}"><<</a>
+										<a class="page-link disabled" th:unless="${currentPage > 1}"><<</a>
+									</li>
+
+									<li class="page-item"><a class="pe-3 page-link disabled"
+										th:if="${currentPage >= 1 && currentPage <= 1}"><<</a></li>
+
+									<th:block th:with="maxPagesOnEachSide=1">
+										<li class="page-item"
+											th:each="i: ${#numbers.sequence(1, totalPages)}"><a
+											class="page-link"
+											th:if="${i >= currentPage - maxPagesOnEachSide && i <= currentPage + maxPagesOnEachSide && i != currentPage}"
+											th:href="@{'/expenses/view/pageno=' + ${i}}">[[${i}]]</a> <a
+											class="page-link active" th:if="${i == currentPage}">[[${i}]]</a>
+										</li>
+									</th:block>
+
+									<li class="page-item"><a class="pe-3 page-link"
+										th:if="${currentPage < totalPages}"
+										th:href="@{'/expenses/view/pageno=' + ${currentPage + 1}}">>></a>
+										<a class="page-link" th:unless="${currentPage < totalPages}">>></a>
+									</li>
+
+									<li class="page-item"><a class="page-link"
+										th:if="${currentPage < totalPages}"
+										th:href="@{'/expenses/view/pageno=' + ${totalPages}}">Last</a>
+										<a class="page-link" th:unless="${currentPage < totalPages}">Last
+									</a></li>
+								</ul>
+							</div>
+						</th:block>
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		$(document).ready(function() {
+			$('#example').DataTable({
+				scrollY : '400px',
+				scrollCollapse : true,
+				paging : false,
+			});
+		
+		});
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+</body>
+
+</html>

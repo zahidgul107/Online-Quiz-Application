@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+<!-- site metas -->
+<title>Register company | Shop</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<!-- calendar file css -->
+<link rel="stylesheet" th:href="@{/js/semantic.min.css}" />
+<link th:href="@{/css/aos.css}" rel="stylesheet">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+</style>
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+<body class="bg-light">
+	<div th:replace="fragments/registerHeader :: regHeader"></div>
+	<div class="container-fluid" th:style="'background-image:url(images/dash2.jpg);background-size: cover;'">
+		<div class="row w-50 mx-auto">
+			<div th:if="${fail} != null" th:utext="${fail}"
+				class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+				role="alert" style="width: fit-content;"></div>
+			<div th:if="${success} != null" th:utext="${success}"
+				class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+				role="alert" style="width: fit-content;"></div>
+
+
+		</div>
+		<div class="row column1 center  verticle_center full_height">
+			<div class="col-md-6 col-lg-3">
+				<div class="full counter_section mb-3" data-aos="fade-right"
+     data-aos-duration="3000" style="background-color: rgba(255, 255, 255, 0.8);">
+					<a th:href="@{/registerCompany}">
+						<div class="couter_icon mb-3">
+							<div>
+								<i class="fa fa-bank red_color"></i>
+							</div>
+						</div>
+						<div class="counter_no">
+							<div>
+								<p class="head_couter">
+									<a th:href="@{/registerCompany}">Register Company</a>
+								</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div class="col-md-6 col-lg-3">
+				<div class="full counter_section mb-3" data-aos="fade-left"
+                    data-aos-duration="3000" style="background-color: rgba(255, 255, 255, 0.8);">
+					<a th:href="@{/registerShop}">
+						<div class="couter_icon mb-3">
+							<div>
+								<i class="fa fa-shop yellow_color"></i>
+							</div>
+						</div>
+						<div class="counter_no ">
+							<div>
+								<p class="head_couter">
+									<a th:href="@{/registerShop}">Register Shop</a>
+								</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- footer -->
+	<div class="container-fluid">
+		<div class="footer">
+			<p>
+				Copyright © 2023 by ASTE<br>
+				<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+			</p>
+		</div>
+	</div>
+
+
+
+	<!-- jQuery -->
+	<script th:src="@{/js/Aos.js}"></script>
+	<script th:src="@{/js/initAos.js}"></script>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+	 
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/custom.js}"></script>
+	<!-- Message hide  -->
+	<script th:src="@{/js/alertClose.js}"></script>
+</body>
+</html>

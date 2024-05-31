@@ -1,0 +1,124 @@
+/*------------------------------------------------------------------
+    File Name: custom.css
+-------------------------------------------------------------------*/
+
+/** ADD YOUR AWESOME CODES HERE **/
+@media ( min-width : 150px) and (max-width: 1200px) {
+	.reglogo img {
+		margin-left: 330px;
+		padding: 8px 8px;
+		height: 75px;
+	}
+	.topbar {
+		position: fixed;
+		width: 100%;
+		/* padding-left: 280px; */
+		z-index: 2;
+		background: #15283c;
+		top: 0;
+		transition: ease all 0.3s;
+		left: 0;
+	}
+}
+
+.section {
+	/*  max-width: 640px;  */
+	background: #fff;
+	min-height: 540px;
+	width: 100%;
+	box-shadow: 0px 0 10px -8px #000;
+	/* margin: 30px; */
+	padding: 0;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.reglogo {
+	padding: 5px;
+	text-align: center;
+	background: transparent;
+	float: left;
+	max-width: 150px;
+}
+
+.reglogo img {
+	margin-left: -330px;
+	padding: 8px 8px;
+	height: 75px;
+}
+
+p.total {
+	margin: 0;
+	float: left;
+	width: 100%;
+	line-height: normal;
+	font-weight: 200;
+	color: #455a64;
+	text-align: center;
+	font-size: 14px;
+	color: #800040;
+	text-shadow: 2px 2px 4px;
+}
+
+.main_btn {
+	min-width: 160px;
+	height: auto;
+	float: left;
+	background: limegreen;
+	text-align: center;
+	color: #fff;
+	padding: 10px;
+	font-size: 17px;
+	border-radius: 5px;
+	border: none;
+	transition: ease all 0.5s;
+	cursor: pointer;
+	font-weight: 100;
+}
+
+h6 {
+	font-size: 15px;
+	font-weight: 500;
+	/* text-shadow: 0 0 3px #FF0000 */
+}
+/* button.main_btn {
+    float: none;
+    margin: 0;
+} */
+.main_btn:hover, .main_btn:focus {
+	background: #ff5722;
+	color: #fff;
+}
+
+.counter_section1 {
+	min-height: auto;
+	display: block;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
+		rgba(0, 0, 0, 0.19);
+	border: 0px solid #e7e7e7;
+	padding: 30px 35px;
+	background: #fff;
+	border-radius: 5px;
+	height: 192px;
+	display: flex;
+}
+
+.login_section2 {
+	max-width: 640px;
+	background: #fff;
+	min-height: 340px;
+	width: 100%;
+	box-shadow: 0 4px 8px 0 lightgrey;
+	margin: auto;
+	padding: 0;
+	border-radius: 10px;
+	overflow: hidden;
+}
+.mt{
+	margin-top:6rem;
+	
+}
+
+.full_height1 {
+	height: 80vh;
+}

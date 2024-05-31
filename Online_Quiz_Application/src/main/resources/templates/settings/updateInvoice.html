@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+	<!-- basic -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<!-- mobile metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />
+	<!-- site metas -->
+	<title>Invoice | Expenses</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+	<!-- site icon -->
+<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+	<!-- bootstrap css -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+	<!-- site css -->
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
+	<!-- responsive css -->
+	<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+	<!-- color css -->
+	<link rel="stylesheet" th:href="@{/css/colors.css}" />
+	<!-- select bootstrap -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+	<!-- scrollbar css -->
+	<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+	<!-- custom css -->
+	<link rel="stylesheet" th:href="@{/css/custom.css}" />
+	<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2 th:text="${edit}?'Update Invoice':'Add Invoice'"></h2>
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class="col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center"
+								role="alert" style="width: fit-content"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class="col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center"
+								role="alert" style="width: fit-content"></div>
+						</div>
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+						<form th:object="${invoice}" th:method="post" data-bvalidator-validate="true"
+							th:action="@{${edit != null} ? '/invoice/updateInvoice' : '/invoice/createInvoice'}"
+							enctype="multipart/form-data">
+							<div class="form-row">
+								<input type="hidden" th:field="*{id}" />
+								<div class="form-group col-md-6">
+									<label for="invoiceDate">Invoice Date:</label>
+									<input type="date" id="datepicker4" class="form-control" name="invoiceDate"
+										th:field="*{invoiceDate}" required />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="invoiceDate">Invoice Number:</label>
+									<input type="text" id="invoiceNumber" class="form-control" name="invoiceNumber"
+										th:field="*{invoiceNumber}" required />
+								</div>
+								
+								<div class="form-group col-md-6">
+                                    <label>Bank Detail</label> <select id="invoice" class="form-control"
+                                        th:field="*{bankDetails}">
+                                        <option value="">Select Bank</option>
+                                        <option th:each="bank : ${bankList}"
+                                            th:text="${bank.bankName}+'('+${bank.accountNumber}+')'"
+                                            th:value="${bank.id}"></option>
+                                    </select>
+                                </div>
+								<div class="form-group col-md-6">
+                                    <label>Party</label> <select th:field="*{party}" class="form-select form-control"
+                                        aria-label="Default select example">
+                                        <option value="">Select Party</option>
+                                        <option th:each="party : ${partyList}" th:text="${party.partyName+'('+party.phoneNumber+')'}"
+                                            th:value="${party.id}" />
+                                    </select>
+                                </div>
+
+								<div class="col-md-6">
+                                    <label for="countryState"> Choose One: </label>
+                                    <div class="row " style="margin:0 2px">
+                                    <div class="col-md-12 form-control ">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" th:field="*{type}" required
+                                                    id="inlineRadio2" value="country" /> <label class="form-check-label"
+                                                    for="inlineRadio1">Country</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" th:field="*{type}" required
+                                                    id="inlineRadio1" value="state" />
+                                                <label class="form-check-label" for="inlineRadio2">State</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div></div>
+								<div class="form-group col-md-6 country">
+                                    <label for="countryList">Choose Country:</label> <select id="countryList"
+                                        th:field="*{countryState}" class="form-control countryL">
+                                        <option value="">Choose Country...</option>
+                                        <option th:text="*{countryState}" th:value="*{countryState}">
+                                    </select>
+                                </div>
+								<div class="form-group col-md-6 state d-none">
+                                    <label for="country">State</label> <input type="text" th:field="*{countryState}"
+                                        id="state" class="form-control" />
+                                </div>
+                                <div class="form-group col-md-6">
+									<label>Select Currency</label> <select th:field="*{currency}"
+										id="currencySelect" class="form-select form-control"
+										aria-label="Default select example" required>
+										<option value="">Select Currency</option>
+										<option th:text="*{currency}"
+											th:value="*{currency}">
+									</select>
+								</div>
+								<div class="form-group col-md-6">
+                                    <label for="typesOfInvoice">Types of Invoice:</label> <select id="typesOfInvoice"
+                                        class="form-control selectDropdown" th:field="*{typesOfInvoice}">
+                                        <option value="">Choose Invoice...</option>
+                                        <option value="goods" th:selected="*{typesOfInvoice} =='goods' ">Goods</option>
+                                        <option value="services" th:selected="*{typesOfInvoice} =='services' ">Services
+                                        </option>
+                                    </select>
+                                </div>
+								
+							</div>
+							
+							
+							
+							<!-- <div class="form-row">
+							
+									<div class="form-group col-md-6" th:if="${session.company.type=='Company'}">
+									<label> LUT Applicable: </label>
+									<div class="row " style="margin:0 2px">
+                                    <div class="col-md-12 form-control ">
+									<div class="row">
+									
+									<div class="col-md-3">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" th:field="*{lutApplicable}"   
+													id="inlineRadio22"  value="yes"  required/>
+												<label class="form-check-label" for="inlineRadio22">YES</label>
+											</div>
+										</div>
+									
+										<div class="col-md-3">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" th:field="*{lutApplicable}" 
+													id="inlineRadio11" value="no"  required/>
+												<label class="form-check-label" for="inlineRadio11">NO</label>
+											</div>
+										</div>
+										
+										</div>
+									</div>
+							</div></div>
+							
+							
+							
+							<div class="form-group col-md-6 lut d-none">
+									<label for="">Enter LUT No</label>
+									<input type="text" id="lut" class="form-control" th:field="*{lutNumber}"
+										required  />
+								</div>
+								</div> -->
+								
+								<div class="form-row">
+							
+									<div class="form-group col-md-6 d-none lutexport" th:if="${session.company.type=='Company'}">
+									<label> LUT Applicable: </label>
+									<div class="row " style="margin:0 2px">
+                                    <div class="col-md-12 form-control ">
+									<div class="row">
+									
+									<div class="col-md-3">
+											<div class="form-check form-check-inline">
+												<input class="lutApplicable " type="radio" th:field="*{lutApplicable}"  
+													id="inlineRadio22"  value="yes"  required/>
+												<label class="form-check-label" for="inlineRadio22" style="margin-left:3px;">YES</label>
+											</div>
+										</div>
+									
+										<div class="col-md-3">
+											<div class="form-check form-check-inline">
+												<input class="lutApplicable" type="radio" th:field="*{lutApplicable}"
+													id="inlineRadio11" value="no"  required/>
+												<label class="form-check-label" for="inlineRadio11" style="margin-left:3px;">NO</label>
+											</div>
+										</div>
+										
+										</div>
+									</div>
+							</div></div>
+							
+							
+							
+							<div class="form-group col-md-6 lut d-none">
+									<label for="">Enter LUT No</label>
+									<input type="text" id="lut" class="form-control"  name="lutNumber" th:field="*{lutNumber}"
+										  />
+								</div>
+								</div>
+								
+								
+								
+								
+								
+								
+
+							<div class="d-flex justify-content-center align-items-center margin: 17px">
+								<h5 style="margin-top: 2rem; margin-bottom: 1rem">
+									Invoice Items
+								</h5>
+							</div>
+
+							<div th:if="*{type} == 'country'"  style="overflow: auto" class="ctTable ">
+								<table class="table 1 countryTable">
+									<thead>
+										<tr>
+											<th scope="col">Item</th>
+											<th scope="col">Quantity</th>
+											<th scope="col" class="unitPrice">Units</th>
+											<th scope="col">Description</th>
+											<th scope="col">Amount</th>
+											<th scope="col">SAC</th>
+											<th scope="col">HSN</th>
+											<th scope="col">IGST(%)</th>
+											<th scope="col">Total Amount</th>
+											<th scope="col">Actions</th>
+										</tr>
+									</thead>
+									<tbody class="tbody1">
+										<tr  class="tblRow" th:if="${edit} == true" th:each="invoiceItems, stat: ${invoice.invoiceItems}">
+											<td>
+												<input type="hidden" th:value="${invoiceItems.id}"
+													 />
+												<input type="hidden" th:value="${invoiceItems.invoice.id}"
+													 />
+												<input type="text" id="item" class="item"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].item'"
+													th:value="${invoiceItems.item}" required />
+											</td>
+
+											<td><input type="text" class="quantity"
+                                                    th:attr="name='invoiceItems[' + ${stat.index} + '].quantity'"
+                                                    th:value="${invoiceItems.quantity}" required /></td>
+
+											<td>
+												<input type="text" class="units"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].units'"
+													th:value="${invoiceItems.units}" required />
+											</td>
+
+											<td>
+												<input type="text" class="description"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].description'"
+													th:value="${invoiceItems.description}" required />
+											</td>
+
+											<td>
+												<input type="number" class="amount"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].amount'"
+													th:value="${invoiceItems.amount}" required />
+											</td>
+
+											<td>
+												<input type="text" class="sac"  th:disabled="${invoice.typesOfInvoice} == 'goods'?true:false"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].sac'"
+													th:value="${invoiceItems.sac}" required />
+											</td>
+
+											<td>
+												<input type="text" class="hsn"  th:disabled="${invoice.typesOfInvoice}=='services'?true:false"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].hsn'"
+													th:value="${invoiceItems.hsn}" required />
+											</td>
+
+											<td>
+												<input type="number" class="igst"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].igst'"
+													th:value="${invoiceItems.igst}" th:igstVal="${invoiceItems.amount}*(${invoiceItems.igst}/100)" step="any" min="0" max="100" required />
+											</td>
+
+											<td>
+												<input type="number" class="totalAmount"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].totalAmount'"
+													th:value="${invoiceItems.totalAmount}" required readonly />
+											</td>
+
+											<td>
+												<i class="fa fa-trash text-danger removeCountry"></i>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<button type="button" class="btn btn-info" id="addItemButtonCt">
+									Add Item
+								</button>
+							</div>
+
+							<div  th:if="*{type} == 'state'" style="overflow: auto" class="stTable">
+								<table class="table 2 stateTable">
+									<thead>
+										<tr>
+											<th scope="col">Item</th>
+										    <th scope="col">Quantity</th>
+											<th scope="col" class="unitPrice">Units</th>
+											<th scope="col">Description</th>
+											<th scope="col">Amount</th>
+											<th scope="col">SAC</th>
+											<th scope="col">HSN</th>
+											<th scope="col">CGST(%)</th>
+											<th scope="col">SGST(%)</th>
+											<th scope="col">Total Amount</th>
+											<th scope="col">Actions</th>
+										</tr>
+									</thead>
+									<tbody class="tbody2">
+										<tr class="tblRow" th:each="invoiceItems, stat: ${invoice.invoiceItems}">
+											<td>
+												<input type="hidden" th:value="${invoiceItems.id}"
+													 />
+
+												<input type="hidden" th:value="${invoiceItems.invoice.id}"
+													/>
+												<input type="text" id="item" class="item"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].item'"
+													th:value="${invoiceItems.item}" required />
+											</td>
+
+											<td><input type="text" class="quantity"
+                                                    th:attr="name='invoiceItems[' + ${stat.index} + '].quantity'"
+                                                    th:value="${invoiceItems.quantity}" required /></td>
+
+											<td>
+												<input type="text" class="units"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].units'"
+													th:value="${invoiceItems.units}" required />
+											</td>
+
+											<td>
+												<input type="text" class="description"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].description'"
+													th:value="${invoiceItems.description}" required />
+											</td>
+
+											<td>
+												<input type="number" class="amount"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].amount'"
+													th:value="${invoiceItems.amount}" required />
+											</td>
+
+											<td>
+												<input type="text" class="sac"  th:disabled="${invoice.typesOfInvoice} == 'goods'?true:false"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].sac'"
+													th:value="${invoiceItems.typesOfItem} == 'goods'?0:${invoiceItems.sac}" required />
+											</td>
+
+											<td>
+												<input type="text" class="hsn"  th:disabled="${invoice.typesOfInvoice} == 'services'?true:false"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].hsn'"
+													th:value="${invoiceItems.typesOfItem} == 'services'?0:${invoiceItems.hsn}" required />
+											</td>
+
+											<td>
+												<input type="number" class="cgst"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].cgst'"
+													th:value="${invoiceItems.cgst}" th:cgstVal="${invoiceItems.amount}*(${invoiceItems.cgst}/100)" step="any" min="0" max="100" required />
+											</td>
+
+											<td>
+												<input type="number" class="sgst" th:sgstVal="${invoiceItems.amount}*(${invoiceItems.sgst}/100)"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].sgst'"
+													th:value="${invoiceItems.sgst}" step="any" min="0" max="100" required />
+											</td>
+
+											<td>
+												<input type="number" class="totalAmount"
+													th:attr="name='invoiceItems[' + ${stat.index} + '].totalAmount'"
+													th:value="${invoiceItems.totalAmount}" required readonly />
+											</td>
+
+											<td>
+												<i class="fa fa-trash text-danger removeState"></i>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<button type="button" class="btn btn-info" id="addItemButtonSt">
+									Add Item
+								</button>
+							</div>
+
+							<br />
+							<br />
+							<div class="row">
+                                <div class="form-group col-md-3 d-none">
+                                    <label for="invoiceDate">Total Cgst:</label> <input type="number" id="totalCgst"
+                                        class="form-control" th:field="*{totalCgst}" required readonly />
+                                </div>
+                                <div class="form-group col-md-3 d-none">
+                                    <label for="invoiceDate">Total Sgst:</label> <input type="number" id="totalSgst"
+                                        class="form-control" th:field="*{totalSgst}" required readonly />
+                                </div>
+                                <div class="form-group col-md-3 d-none">
+                                    <label for="invoiceDate">Total Igst:</label> <input type="number" id="totalIgst"
+                                        class="form-control" th:field="*{totalIgst}" required readonly />
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label for="invoiceDate">Total Amount:</label> <input type="number" id="totalAmount"
+                                        class="form-control" th:field="*{totalAmount}" required readonly />
+                                </div>
+                                
+                                  <div class="form-group col-md-3">
+                                    <label for="amountReceived">Received Amount:</label> <input type="number" id="amountReceived"
+                                        class="form-control" th:field="*{amountReceived}" required readonly />
+                                </div>
+                            </div>
+
+							<div class="row">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary"
+										th:text=" ${edit}?'Update':'Add Invoice'"></button>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br />
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar("#sidebar");
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+	<script th:src="@{/customJs/countryList.js}"></script>
+
+	<script th:inline="javascript">
+		// Call the calculateTotalSum() function whenever the DOM changes
+
+		$(document).ready(function () {
+			
+			$(document).on("keyup", ".quantity", function () {
+				var selectedType =$('.selectDropdown').val();
+				if(selectedType == 'goods'){
+				var tr = $(this).closest("tr");
+				var quantity = parseFloat($(this).val());
+				var units = parseFloat($(tr).find(".units").val());
+				if (typeof quantity === "undefined" || isNaN(quantity)) {
+					quantity = 0;
+				}
+				if (typeof units === "undefined" || isNaN(units)) {
+					units = 0;
+				}
+				var amount = (quantity*units);
+				$(tr).find(".amount").val(amount.toFixed(2));
+				calculateAmount(tr);
+				}
+				
+			});
+           $(document).on("keyup", ".units", function () {
+        	   var selectedType =$('.selectDropdown').val();
+				if(selectedType == 'goods'){
+        	   var tr = $(this).closest("tr");
+				var units = parseFloat($(this).val());
+				var quantity = parseFloat($(tr).find(".quantity").val());
+				if (typeof quantity === "undefined" || isNaN(quantity)) {
+					quantity = 0;
+				}
+				if (typeof units === "undefined" || isNaN(units)) {
+					units = 0;
+				}
+				var amount = (quantity*units);
+				$(tr).find(".amount").val(amount.toFixed(2));
+				calculateAmount(tr);
+				}
+				
+			});
+			//on change Amount
+			$(document).on("keyup", ".amount", function () {
+				var tr = $(this).closest("tr");
+				var amount = parseFloat($(this).val());
+				var igst = parseFloat($(tr).find(".igst").val());
+				console.log("amount======keyup===="+amount+"----------"+igst);
+				var cgst = parseFloat($(tr).find(".cgst").val());
+				var sgst = parseFloat($(tr).find(".sgst").val());
+
+				if (typeof igst === "undefined" || isNaN(igst)) {
+					igst = 0;
+				}
+				if (typeof cgst === "undefined" || isNaN(cgst)) {
+					cgst = 0;
+				}
+				if (typeof sgst === "undefined" || isNaN(sgst)) {
+					sgst = 0;
+				}
+				
+				var igstValue = (igst / 100) * amount;
+				$(tr).find(".igst").attr("igstVal", igstValue);
+
+				var cgstValue = (cgst / 100) * amount;
+				$(tr).find(".cgst").attr("cgstVal", cgstValue);
+
+				var sgstValue = (sgst / 100) * amount;
+				$(tr).find(".sgst").attr("sgstVal", sgstValue);
+
+
+				var totalAmount = parseFloat(
+					amount + igstValue + cgstValue + sgstValue
+				).toFixed(2);
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalCgst();
+				calculateTotalSgst();
+			});
+
+			flatpickr("#datepicker4", {
+				dateFormat: "Y-m-d",
+
+				locale: {
+					firstDayOfWeek: 1,
+					// Monday as the first day of the week
+				},
+				onChange: function (selectedDates, dateStr, instance) { },
+			});
+
+			//#totalAmount calculation
+
+			function calculateTotalSum() {
+				var sumTotal = 0;
+				$(".totalAmount").each(function () {
+					var totalAmount = parseFloat($(this).val());
+					if (!isNaN(totalAmount)) {
+						sumTotal += totalAmount;
+					}
+					$("#totalAmount").val(sumTotal.toFixed(2));
+				});
+
+				console.log("Sum Total:", sumTotal);
+			}
+
+			$(document).on("change", ".igst,.cgst,.sgst", calculateTotalSum);
+
+			//totalIgst calculation
+			function calculateTotalIgst() {
+				var sumTotalIgst = 0;
+				$(".igst").each(function () {
+					var igstVAlue = $(this).attr("igstVal");
+					var totalIgst = parseFloat(igstVAlue);
+					if (!isNaN(totalIgst)) {
+						sumTotalIgst += totalIgst;
+					}
+
+					$("#totalIgst").val(sumTotalIgst.toFixed(2));
+				});
+
+				console.log("Sum Totallllllll:", sumTotalIgst);
+			}
+
+			$(document).on("change", ".igst", calculateTotalIgst);
+			//totalCgst calculation
+
+			function calculateTotalCgst() {
+				var sumTotalCgst = 0;
+				$(".cgst").each(function () {
+					var cgstVAlue = $(this).attr("cgstVal");
+					var totalCgst = parseFloat(cgstVAlue);
+					if (!isNaN(totalCgst)) {
+						sumTotalCgst += totalCgst;
+					}
+
+					$("#totalCgst").val(sumTotalCgst.toFixed(2));
+				});
+
+				console.log("Sum TotalCgst:", sumTotalCgst);
+			}
+
+			$(document).on("change", ".cgst", calculateTotalCgst);
+
+			//totalSgst calculation
+
+			function calculateTotalSgst() {
+				var sumTotalSgst = 0;
+				$(".sgst").each(function () {
+					var sgstVAlue = $(this).attr("sgstVal");
+					var totalSgst = parseFloat(sgstVAlue);
+					if (!isNaN(totalSgst)) {
+						sumTotalSgst += totalSgst;
+					}
+
+					$("#totalSgst").val(sumTotalSgst.toFixed(2));
+				});
+
+				console.log("Sum TotalSgst:", sumTotalSgst);
+			}
+			
+		//	Calculate Amount
+			function calculateAmount(tr) {
+				var tr = tr;
+				var amount = parseFloat($(tr).find(".amount").val());
+				var igst = parseFloat($(tr).find(".igst").val());
+				var cgst = parseFloat($(tr).find(".cgst").val());
+				var sgst = parseFloat($(tr).find(".sgst").val());
+
+				if (typeof igst === "undefined" || isNaN(igst)) {
+					igst = 0;
+				}
+				if (typeof cgst === "undefined" || isNaN(cgst)) {
+					cgst = 0;
+				}
+				if (typeof sgst === "undefined" || isNaN(sgst)) {
+					sgst = 0;
+				}
+				var igstValue = (igst / 100) * amount;
+				$(tr).find(".igst").attr("igstVal", igstValue);
+
+				var cgstValue = (cgst / 100) * amount;
+				$(tr).find(".cgst").attr("cgstVal", cgstValue);
+				
+				var sgstValue = (sgst / 100) * amount;
+				$(tr).find(".sgst").attr("sgstVal", sgstValue);
+
+
+				var totalAmount = parseFloat(
+					amount + igstValue + cgstValue + sgstValue
+				);
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalCgst();
+				calculateTotalSgst();
+			
+		}
+
+			$(document).on("change", ".sgst", calculateTotalSgst);
+
+			// conditional code on state and country
+			$(document).on("change", ".form-check-input", function () {
+				$("#totalAmount").val(0);
+				$("#totalIgst").val(0);
+				$("#totalSgst").val(0);
+				$("#totalCgst").val(0);
+
+				if ($("#inlineRadio2").is(":checked")) {
+					/* $("tbody").empty(); */
+					$(".country").removeClass("d-none");
+					$(".selectDropdown").parent().removeClass("d-none");
+					$(".countryL").attr("name", "countryState");
+					$("#countryList").attr("required", true);
+					$("#state").attr("name", "State");
+					$("#state").attr("required", false);
+					$(".state").addClass("d-none");
+					$(".ctTable").removeClass("d-none");
+					$(".stTable").addClass("d-none");
+					$("#totalIgst").parent().removeClass("d-none");
+					$("#totalSgst").parent().addClass("d-none");
+					$("#totalCgst").parent().addClass("d-none");
+					$(".lutexport").removeClass("d-none");
+				} else if ($("#inlineRadio1").is(":checked")) {
+					/* $("tbody").empty(); */
+					$(".state").removeClass("d-none");
+					$(".selectDropdown").parent().removeClass("d-none");
+					$("#state").attr("name", "countryState");
+					$("#state").attr("required", true);
+					$("#countryList").attr("required", false);
+					$(".countryL").attr("name", "country");
+					$(".country").addClass("d-none");
+					$(".stTable").removeClass("d-none");
+					$(".ctTable").addClass("d-none");
+					$("#totalIgst").parent().addClass("d-none");
+					$("#totalSgst").parent().removeClass("d-none");
+					$("#totalCgst").parent().removeClass("d-none");
+					 $(".lutexport").addClass("d-none");
+					 $("#lut").attr("required", false);
+					 $(".lutApplicable").attr("required", false);
+					 $("#lut").removeAttr("name");
+				}
+			});
+			
+			$(document).ready(function() {
+			    if ($("#inlineRadio2").is(":checked")) {
+			        /* $("tbody").empty(); */
+			        $(".country").removeClass("d-none");
+			        $(".selectDropdown").parent().removeClass("d-none");
+			        $(".countryL").attr("name", "countryState");
+			        $("#countryList").attr("required", true);
+			        $("#state").attr("name", "State");
+			        $(".state").addClass("d-none");
+			        $(".ctTable").removeClass("d-none");
+			        $(".stTable").addClass("d-none");
+			        $("#totalIgst").parent().removeClass("d-none");
+			        $("#totalSgst").parent().addClass("d-none");
+			        $("#totalCgst").parent().addClass("d-none");
+			        $(".lutexport").removeClass("d-none");
+			    } else if ($("#inlineRadio1").is(":checked")) {
+			        /* $("tbody").empty(); */
+			        $(".state").removeClass("d-none");
+			        $(".selectDropdown").parent().removeClass("d-none");
+			        $("#state").attr("name", "countryState");
+			        $("#state").attr("required", true);
+			        $(".countryL").attr("name", "country");
+			        $(".country").addClass("d-none");
+			        $(".stTable").removeClass("d-none");
+			        $(".ctTable").addClass("d-none");
+			        $("#totalIgst").parent().addClass("d-none");
+			        $("#totalSgst").parent().removeClass("d-none");
+			        $("#totalCgst").parent().removeClass("d-none");
+			        $(".lutexport").addClass("d-none");
+					 $("#lut").attr("required", false);
+					 $(".lutApplicable").attr("required", false);
+					 $("#lut").removeAttr("name");
+			    }
+			});
+
+
+			//Remove Row from a table
+			$("tbody").on("click", ".removeState", function () {
+				$(this).closest("tr").remove();
+				if ($(".tbody1 tr").length < 1) {
+					$("#totalAmount").val(0);
+					$("#totalSgst").val(0);
+					$("#totalCgst").val(0);
+				}
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalCgst();
+				calculateTotalSgst();
+
+				$(".tbody2")
+					.find(".tblRow")
+					.each(function (index, elem) {
+						var item = $(this).children().find(".item");
+						$(item).attr("name", "invoiceItems[" + index + "].item");
+						var itemType = $(this).children().find(".quantity");
+						$(itemType).attr("name","invoiceItems[" + index + "].quantity"); 
+						var units = $(this).children().find(".units");
+						$(units).attr("name", "invoiceItems[" + index + "].units");
+						var description = $(this).children().find(".description");
+						$(description).attr(
+							"name",
+							"invoiceItems[" + index + "].description"
+						);
+						var amount = $(this).children().find(".amount");
+						$(amount).attr("name", "invoiceItems[" + index + "].amount");
+						var sac = $(this).children().find(".sac");
+						$(sac).attr("name", "invoiceItems[" + index + "].sac");
+						var hsn = $(this).children().find(".hsn");
+						$(hsn).attr("name", "invoiceItems[" + index + "].hsn");
+						var cgst = $(this).children().find(".cgst");
+						$(cgst).attr("name", "invoiceItems[" + index + "].cgst");
+						var sgst = $(this).children().find(".sgst");
+						$(sgst).attr("name", "invoiceItems[" + index + "].sgst");
+						var totalAmount = $(this).children().find(".totalAmount");
+						$(totalAmount).attr(
+							"name",
+							"invoiceItems[" + index + "].totalAmount"
+						);
+					});
+			});
+			//calculate field values
+			$(document).on("keyup", ".igst", function () {
+				var tr = $(this).closest("tr");
+				var amount = parseFloat($(tr).find(".amount").val());
+				var igst = parseFloat($(tr).find(".igst").val());
+
+				if (typeof igst === "undefined" || isNaN(igst)) {
+					igst = 0;
+				}
+				var igstValue = (igst / 100) * amount;
+				$(this).attr("igstVal", igstValue);
+				var totalAmount = (igst / 100) * amount + amount;
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+
+				calculateTotalSum();
+				calculateTotalIgst();
+			});
+
+			$(document).on("keyup", ".sgst", function () {
+				var tr = $(this).closest("tr");
+				var amount = parseFloat($(tr).find(".amount").val());
+				var sgst = parseFloat($(tr).find(".sgst").val());
+				var cgst = parseFloat($(tr).find(".cgst").val());
+				sgst = parseFloat((sgst / 100) * amount);
+				cgst = parseFloat((cgst / 100) * amount);
+
+				// Check if cgst is undefined or NaN
+				if (typeof cgst === "undefined" || isNaN(cgst)) {
+					cgst = 0;
+				}
+
+				// Check if sgst is undefined or NaN
+				if (typeof sgst === "undefined" || isNaN(sgst)) {
+					sgst = 0;
+				}
+				$(this).attr("sgstVal", sgst);
+				$(tr).find(".cgst").attr("scgstVal", cgst);
+				var totalAmount =
+					parseFloat(amount) + parseFloat(sgst) + parseFloat(cgst);
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+
+				calculateTotalSum();
+				calculateTotalSgst();
+			});
+			$(document).on("keyup", ".cgst", function () {
+				var tr = $(this).closest("tr");
+				var amount = parseFloat($(tr).find(".amount").val());
+				var sgst = parseFloat($(tr).find(".sgst").val());
+				var cgst = parseFloat($(tr).find(".cgst").val());
+				sgst = parseFloat((sgst / 100) * amount);
+				cgst = parseFloat((cgst / 100) * amount);
+
+				// Check if cgst is undefined or NaN
+				if (typeof cgst === "undefined" || isNaN(cgst)) {
+					cgst = 0;
+				}
+
+				// Check if sgst is undefined or NaN
+				if (typeof sgst === "undefined" || isNaN(sgst)) {
+					sgst = 0;
+				}
+				$(this).attr("cgstVal", cgst);
+				$(tr).find(".sgst").attr("sgstVal", sgst);
+				var totalAmount =
+					parseFloat(amount) + parseFloat(sgst) + parseFloat(cgst);
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+				calculateTotalSum();
+				calculateTotalCgst();
+			});
+
+			$("tbody").on("click", ".removeCountry", function () {
+				$(this).closest("tr").remove();
+				if ($(".tbody1 tr").length < 1) {
+					$("#totalAmount").val(0);
+					$("#totalIgst").val(0);
+				}
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalCgst();
+				calculateTotalSgst();
+
+				$(".tbody1")
+					.find(".tblRow")
+					.each(function (index, elem) {
+						var item = $(this).children().find(".item");
+						$(item).attr("name", "invoiceItems[" + index + "].item");
+						var itemType = $(this).children().find(".quantity");
+						$(itemType).attr("name","invoiceItems[" + index + "].quantity"); 
+						var units = $(this).children().find(".units");
+						$(units).attr("name", "invoiceItems[" + index + "].units");
+						var description = $(this).children().find(".description");
+						$(description).attr("name","invoiceItems[" + index + "].description");
+						var amount = $(this).children().find(".amount");
+						$(amount).attr("name", "invoiceItems[" + index + "].amount");
+						var sac = $(this).children().find(".sac");
+						$(sac).attr("name", "invoiceItems[" + index + "].sac");
+						var hsn = $(this).children().find(".hsn");
+						$(hsn).attr("name", "invoiceItems[" + index + "].hsn");
+						var igst = $(this).children().find(".igst");
+						$(igst).attr("name", "invoiceItems[" + index + "].igst");
+						var totalAmount = $(this).children().find(".totalAmount");
+						$(totalAmount).attr(
+							"name",
+							"invoiceItems[" + index + "].totalAmount"
+						);
+					});
+			});
+
+			// Types of item dropdown change event
+			/* $(document).on("change", ".selectDropdown", function () {
+				console.log("selectDropdown value:",$(this).val());
+				var selectedItem = $(this).val();
+
+				if (selectedItem === "goods") {
+					$('tbody ').children().nextAll().find(".sac").attr("disabled", true);
+					$('tbody ').children().nextAll().find(".hsn").attr("disabled", false);
+				} else if (selectedItem === "services") {
+					$('tbody ').children().nextAll().find(".hsn").attr("disabled", true);
+					$('tbody ').children().nextAll().find(".sac").attr("disabled", false);
+				}
+			}); */
+			//country scripts
+			$("#addItemButtonCt").click(function () {
+				var gs = $('.selectDropdown').val();
+				
+				if(gs=='goods'){
+					var table = $("table .tbody1");
+					var itemIndex = $("table .tbody1 tr").length;
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item" name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="text" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+					
+					row.append(
+						'<td><input type="text" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units" required /></td>'
+					);
+					row.append(
+						'<td><input type="text"class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  disabled/></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required  /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="igst"  igstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].igst" step="any" min="0" max="100" required /></td>'
+					);
+					row.append(
+						'<td><input type="number"  class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"  readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeCountry" ></td>'
+					);
+
+					table.append(row);
+				
+				}else if(gs == 'services'){
+					var table = $("table .tbody1");
+					var itemIndex = $("table .tbody1 tr").length;
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item" name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="text" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+					
+					row.append(
+						'<td><input type="text" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units" required /></td>'
+					);
+					row.append(
+						'<td><input type="text"class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  /></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required disabled /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="igst"  igstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].igst" step="any" min="0" max="100" required /></td>'
+					);
+					row.append(
+						'<td><input type="number"  class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"  readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeCountry" ></td>'
+					);
+
+					table.append(row);
+					
+				}
+			});
+				
+				
+
+			//state scripts
+
+			$("#addItemButtonSt").click(function () {
+				var gs = $('.selectDropdown').val();
+				if(gs == 'goods'){
+					var table = $("table .tbody2");
+					var itemIndex = $("table .tbody2 tr").length;
+
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item"  name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="text" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+				
+					row.append(
+						'<td><input type="text" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount" required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  disabled/></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="cgst" cgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].cgst" step="any" min="0" max="100" /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="sgst" sgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].sgst" step="any" min="0" max="100" required /></td>'
+					);
+					row.append(
+						'<td><input type="number"   class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"   readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeState" ></td>'
+					);
+
+					table.append(row);
+				}else if(gs == 'services'){
+					var table = $("table .tbody2");
+					var itemIndex = $("table .tbody2 tr").length;
+
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item"  name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="text" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+				
+					row.append(
+						'<td><input type="text" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount" required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  /></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required  disabled/></td>'
+					);
+					row.append(
+						'<td><input type="number" class="cgst" cgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].cgst" step="any" min="0" max="100" /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="sgst" sgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].sgst" step="any" min="0" max="100" required /></td>'
+					);
+					row.append(
+						'<td><input type="number"   class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"   readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeState" ></td>'
+					);
+
+					table.append(row);
+				}
+				
+			});
+		});
+		
+		/* API for currency */
+		$(document).ready(function() {
+			$.ajax({
+				url : 'https://openexchangerates.org/api/currencies.json',
+				method : 'GET',
+				dataType : 'json',
+				success : function(data) {
+					const currencies = Object.keys(data);
+					const selectElement = $('#currencySelect');
+
+					currencies.forEach(function(currency) {
+						const optionElement = $('<option>');
+						optionElement.val(currency);
+						optionElement.text(`${currency} (${data[currency]})`);
+						selectElement.append(optionElement);
+					});
+				},
+				error : function(xhr, status, error) {
+					console.error('Error fetching currency data:', error);
+				}
+			});
+
+			$('#currencySelect').change(function() {
+				const selectedCurrency = $(this).val();
+				console.log('Selected Currency:', selectedCurrency);
+			});
+		});
+		
+		$(document).ready(function() {
+				var selectedValue =$('.selectDropdown').val();
+	            var unitPriceHeading = $(".unitPrice");
+	            if (selectedValue === "goods") {
+	                unitPriceHeading.text("Unit Price");
+	            } else {
+	                unitPriceHeading.text("Units");
+	            }
+	    
+	    });
+		/* $(document).on("change", ".form-check-input", function () {
+
+			if ($("#inlineRadio11").is(":checked")) {
+				$(".lut").addClass("d-none");
+				 $("#lut").val(null);
+				  $("#lut").attr("required", false);
+
+				 
+			} else if ($("#inlineRadio22").is(":checked")) {
+				$(".lut").removeClass("d-none");
+				
+			}
+		});
+		 */
+		 $(document).ready(function() {
+			 if ($("#inlineRadio11").is(":checked")) {
+					$(".lut").addClass("d-none");
+					 $("#lut").attr("required", false);
+					   $("#lut").val(''); 
+					   $("#lut").removeAttr("name"); // Remove the name attribute
+				} else if ($("#inlineRadio22").is(":checked")) {
+					
+					$(".lut").removeClass("d-none");
+					$("#lut").attr("required", true);
+					 $("#lut").attr("name", "lutNumber"); // Re-add the name attribute
+				}
+			 
+		 });
+		
+		
+		$(document).on("change", ".lutApplicable", function () {
+
+			if ($("#inlineRadio11").is(":checked")) {
+				$(".lut").addClass("d-none");
+				 $("#lut").attr("required", false);
+				   $("#lut").val(''); 
+				   $("#lut").removeAttr("name"); // Remove the name attribute
+			} else if ($("#inlineRadio22").is(":checked")) {
+				
+				$(".lut").removeClass("d-none");
+				$("#lut").attr("required", true);
+				 $("#lut").attr("name", "lutNumber"); // Re-add the name attribute
+			}
+		}); 
+
+	 	$(document).ready(function () {
+            // Function to handle the read-only behavior of radio buttons
+            function setRadioReadOnly(checkedRadio) {
+                $("#inlineRadio1, #inlineRadio2").not(checkedRadio).prop("disabled", true);
+            }
+
+            // Function to reset the read-only behavior of radio buttons
+            function resetRadioReadOnly() {
+                $("#inlineRadio1, #inlineRadio2").prop("disabled", false);
+            }
+
+            // Initial setup
+            if ($("#inlineRadio1").is(":checked")) {
+                setRadioReadOnly($("#inlineRadio1"));
+            } else if ($("#inlineRadio2").is(":checked")) {
+                setRadioReadOnly($("#inlineRadio2"));
+            }
+          
+          
+
+            // Handle the change event of radio buttons
+            $("input[type='radio']").change(function () {
+                resetRadioReadOnly(); // Reset read-only for all radio buttons
+
+                if ($("#inlineRadio1").is(":checked") ) {
+                    setRadioReadOnly($("#inlineRadio1"));
+                } else if ($("#inlineRadio2").is(":checked") ) {
+                    setRadioReadOnly($("#inlineRadio2"));
+                }
+              
+            });
+        }); 
+		
+		
+		
+		
+		
+		
+		/* 
+			 if ($("#inlineRadio11").is(":checked")) {
+				$(".lut").addClass("d-none");
+			} else if ($("#inlineRadio22").is(":checked")) {
+				$(".lut").removeClass("d-none");
+			} */
+			
+			
+			
+			
+/*       $( "form" ).on( "submit", function( event ) {
+				console.log( $( this ).serializeArray() );
+				event.preventDefault();
+			  } ); */
+	</script>
+</body>
+
+</html>

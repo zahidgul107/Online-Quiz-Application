@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+    <title>Experience Certificate</title>
+</head>
+<body>
+    <h1>Experience Certificate</h1>
+    
+  
+     <p>This is to certify that <strong th:text="${empList.employeeName}"></strong> with contact number
+      <strong th:text="${empList.phoneNumber}"></strong> and email <strong th:text="${empList.email}"></strong> has been employed with our organization from
+       <strong th:text="${empList.joiningDate}"></strong> to <strong th:text="${empList.exitDate}"></strong>.</p>
+    <p>Total experience: <strong th:text="${experienceFormatted}"></strong>.</p>
+   
+   
+</body>
+</html>

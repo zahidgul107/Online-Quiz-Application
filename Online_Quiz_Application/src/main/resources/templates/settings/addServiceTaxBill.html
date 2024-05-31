@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+	<!-- basic -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<!-- mobile metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1" />
+	<!-- site metas -->
+	<title>Add Servic Tax Bills | Expenses</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+	<!-- site icon -->
+	<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+	<!-- bootstrap css -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+	<!-- site css -->
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
+	<!-- responsive css -->
+	<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+	<!-- color css -->
+	<link rel="stylesheet" th:href="@{/css/colors.css}" />
+	<!-- select bootstrap -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+	<!-- scrollbar css -->
+	<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+	<!-- custom css -->
+	<link rel="stylesheet" th:href="@{/css/custom.css}" />
+	<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2 th:text="${edit}?'Update Service Tax Bill':'Service Tax Bill'"></h2>
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class="col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center"
+								role="alert" style="width: fit-content"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class="col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center"
+								role="alert" style="width: fit-content"></div>
+						</div>
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+						<form th:object="${invoice}" th:method="post" data-bvalidator-validate="true"
+							th:action="@{${edit != null} ? '/invoice/updateServiceBill' : '/invoice/addServiceBill'}"
+							enctype="multipart/form-data">
+							<div class="form-row">
+								<input type="hidden" th:field="*{id}" />
+								<div class="form-group col-md-6">
+									<label for="invoiceDate">Bill Number:</label>
+									<input type="text" id="invoiceNumber" class="form-control" name="invoiceNumber"
+										th:field="*{invoiceNumber}" required />
+								</div>
+								<div class="form-group col-md-6">
+									<label for="invoiceDate">Bill Date:</label>
+									<input type="date" id="datepicker4" class="form-control" name="invoiceDate"
+										th:field="*{invoiceDate}" required />
+								</div>
+								
+									<div class="form-group col-md-6">
+									<label>Bank Detail</label> <select
+										id="invoice" class="form-control"
+										name="bankDetails">
+										<option value="">Select Bank</option>
+										<option th:each="bank : ${bankList}" th:value="${bank.id}"
+											th:text="${bank.bankName}+'('+${ bank.accountNumber}+')'"></option>
+									</select>
+								</div>
+								<div class="form-group col-md-6">
+									<label>Party</label>
+									<select  name="party" class="form-select form-control" aria-label="Default select example">
+										<option value="">Select Party</option>
+										<option th:each="party : ${partyList}"
+											th:text="${party.partyName+'('+party.phoneNumber+')'}" th:value="${party.id}" />
+									</select>
+								</div>
+								
+
+								<div class="col-md-6">
+									<label for="countryState"> Choose One: </label>
+									<div class="row " style="margin:0 2px">
+                                    <div class="col-md-12 form-control ">
+									<div class="row">
+										<div class="col-md-3">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="type" required
+													id="inlineRadio2" value="country" />
+												<label class="form-check-label" for="inlineRadio1">Country</label>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio" name="type" required
+													id="inlineRadio1" value="state" />
+												<label class="form-check-label" for="inlineRadio2">State</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								</div></div>
+								
+								
+								
+								<div class="form-group col-md-6 country d-none">
+									<label for="countryList">Choose Country:</label>
+									<select id="countryList" class="form-control countryL" name="country">
+										<option value="">Choose Country...</option>
+									</select>
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label>Select Currency</label> <select 
+										id="currencySelect" class="form-select form-control" th:field="*{currency}"
+										aria-label="Default select example" required>
+										<option value="">Select Currency</option>
+									</select>
+								</div>
+								
+								<div class="form-group col-md-6 state d-none">
+									<label for="country">State</label>
+									<input type="text" id="state" class="form-control" name="state" />
+								</div>
+								<div class="form-group col-md-6 d-none ">
+									<label for="typesOfInvoice ">Types of Invoice:</label>
+									<select id="typesOfInvoice" class="form-control selectDropdown " name="typesOfInvoice">
+										<option value="">Choose Invoice...</option>
+										<option value="goods">Goods</option>
+										<option value="services">Services</option>
+									</select>
+								</div>
+								<div class="col-md-6  gstwithoutgst d-none">
+									<label for="gstwithoutgst"> Choose One: </label>
+									<div class="row " style="margin:0 2px">
+                                    <div class="col-md-12 form-control ">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input withgst" type="radio" name="gst" required
+													id="inlineRadio3" value="true" />
+												<label class="form-check-label" for="inlineRadio3">With GST</label>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input withgst" type="radio" name="gst" required
+													id="inlineRadio4" value="false" />
+												<label class="form-check-label" for="inlineRadio4">Without GST</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								</div></div>
+							</div>
+							
+
+							<div class="d-flex justify-content-center align-items-center margin: 17px">
+								<h5 style="margin-top: 2rem; margin-bottom: 1rem">
+									Invoice Items
+								</h5>
+							</div>
+
+							<div style="overflow: auto" class="ctTable d-none">
+								<table class="table 1 countryTable">
+									<thead>
+										<tr>
+											<th scope="col">Item</th>
+											<th scope="col">Quantity</th>
+											<th scope="col" class="unitPrice"></th>
+											<th scope="col">Description</th>
+											<th scope="col">Deduction</th>
+											<th scope="col">Amount</th>
+											<th scope="col">SAC</th>
+											<th scope="col">HSN</th>
+											<th scope="col">Making Charges</th>
+											<th scope="col">IGST(%)</th>
+											<th scope="col"> Other Charges</th>
+											<th scope="col">Total Amount</th>
+											<th scope="col">Actions</th>
+										</tr>
+									</thead>
+									<tbody class="tbody1"></tbody>
+								</table>
+								<button type="button" class="btn btn-info" id="addItemButtonCt">
+									Add Item
+								</button>
+							</div>
+
+							<div style="overflow: auto" class="stTable d-none">
+								<table class="table 2 stateTable">
+									<thead>
+										<tr>
+											<th scope="col">Item</th>
+										    <th scope="col">Quantity</th>
+											<th scope="col" class="unitPrice"></th>
+											<th scope="col">Description</th>
+											<th scope="col">Deduction</th>
+											<th scope="col">Amount</th>
+											<th scope="col">SAC</th>
+											<th scope="col">HSN</th>
+											<th scope="col">Making Charges</th>
+											<th scope="col">CGST(%)</th>
+											<th scope="col">SGST(%)</th>
+											<th scope="col"> Other Charges</th>
+											<th scope="col">Total Amount</th>
+											<th scope="col">Actions</th>
+										</tr>
+									</thead>
+									<tbody class="tbody2"></tbody>
+								</table>
+								<button type="button" class="btn btn-info" id="addItemButtonSt">
+									Add Item
+								</button>
+							</div>
+
+							<br />
+							<br />
+							<div class="row">
+								<div class="form-group col-md-4 d-none">
+									<label for="invoiceDate">Total Cgst:</label>
+									<input type="number" id="totalCgst" class="form-control" name="totalCgst" required
+										readonly />
+								</div>
+								<div class="form-group col-md-4 d-none">
+									<label for="invoiceDate">Total Sgst:</label>
+									<input type="number" id="totalSgst" class="form-control" name="totalSgst" required
+										readonly />
+								</div>
+								<div class="form-group col-md-4 d-none">
+									<label for="invoiceDate">Total Igst:</label>
+									<input type="number" id="totalIgst" class="form-control" name="totalIgst" required
+										readonly />
+								</div>
+
+								<div class="form-group col-md-4">
+									<label for="invoiceDate">Total Amount:</label>
+									<input type="number" id="totalAmount" class="form-control" name="totalAmount"
+										required readonly />
+								</div>
+					
+							</div>
+
+							<div class="row">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary"
+										th:text=" ${edit}?'Update':'Add Bill'"></button>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE
+								
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar("#sidebar");
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+	<script th:src="@{/customJs/countryList.js}"></script>
+
+	<script th:inline="javascript">
+		// Call the calculateTotalSum() function whenever the DOM changes
+
+		$(document).ready(function () {
+			
+			$(document).on("keyup", ".quantity", function () {
+				var selectedType =$('.selectDropdown').val();
+				if(selectedType == 'goods')
+				{
+					var tr = $(this).closest("tr");
+					 console.log("tr===quantity===="+tr);
+					var quantity = parseFloat($(this).val());
+					var units = parseFloat($(tr).find(".units").val());
+					var deduction=parseFloat($(tr).find(".deduction").val());
+	
+					if (typeof quantity === "undefined" || isNaN(quantity)) {
+						quantity = 0;
+					}
+					if (typeof units === "undefined" || isNaN(units)) {
+						units = 0;
+					}
+					if(typeof deduction === "undefined" || isNaN(deduction)){
+						deduction=0;
+					}
+					var quant=quantity-deduction;
+					var amount = (quant*units).toFixed(2);
+					$(tr).find(".amount").val(amount);
+					calculateAmount(tr);
+				}
+				
+			});
+           $(document).on("keyup", ".units", function () {
+        	   var selectedType =$('.selectDropdown').val();
+				if(selectedType == 'goods')
+				{
+	        	    var tr = $(this).closest("tr");
+	        	    console.log("tr===units===="+tr);
+					var units = parseFloat($(this).val());
+					var quantity = parseFloat($(tr).find(".quantity").val());
+					var deduction=parseFloat($(tr).find(".deduction").val());
+	
+					if (typeof quantity === "undefined" || isNaN(quantity)) {
+						quantity = 0;
+					}
+					if (typeof units === "undefined" || isNaN(units)) {
+						units = 0;
+					}
+					if(typeof deduction === "undefined" || isNaN(deduction)){
+						deduction=0;
+					}
+					var quant=quantity-deduction;
+					var amount = (quant*units).toFixed(2);
+					$(tr).find(".amount").val(amount);
+					calculateAmount(tr);
+				}
+				
+			});
+           $(document).on("keyup", ".deduction", function () {
+        	   var selectedType =$('.selectDropdown').val();
+				if(selectedType == 'goods')
+				{
+	        	    var tr = $(this).closest("tr");
+	        	    console.log("tr===units===="+tr);
+					var deduction = parseFloat($(this).val());
+					var quantity = parseFloat($(tr).find(".quantity").val());
+					var units=parseFloat($(tr).find(".units").val());
+	
+					if (typeof quantity === "undefined" || isNaN(quantity)) {
+						quantity = 0;
+					}
+					if (typeof units === "undefined" || isNaN(units)) {
+						units = 0;
+					}
+					if(typeof deduction === "undefined" || isNaN(deduction)){
+						deduction=0;
+					}
+					var quant=quantity-deduction;
+					var amount = (quant*units).toFixed(2);
+					$(tr).find(".amount").val(amount);
+					calculateAmount(tr);
+				}
+				
+			});
+			//on change Amount
+			$(document).on("keyup", ".amount", function () {
+				var tr = $(this).closest("tr");
+				var amount = parseFloat($(this).val());
+				var igst = parseFloat($(tr).find(".igst").val());
+				var cgst = parseFloat($(tr).find(".cgst").val());
+				var sgst = parseFloat($(tr).find(".sgst").val());
+				var makingCharges = parseFloat($(tr).find(".makingCharges").val()); 
+				
+
+				if (typeof igst === "undefined" || isNaN(igst)) {
+					igst = 0;
+				}
+				if (typeof cgst === "undefined" || isNaN(cgst)) {
+					cgst = 0;
+				}
+				if (typeof sgst === "undefined" || isNaN(sgst)) {
+					sgst = 0;
+				}
+				if (typeof makingCharges === "undefined" || isNaN(makingCharges)) {
+					makingCharges = 0;
+				}
+				var igstValue = (igst / 100) * makingCharges;
+				$(tr).find(".igst").attr("igstVal", igstValue);
+
+				var cgstValue = (cgst / 100) * makingCharges;
+				$(tr).find(".cgst").attr("cgstVal", cgstValue);
+				
+				var sgstValue = (sgst / 100) * makingCharges;
+				$(tr).find(".sgst").attr("sgstVal", sgstValue);
+				
+				var totalAmount = parseFloat(
+					amount + igstValue + cgstValue + sgstValue 
+				).toFixed(2);
+				$(tr).find(".totalAmount").val(totalAmount);
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalCgst();
+				calculateTotalSgst();
+				
+			});
+			// on makingcharges keyup
+			$(document).on("keyup", ".makingCharges", function () {
+				 var tr = $(this).closest("tr");
+				    var makingCharges = parseFloat($(this).val());
+				    var amount = parseFloat($(tr).find(".amount").val());
+				/* var tr = $(this).closest("tr");
+				var amount = parseFloat($(this).val()); */
+				var igst = parseFloat($(tr).find(".igst").val());
+				var cgst = parseFloat($(tr).find(".cgst").val());
+				var sgst = parseFloat($(tr).find(".sgst").val());
+				var makingCharges = parseFloat($(tr).find(".makingCharges").val());
+
+				if (typeof igst === "undefined" || isNaN(igst)) {
+					igst = 0;
+				}
+				if (typeof cgst === "undefined" || isNaN(cgst)) {
+					cgst = 0;
+				}
+				if (typeof sgst === "undefined" || isNaN(sgst)) {
+					sgst = 0;
+				}
+				if (typeof makingCharges === "undefined" || isNaN(makingCharges)) {
+					makingCharges = 0;
+				}
+				var igstValue = (igst / 100) * makingCharges;
+				$(tr).find(".igst").attr("igstVal", igstValue);
+
+				var cgstValue = (cgst / 100) * makingCharges;
+				$(tr).find(".cgst").attr("cgstVal", cgstValue);
+				
+				var sgstValue = (sgst / 100) * makingCharges;
+				$(tr).find(".sgst").attr("sgstVal", sgstValue);
+				
+				var totalAmount = parseFloat(
+					amount + igstValue + cgstValue + sgstValue + makingCharges
+				).toFixed(2);
+				$(tr).find(".totalAmount").val(totalAmount);
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalCgst();
+				calculateTotalSgst();
+				calculateTotalmakingCharges();
+				
+			});
+			
+			
+			
+			$(document).on("keyup", ".otherCharges", function () {
+			    var tr = $(this).closest("tr");
+			    var otherCharges = parseFloat($(this).val());
+			    var amount = parseFloat($(tr).find(".amount").val());
+			    var igst = parseFloat($(tr).find(".igst").val());
+			    var cgst = parseFloat($(tr).find(".cgst").val());
+			    var sgst = parseFloat($(tr).find(".sgst").val());
+			    var makingCharges = parseFloat($(tr).find(".makingCharges").val());
+
+			    if (isNaN(otherCharges)) {
+			        otherCharges = 0;
+			    }
+			    if (isNaN(amount)) {
+			        amount = 0;
+			    }
+			    if (isNaN(igst)) {
+			        igst = 0;
+			    }
+			    if (isNaN(cgst)) {
+			        cgst = 0;
+			    }
+			    if (isNaN(sgst)) {
+			        sgst = 0;
+			    }
+			    if (isNaN(makingCharges)) {
+			        makingCharges = 0;
+			    }
+
+			    var igstValue = (igst / 100) * makingCharges;
+			    $(tr).find(".igst").attr("igstVal", igstValue);
+
+			    var cgstValue = (cgst / 100) * makingCharges;
+			    $(tr).find(".cgst").attr("cgstVal", cgstValue);
+
+			    var sgstValue = (sgst / 100) * makingCharges;
+			    $(tr).find(".sgst").attr("sgstVal", sgstValue);
+
+			    var totalAmount = parseFloat(amount + igstValue + cgstValue + sgstValue + makingCharges + otherCharges).toFixed(2);
+			    $(tr).find(".totalAmount").val(totalAmount);
+
+			    calculateTotalSum();
+			    calculateTotalIgst();
+			    calculateTotalCgst();
+			    calculateTotalSgst();
+			   // calculateTotalLabour();
+		        calculateTotalmakingCharges();
+			    calculateTotalOtherCharges();
+			});
+			function calculateTotalLabour() {
+			    var labourTotal = 0;
+			    $(".labourCharges").each(function () {
+			        var labourCharge = parseFloat($(this).val());
+			        if (!isNaN(labourCharge)) {
+			            labourTotal += labourCharge;
+			        }
+			    });
+
+			    var totalAmount = parseFloat($("#totalAmount").val());
+			    $("#totalAmount").val(totalAmount.toFixed(2));
+
+			    console.log("Labour Total:", labourTotal);
+			}
+			
+			function calculateTotalOtherCharges() {
+			    var otherChargesTotal = 0;
+			    $(".otherCharges").each(function () {
+			        var otherCharges = parseFloat($(this).val());
+			        if (!isNaN(otherCharges)) {
+			            otherChargesTotal += otherCharges;
+			        }
+			    });
+
+			    var totalAmount = parseFloat($("#totalAmount").val());
+			    $("#totalAmount").val(totalAmount.toFixed(2));
+
+			    console.log("Other Charges Total:", otherChargesTotal);
+			}
+			
+			$("#datepicker4").flatpickr({
+				format : "Y-m-d",
+				altFormat : "Y-m-d",
+				altInput : true,
+				allowInput : true
+			});
+			/* flatpickr("#datepicker4", {
+				dateFormat: "Y-m-d",
+
+				locale: {
+					firstDayOfWeek: 1,
+					// Monday as the first day of the week
+				},
+				onChange: function (selectedDates, dateStr, instance) { },
+			}); */
+
+			//#totalAmount calculation
+			
+
+
+			function calculateTotalSum() {
+				var sumTotal = 0;
+				$(".totalAmount").each(function () {
+					var totalAmount = parseFloat($(this).val());
+					if (!isNaN(totalAmount)) {
+						sumTotal += totalAmount;
+					}
+					$("#totalAmount").val(sumTotal.toFixed(2));
+				});
+
+				console.log("Sum Total:", sumTotal);
+			}
+			
+		 	$(document).on("keyup", ".igst, .cgst, .sgst, .makingCharges, .otherCharges", function () {
+			    var tr = $(this).closest("tr");
+			    var amount = parseFloat($(tr).find(".amount").val());
+			    var igst = parseFloat($(tr).find(".igst").val());
+			    var cgst = parseFloat($(tr).find(".cgst").val());
+			    var sgst = parseFloat($(tr).find(".sgst").val());
+			    var makingCharges = parseFloat($(tr).find(".makingCharges").val());
+			    var otherCharges = parseFloat($(tr).find(".otherCharges").val());
+
+			    if (isNaN(amount)) {
+			        amount = 0;
+			    }
+			    if (isNaN(igst)) {
+			        igst = 0;
+			    }
+			    if (isNaN(cgst)) {
+			        cgst = 0;
+			    }
+			    if (isNaN(sgst)) {
+			        sgst = 0;
+			    }
+			    if (isNaN(makingCharges)) {
+			        makingCharges = 0;
+			    }
+			    if (isNaN(otherCharges)) {
+			        otherCharges = 0;
+			    }
+
+			    var igstValue = (igst / 100) * makingCharges;
+			    $(tr).find(".igst").attr("igstVal", igstValue);
+
+			    var cgstValue = (cgst / 100) * makingCharges;
+			    $(tr).find(".cgst").attr("cgstVal", cgstValue);
+
+			    var sgstValue = (sgst / 100) * makingCharges;
+			    $(tr).find(".sgst").attr("sgstVal", sgstValue);
+
+			    var totalAmount = parseFloat(amount + igstValue + cgstValue + sgstValue  + makingCharges + otherCharges).toFixed(2);
+			    $(tr).find(".totalAmount").val(totalAmount);
+
+			    calculateTotalSum();
+			    calculateTotalIgst();
+			    calculateTotalCgst();
+			    calculateTotalSgst();
+			    calculateTotalmakingCharges();
+			    calculateTotalOtherCharges();
+			}); 
+			
+			
+
+			$(document).on("change", ".igst,.cgst,.sgst", calculateTotalSum);
+
+			//totalIgst calculation
+			function calculateTotalIgst() {
+				var sumTotalIgst = 0;
+				$(".igst").each(function () {
+					var igstVAlue = $(this).attr("igstVal");
+					console.log("igst===="+igstVAlue);
+					var totalIgst = parseFloat(igstVAlue);
+					if (!isNaN(totalIgst)) {
+						sumTotalIgst += totalIgst;
+					}
+
+					$("#totalIgst").val(sumTotalIgst.toFixed(2));
+				});
+
+				console.log("Sum Totallllllll:", sumTotalIgst);
+			}
+
+			$(document).on("change", ".igst", calculateTotalIgst);
+			//totalCgst calculation
+
+			function calculateTotalCgst() {
+				var sumTotalCgst = 0;
+				$(".cgst").each(function () {
+					var cgstVAlue = $(this).attr("cgstVal");
+					var totalCgst = parseFloat(cgstVAlue);
+					if (!isNaN(totalCgst)) {
+						sumTotalCgst += totalCgst;
+					}
+
+					$("#totalCgst").val(sumTotalCgst.toFixed(2));
+				});
+
+				console.log("Sum TotalCgst:", sumTotalCgst);
+			}
+
+			$(document).on("change", ".cgst", calculateTotalCgst);
+
+			//totalSgst calculation
+
+			function calculateTotalSgst() {
+				var sumTotalSgst = 0;
+				$(".sgst").each(function () {
+					var sgstVAlue = $(this).attr("sgstVal");
+					var totalSgst = parseFloat(sgstVAlue);
+					if (!isNaN(totalSgst)) {
+						sumTotalSgst += totalSgst;
+					}
+
+					$("#totalSgst").val(sumTotalSgst.toFixed(2));
+				});
+
+				console.log("Sum TotalSgst:", sumTotalSgst);
+			}
+			
+			//Calculate Amount
+			function calculateAmount(tr) {
+				var tr = tr;
+				var amount = parseFloat($(tr).find(".amount").val());
+				if (typeof amount === "undefined" || isNaN(amount)) {
+					units = 0;
+				}
+				var igst = parseFloat($(tr).find(".igst").val());
+				var cgst = parseFloat($(tr).find(".cgst").val());
+				var sgst = parseFloat($(tr).find(".sgst").val());
+				var makingCharges = parseFloat($(tr).find(".makingCharges").val());
+				var otherCharges = parseFloat($(tr).find(".otherCharges").val());
+				
+
+				if (typeof igst === "undefined" || isNaN(igst)) {
+					igst = 0;
+				}
+				if (typeof cgst === "undefined" || isNaN(cgst)) {
+					cgst = 0;
+				}
+				if (typeof sgst === "undefined" || isNaN(sgst)) {
+					sgst = 0;
+				}
+				
+				if (typeof makingCharges === "undefined" || isNaN(makingCharges)) {
+					makingCharges = 0;
+				}
+				if (typeof otherCharges === "undefined" || isNaN(otherCharges)) {
+					otherCharges = 0;
+				}
+				
+				var igstValue = (igst / 100) * makingCharges;
+				$(tr).find(".igst").attr("igstVal", igstValue);
+				console.log("iiiiiiiii=="+igstValue);
+
+				var cgstValue = (cgst / 100) * makingCharges;
+				$(tr).find(".cgst").attr("cgstVal", cgstValue);
+				
+				var sgstValue = (sgst / 100) * makingCharges;
+				$(tr).find(".sgst").attr("sgstVal", sgstValue);
+
+
+				var totalAmount = parseFloat(
+					amount + igstValue + cgstValue + sgstValue  + makingCharges + otherCharges
+				);
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+			
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalCgst();
+				calculateTotalSgst();
+				//calculateTotalLabour();
+			    calculateTotalOtherCharges();
+			}
+
+			$(document).on("change", ".sgst", calculateTotalSgst);
+			
+			
+			
+
+	// Function to calculate the grand total
+	function calculateGrandTotal() {
+	    var totalAmount = parseFloat($("#totalAmount").val());
+	    var oldGoldExchange = parseFloat($("#oldGoldExchange").val());
+	    var discount = parseFloat($("#discount").val());
+
+	    if (isNaN(totalAmount)) {
+	        totalAmount = 0;
+	    }
+	    if (isNaN(oldGoldExchange)) {
+	    	oldGoldExchange = 0;
+	    }
+	    if (isNaN(discount)) {
+	        discount = 0;
+	    }
+
+	    var grandTotal = parseFloat(totalAmount - oldGoldExchange - discount);
+	    $("#grandTotal").val(grandTotal.toFixed(2));
+	    console.log("Grand Total:", grandTotal);
+	}
+	
+	
+	/* $(document).on("change", "val(totalAmount)", calculateGrandTotal); */
+	 $("#addItemButtonSt,#addItemButtonCt").on("click", function () {
+	        // Add the ID or class names of the input fields you want to clear
+	        $(".discount").val(""); // Clear the quantity field
+	        $(".oldGoldExchange").val(""); // Clear the units field
+	        $(".grandTotal").val(""); // Clear the amount field
+	       
+
+	        // After clearing the fields, also recalculate the total and grand total
+	        calculateTotalSum();
+	        calculateTotalIgst();
+	        calculateTotalCgst();
+	        calculateTotalSgst();
+	       // calculateTotalLabour();
+	        calculateTotalOtherCharges();
+	      /*   calculateGrandTotal(); */
+
+	      
+	    });
+
+
+			// conditional code on state and country
+			$(document).on("change", ".form-check-input", function () {
+				$("#totalAmount").val(0);
+				$("#totalIgst").val(0);
+				$("#totalSgst").val(0);
+				$("#totalCgst").val(0);
+
+				if ($("#inlineRadio2").is(":checked")) {
+					$("tbody").empty();
+					$(".country").removeClass("d-none");
+					$(".selectDropdown").parent().removeClass("d-none");
+					$(".gstwithoutgst").removeClass("d-none");
+					$(".countryL").attr("name", "countryState");
+					$("#countryList").attr("required", true);
+					$("#state").attr("name", "State");
+					$(".state").addClass("d-none");
+					$("#state").attr("required", false);
+					$(".ctTable").removeClass("d-none");
+					$(".stTable").addClass("d-none");
+					$("#totalIgst").parent().removeClass("d-none");
+					$("#totalSgst").parent().addClass("d-none");
+					$("#totalCgst").parent().addClass("d-none");
+				} else if ($("#inlineRadio1").is(":checked")) {
+					$("tbody").empty();
+					$(".state").removeClass("d-none");
+					$(".selectDropdown").parent().removeClass("d-none");
+					$(".gstwithoutgst").removeClass("d-none");
+					$("#state").attr("name", "countryState");
+					$("#state").attr("required", true);
+					$(".countryL").attr("name", "country");
+					$(".country").addClass("d-none");
+					$("#countryList").attr("required", false);
+					$(".stTable").removeClass("d-none");
+					$(".ctTable").addClass("d-none");
+					$("#totalIgst").parent().addClass("d-none");
+					$("#totalSgst").parent().removeClass("d-none");
+					$("#totalCgst").parent().removeClass("d-none");
+				}
+			});
+
+			//Remove Row from a table
+			$("tbody").on("click", ".removeState", function () {
+				$(this).closest("tr").remove();
+				if ($(".tbody1 tr").length < 1) {
+					$("#totalAmount").val(0);
+					$("#totalSgst").val(0);
+					$("#totalIgst").val(0);
+					$("#totalCgst").val(0);
+					$("#grandTotal").val(0);
+					$("#discount").val(0);
+					$("#oldGoldExchange").val(0);
+				}
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalCgst();
+				calculateTotalSgst();
+				calculateTotalLabour();
+			    calculateTotalOtherCharges();
+			    calculateGrandTotal()
+				  
+
+				$(".tbody2")
+					.find(".tblRow")
+					.each(function (index, elem) {
+						var item = $(this).children().find(".item");
+						$(item).attr("name", "invoiceItems[" + index + "].item");
+						var itemType = $(this).children().find(".quantity");
+						$(itemType).attr("name","invoiceItems[" + index + "].quantity"); 
+						var units = $(this).children().find(".units");
+						$(units).attr("name", "invoiceItems[" + index + "].units");
+						var description = $(this).children().find(".description");
+						$(description).attr(
+							"name",
+							"invoiceItems[" + index + "].description"
+						);
+						var deduction = $(this).children().find(".deduction");
+						$(deduction).attr("name","invoiceItems[" + index + "].deduction");
+						var amount = $(this).children().find(".amount");
+						$(amount).attr("name", "invoiceItems[" + index + "].amount");
+						var sac = $(this).children().find(".sac");
+						$(sac).attr("name", "invoiceItems[" + index + "].sac");
+						var hsn = $(this).children().find(".hsn");
+						$(hsn).attr("name", "invoiceItems[" + index + "].hsn");
+						var makingCharges = $(this).children().find(".makingCharges");
+						$(makingCharges).attr("name", "invoiceItems[" + index + "].makingCharges");
+						var cgst = $(this).children().find(".cgst");
+						$(cgst).attr("name", "invoiceItems[" + index + "].cgst");
+						var sgst = $(this).children().find(".sgst");
+						$(sgst).attr("name", "invoiceItems[" + index + "].sgst");
+						var otherCharges = $(this).children().find(".otherCharges");
+						$(otherCharges).attr("name", "invoiceItems[" + index + "].otherCharges");
+						var totalAmount = $(this).children().find(".totalAmount");
+						$(totalAmount).attr(
+							"name",
+							"invoiceItems[" + index + "].totalAmount"
+						);
+					});
+			});
+						
+			
+			//calculate field values
+			$(document).on("keyup", ".igst", function () {
+				var tr = $(this).closest("tr");
+				var amount = parseFloat($(tr).find(".amount").val());
+				var igst = parseFloat($(tr).find(".igst").val());
+				var makingCharges = parseFloat($(tr).find(".makingCharges").val());
+				var otherCharges = parseFloat($(tr).find(".otherCharges").val());
+				
+
+				if (typeof igst === "undefined" || isNaN(igst)) {
+					igst = 0;
+				}
+				if (typeof makingCharges === "undefined" || isNaN(makingCharges)) {
+					makingCharges = 0;
+				}
+				if (typeof otherCharges === "undefined" || isNaN(otherCharges)) {
+					otherCharges = 0;
+				}
+				var igstValue = (igst / 100) * makingCharges;
+				$(this).attr("igstVal", igstValue);
+				var totalAmount = igstValue + amount  + makingCharges + otherCharges;
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalmakingCharges();
+				//calculateTotalLabour();
+			    calculateTotalOtherCharges();
+			});
+
+			$(document).on("keyup", ".sgst", function () {
+				var tr = $(this).closest("tr");
+				var amount = parseFloat($(tr).find(".amount").val());
+				var makingCharges = parseFloat($(tr).find(".makingCharges").val());
+				var sgst = parseFloat($(tr).find(".sgst").val());
+				var cgst = parseFloat($(tr).find(".cgst").val());
+				sgst = parseFloat((sgst / 100) * makingCharges);
+				cgst = parseFloat((cgst / 100) * makingCharges);
+				
+				var otherCharges = parseFloat($(tr).find(".otherCharges").val());
+
+				// Check if cgst is undefined or NaN
+				if (typeof cgst === "undefined" || isNaN(cgst)) {
+					cgst = 0;
+				}
+
+				// Check if sgst is undefined or NaN
+				if (typeof sgst === "undefined" || isNaN(sgst)) {
+					sgst = 0;
+				}
+				$(this).attr("sgstVal", sgst);
+				$(tr).find(".cgst").attr("cgstVal", cgst);
+				if (typeof makingCharges === "undefined" || isNaN(makingCharges)) {
+					makingCharges = 0;
+				}
+				if (typeof otherCharges === "undefined" || isNaN(otherCharges)) {
+					otherCharges = 0;
+				}
+				var totalAmount =
+					parseFloat(amount) + parseFloat(sgst) + parseFloat(cgst) + makingCharges + otherCharges;
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+
+				calculateTotalSum();
+				calculateTotalSgst();
+				calculateTotalmakingCharges();
+				//calculateTotalLabour();
+			    calculateTotalOtherCharges();
+			});
+			$(document).on("keyup", ".cgst", function () {
+				var tr = $(this).closest("tr");
+				var amount = parseFloat($(tr).find(".amount").val());
+				var makingCharges = parseFloat($(tr).find(".makingCharges").val());
+				var sgst = parseFloat($(tr).find(".sgst").val());
+				var cgst = parseFloat($(tr).find(".cgst").val());
+				sgst = parseFloat((sgst / 100) * makingCharges);
+				cgst = parseFloat((cgst / 100) * makingCharges);
+			
+				var otherCharges = parseFloat($(tr).find(".otherCharges").val());
+
+				// Check if cgst is undefined or NaN
+				if (typeof cgst === "undefined" || isNaN(cgst)) {
+					cgst = 0;
+				}
+
+				// Check if sgst is undefined or NaN
+				if (typeof sgst === "undefined" || isNaN(sgst)) {
+					sgst = 0;
+				}
+				$(this).attr("cgstVal", cgst);
+				$(tr).find(".sgst").attr("sgstVal", sgst);
+				
+				if (typeof makingCharges === "undefined" || isNaN(makingCharges)) {
+					makingCharges = 0;
+				}
+				if (typeof otherCharges === "undefined" || isNaN(otherCharges)) {
+					otherCharges = 0;
+				}
+				var totalAmount =
+					parseFloat(amount) + parseFloat(sgst) + parseFloat(cgst) + makingCharges + otherCharges;
+				$(tr).find(".totalAmount").val(totalAmount.toFixed(2));
+				calculateTotalSum();
+				calculateTotalCgst();
+				calculateTotalmakingCharges();
+				//calculateTotalLabour();
+			    calculateTotalOtherCharges();
+			});
+
+			$("tbody").on("click", ".removeCountry", function () {
+				$(this).closest("tr").remove();
+				if ($(".tbody1 tr").length < 1) {
+					$("#totalAmount").val(0);
+					$("#totalIgst").val(0);
+					$("#grandTotal").val(0);
+					$("#discount").val(0);
+					$("#oldGoldExchange").val(0);
+				
+				}
+				calculateTotalSum();
+				calculateTotalIgst();
+				calculateTotalCgst();
+				calculateTotalSgst();
+				 calculateGrandTotal()
+
+				$(".tbody1")
+					.find(".tblRow")
+					.each(function (index, elem) {
+						var item = $(this).children().find(".item");
+						$(item).attr("name", "invoiceItems[" + index + "].item");
+						var itemType = $(this).children().find(".quantity");
+						$(itemType).attr("name","invoiceItems[" + index + "].quantity"); 
+						var units = $(this).children().find(".units");
+						$(units).attr("name", "invoiceItems[" + index + "].units");
+						var description = $(this).children().find(".description");
+						$(description).attr("name","invoiceItems[" + index + "].description");
+						var deduction = $(this).children().find(".deduction");
+						$(deduction).attr("name","invoiceItems[" + index + "].deduction");
+						var amount = $(this).children().find(".amount");
+						$(amount).attr("name", "invoiceItems[" + index + "].amount");
+						var sac = $(this).children().find(".sac");
+						$(sac).attr("name", "invoiceItems[" + index + "].sac");
+						var hsn = $(this).children().find(".hsn");
+						$(hsn).attr("name", "invoiceItems[" + index + "].hsn");
+						var makingCharges = $(this).children().find(".makingCharges");
+						$(makingCharges).attr("name", "invoiceItems[" + index + "].makingCharges");
+						var igst = $(this).children().find(".igst");
+						$(igst).attr("name", "invoiceItems[" + index + "].igst");
+						var otherCharges = $(this).children().find(".otherCharges");
+						$(otherCharges).attr("name", "invoiceItems[" + index + "].otherCharges");						
+						var totalAmount = $(this).children().find(".totalAmount");
+						$(totalAmount).attr(
+							"name",
+							"invoiceItems[" + index + "].totalAmount"
+						);
+					});
+			});
+
+			// Types of item dropdown change event
+			/* $(document).on("change", ".selectDropdown", function () {
+				console.log("selectDropdown value:",$(this).val());
+				var selectedItem = $(this).val();
+
+				if (selectedItem === "goods") {
+					$('tbody ').children().nextAll().find(".sac").attr("disabled", true);
+					$('tbody ').children().nextAll().find(".hsn").attr("disabled", false);
+				} else if (selectedItem === "services") {
+					$('tbody ').children().nextAll().find(".hsn").attr("disabled", true);
+					$('tbody ').children().nextAll().find(".sac").attr("disabled", false);
+				}
+			}); */
+			//country scripts
+			$("#addItemButtonCt").click(function () {
+				var gs = $('.selectDropdown').val();
+				var wg = $('.withgst:checked').val();
+				
+				console.log("vgggggggggggg",wg)
+				
+				if(gs=='goods' && wg=='true'){
+					var table = $("table .tbody1");
+					var itemIndex = $("table .tbody1 tr").length;
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item" name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+					
+					row.append(
+						'<td><input type="number" class="units" step="0.01" name="invoiceItems[' +
+						itemIndex +
+						'].units" required /></td>'
+					);
+					row.append(
+						'<td><input type="text"class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="deduction" name="invoiceItems[' +
+							itemIndex +
+							'].deduction" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  disabled/></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required  /></td>'
+					);
+					
+					row.append(
+							'<td><input type="number"  step="0.01" class="makingCharges" name="invoiceItems[' +
+							itemIndex +
+							'].makingCharges" required /></td>'
+						);
+					
+					row.append(
+						'<td><input type="number" class="igst"  igstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].igst" step="any" min="0" max="100" required /></td>'
+					);
+					
+					row.append(
+						'<td><input type="number" step="0.01" class="otherCharges" name="invoiceItems[' +
+						itemIndex +
+						'].otherCharges" required /></td>'
+					);
+					
+					
+					
+					row.append(
+						'<td><input type="number"  class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"  readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeCountry" ></td>'
+					);
+
+					table.append(row);
+				
+				}
+				
+				else if(gs=='goods' && wg=='false'){
+					var table = $("table .tbody1");
+					var itemIndex = $("table .tbody1 tr").length;
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item" name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+					
+					row.append(
+						'<td><input type="number"  step="0.01" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units" required /></td>'
+					);
+					row.append(
+						'<td><input type="text"class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="deduction" name="invoiceItems[' +
+							itemIndex +
+							'].deduction" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  disabled/></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required  /></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="makingCharges" name="invoiceItems[' +
+							itemIndex +
+							'].makingCharges" required   disabled="true"/></td>'
+						);
+					row.append(
+						'<td><input type="number" class="igst"  igstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].igst" step="any" min="0" max="100" required  disabled="true"/></td>'
+					);
+				
+					
+					row.append(
+						'<td><input type="number" step="0.01" class="otherCharges" name="invoiceItems[' +
+						itemIndex +
+						'].otherCharges" required /></td>'
+					);
+					
+					
+					row.append(
+						'<td><input type="number"  class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"  readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeCountry" ></td>'
+					);
+
+					table.append(row);
+				
+				}
+				
+				
+				else if(gs == 'services' && wg=='true'){
+					var table = $("table .tbody1");
+					var itemIndex = $("table .tbody1 tr").length;
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item" name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.1" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+					
+					row.append(
+						'<td><input type="number"   step="0.01" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units" required /></td>'
+					);
+					row.append(
+						'<td><input type="text"class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="deduction" name="invoiceItems[' +
+							itemIndex +
+							'].deduction" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  /></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required disabled /></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="makingCharges" name="invoiceItems[' +
+							itemIndex +
+							'].makingCharges" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="igst"  igstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].igst" step="any" min="0" max="100" required /></td>'
+					);
+					
+					row.append(
+						'<td><input type="number" step="0.01" class="otherCharges" name="invoiceItems[' +
+						itemIndex +
+						'].otherCharges" required /></td>'
+					);
+					
+					row.append(
+						'<td><input type="number"  class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"  readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeCountry" ></td>'
+					);
+
+					table.append(row);
+					
+				}
+				else if(gs == 'services' && wg=='false'){
+					var table = $("table .tbody1");
+					var itemIndex = $("table .tbody1 tr").length;
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item" name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+					
+					row.append(
+						'<td><input type="number" step="0.01" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units" required /></td>'
+					);
+					row.append(
+						'<td><input type="text"class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+							'<td><input type="text"class="deduction" name="invoiceItems[' +
+							itemIndex +
+							'].deduction" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  /></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required disabled /></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="makingCharges" name="invoiceItems[' +
+							itemIndex +
+							'].makingCharges" required disabled="true" /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="igst"  igstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].igst" step="any" min="0" max="100" required  disabled="true"/></td>'
+					);
+					
+					
+					row.append(
+						'<td><input type="number" step="0.01" class="otherCharges" name="invoiceItems[' +
+						itemIndex +
+						'].otherCharges" required /></td>'
+					);
+
+					row.append(
+						'<td><input type="number"  class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"  readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeCountry" ></td>'
+					);
+
+					table.append(row);
+					
+				}
+			});
+				
+				
+
+			//state scripts
+
+			$("#addItemButtonSt").click(function () {
+				var gs = $('.selectDropdown').val();
+				var wogst = $('.withgst:checked').val();
+				if(gs == 'goods' && wogst=='true'){
+					var table = $("table .tbody2");
+					var itemIndex = $("table .tbody2 tr").length;
+
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item"  name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+				
+					row.append(
+						'<td><input type="number" step="0.01" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="deduction" name="invoiceItems[' +
+							itemIndex +
+							'].deduction" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount" required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  disabled/></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required /></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="makingCharges" name="invoiceItems[' +
+							itemIndex +
+							'].makingCharges" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="cgst" cgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].cgst" step="any" min="0" max="100" /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="sgst" sgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].sgst" step="any" min="0" max="100" required /></td>'
+					);
+			
+					row.append(
+						'<td><input type="number" step="0.01" class="otherCharges" name="invoiceItems[' +
+						itemIndex +
+						'].otherCharges" required /></td>'
+					);
+					
+					row.append(
+						'<td><input type="number"   class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"   readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeState" ></td>'
+					);
+
+					table.append(row);
+				}
+				
+				else if(gs == 'goods' && wogst=='false'){
+					var table = $("table .tbody2");
+					var itemIndex = $("table .tbody2 tr").length;
+
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item"  name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+				
+					row.append(
+						'<td><input type="number" step="0.01" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="deduction" name="invoiceItems[' +
+							itemIndex +
+							'].deduction" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount" required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  disabled/></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required /></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="makingCharges" name="invoiceItems[' +
+							itemIndex +
+							'].makingCharges" required disabled="true" /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="cgst" cgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].cgst" step="any" min="0" max="100" disabled="true" /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="sgst" sgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].sgst" step="any" min="0" max="100" required disabled="true"/></td>'
+					);
+					
+					row.append(
+						'<td><input type="number" step="0.01" class="otherCharges" name="invoiceItems[' +
+						itemIndex +
+						'].otherCharges" required /></td>'
+					);
+					
+					
+					row.append(
+						'<td><input type="number"   class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"   readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeState" ></td>'
+					);
+
+					table.append(row);
+				}
+				
+				else if(gs == 'services' && wogst=='true'){
+					var table = $("table .tbody2");
+					var itemIndex = $("table .tbody2 tr").length;
+
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item"  name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+				
+					row.append(
+						'<td><input type="number" step="0.01" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="deduction" name="invoiceItems[' +
+							itemIndex +
+							'].deduction" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount" required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  /></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required  disabled/></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="makingCharges" name="invoiceItems[' +
+							itemIndex +
+							'].makingCharges" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="cgst" cgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].cgst" step="any" min="0" max="100" /></td>'
+					);
+					row.append(
+						'<td><input type="number" class="sgst" sgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].sgst" step="any" min="0" max="100" required /></td>'
+					);
+					
+					row.append(
+						'<td><input type="number" step="0.01" class="otherCharges" name="invoiceItems[' +
+						itemIndex +
+						'].otherCharges" required /></td>'
+					);
+					
+					
+					
+					row.append(
+						'<td><input type="number"   class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"   readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeState" ></td>'
+					);
+
+					table.append(row);
+				}
+				
+				else if(gs == 'services' && wogst=='false'){
+					var table = $("table .tbody2");
+					var itemIndex = $("table .tbody2 tr").length;
+
+					var row = $("<tr class='tblRow'>");
+					row.append(
+						'<td><input type="text" class="item"  name="invoiceItems[' +
+						itemIndex +
+						'].item" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="quantity" name="invoiceItems[' +
+							itemIndex +
+							'].quantity" required /></td>'
+						);
+				
+					row.append(
+						'<td><input type="number" step="0.01" class="units" name="invoiceItems[' +
+						itemIndex +
+						'].units"  required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="description" name="invoiceItems[' +
+						itemIndex +
+						'].description" required /></td>'
+					);
+					row.append(
+							'<td><input type="number" step="0.01" class="deduction" name="invoiceItems[' +
+							itemIndex +
+							'].deduction" required /></td>'
+						);
+					row.append(
+						'<td><input type="number" class="amount" name="invoiceItems[' +
+						itemIndex +
+						'].amount" required /></td>'
+					);
+					row.append(
+						'<td><input type="text" class="sac" name="invoiceItems[' +
+						itemIndex +
+						'].sac" required  /></td>'
+					);
+					row.append(
+						'<td><input type="text"  class="hsn" name="invoiceItems[' +
+						itemIndex +
+						'].hsn" required  disabled/></td>'
+					);
+					row.append(
+							'<td><input type="number"  step="0.01" class="makingCharges" name="invoiceItems[' +
+							itemIndex +
+							'].makingCharges" required disabled="true"/></td>'
+						);
+					row.append(
+						'<td><input type="number" class="cgst" cgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].cgst" step="any" min="0" max="100"  disabled="true"/></td>'
+					);
+					row.append(
+						'<td><input type="number" class="sgst" sgstVal="" name="invoiceItems[' +
+						itemIndex +
+						'].sgst" step="any" min="0" max="100" required  disabled="true"/></td>'
+					);
+					
+					row.append(
+						'<td><input type="number" step="0.01" class="otherCharges" name="invoiceItems[' +
+						itemIndex +
+						'].otherCharges" required /></td>'
+					);
+					
+					row.append(
+						'<td><input type="number"   class="totalAmount" name="invoiceItems[' +
+						itemIndex +
+						'].totalAmount"   readonly/></td>'
+					);
+					row.append(
+						'<td ><i class="fa fa-trash text-danger removeState" ></td>'
+					);
+
+					table.append(row);
+				}
+				
+			});
+		});
+		
+		/* API for currency */
+		$(document).ready(function() {
+			$.ajax({
+				url : 'https://openexchangerates.org/api/currencies.json',
+				method : 'GET',
+				dataType : 'json',
+				success : function(data) {
+					const currencies = Object.keys(data);
+					const selectElement = $('#currencySelect');
+
+					currencies.forEach(function(currency) {
+						const optionElement = $('<option>');
+						optionElement.val(currency);
+						optionElement.text(`${currency} (${data[currency]})`);
+						selectElement.append(optionElement);
+					});
+				},
+				error : function(xhr, status, error) {
+					console.error('Error fetching currency data:', error);
+				}
+			});
+
+			$('#currencySelect').change(function() {
+				const selectedCurrency = $(this).val();
+				console.log('Selected Currency:', selectedCurrency);
+			});
+			
+			$('#currencySelect').change(function() {
+			console.log("clicked");
+			});
+			
+		});
+		
+		
+		$(document).ready(function() {
+	        $("#typesOfInvoice").on("change", function() {
+	            var selectedValue = $(this).val();
+	            var unitPriceHeading = $(".unitPrice");
+	            if (selectedValue === "goods") {
+	                unitPriceHeading.text("Unit Price");
+	            } else {
+	                unitPriceHeading.text("Units");
+	            }
+	        });
+	    });
+      /*  $( "form" ).on( "submit", function( event ) {
+				console.log( $( this ).serializeArray() );
+				event.preventDefault();
+			  } ); */
+			  
+			  
+			  
+			  
+			  $(document).on("keyup", "#oldGoldExchangeRate,#oldGoldExchangeWeight ", function () {
+				  
+				  calculateOldGoldExchangeValue();
+			  });
+			  
+			  function calculateOldGoldExchangeValue() {
+				  var oldGoldExchangeRate = parseFloat($("#oldGoldExchangeRate").val());
+				  var oldGoldExchangeWeight = parseFloat($("#oldGoldExchangeWeight").val());
+				  var rate=Math.round(oldGoldExchangeRate*oldGoldExchangeWeight);
+				  
+				  $("#oldGoldExchange").val(rate);
+			  }
+			  
+	
+	</script>
+</body>
+
+</html>

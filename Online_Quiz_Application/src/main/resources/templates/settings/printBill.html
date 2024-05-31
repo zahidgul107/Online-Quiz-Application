@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
+<!-- site metas -->
+<title>Print Bill | Expenses Management</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- calendar file css -->
+<link rel="stylesheet" th:href="@{/js/semantic.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<!-- <link rel="stylesheet" th:href="@{/css/print.css}" /> -->
+<script type="text/javascript">
+	/* 	window.print(); */
+
+	function printDiv(divName) {
+		document.getElementById('printableArea').style.display = "block";
+		
+		window.print();
+		
+	}
+</script>
+<style>
+.tbl th, .tbl td {
+	border: 2px solid black !important;
+}
+
+.tbl1 {
+	border: 2px solid black !important;
+}
+
+@media print {
+	tr {
+		page-break-inside: avoid;
+	}
+	#printButton {
+		display: none !important;
+	}
+	.print-hr {
+		border: 1px solid black !important;
+	}
+}
+
+@page {
+	margin-top: 2rem !important;
+	margin-bottom: 0px !important;
+}
+ @media print {
+            .col-md-4 {
+                display: inline-block;
+                width: 30%; /* Adjust the width as needed */
+               /*  margin-right: 2%; 
+                vertical-align: top; */
+            }
+            h6 {
+                margin-top: 0; 
+            }
+             .col-md-7 {
+                display: inline-block;
+                width: 60%; 
+              
+            }
+             .col-md-5 {
+                display: inline-block;
+                width: 35%; 
+              
+            }
+             .col-md-3 {
+                display: inline-block;
+                width: 30%; 
+            }
+             .col-md-9 {
+                display: inline-block;
+                width: 65%; 
+              
+            }
+            
+        }
+</style>
+</head>
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+
+				<div class="container-fluid" id="printableArea">
+
+					<div class="row mt-3">
+						<div class="col-md-7 mt-4">
+
+							<h3 class="mt-2">
+								<b class="text-uppercase"
+									th:text="${invoice.company.companyName}"></b>
+							</h3>
+						</div>
+						<div class="col-md-5 mt-4">
+							<h6 class="text-right">
+								<b><a th:href="${invoice.company.website}"
+									style="color: black; text-decoration: none;"
+									th:text="${invoice.company.website}"> </a></b> &nbsp;<i
+									class="fa fa-circle-o-notch" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>Email</b>:-&nbsp;<a
+									th:href="'mailto:' + ${invoice.company.email}"
+									style="color: black; text-decoration: none;"> <strong
+									th:text="${invoice.company.email}"></strong>
+								</a> &nbsp;<i class="fa fa-envelope-o" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>Tel</b>: <strong th:text="${invoice.company.phoneNumber}"></strong>
+								&nbsp;<i class="fa fa-phone" style="font-size: 1.1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>H.O</b>:&nbsp;<b th:text="${invoice.company.headOffice}"></b>
+								&nbsp;<i class="fa fa-university" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>B.O</b>:&nbsp;<b th:text="${invoice.company.branchOffice}"></b>
+								&nbsp;<i class="fa fa-bank" style="font-size: 1rem;"></i>
+							</h6>
+						</div>
+
+						<div class="col-md-4 mt-4">
+							<h6>
+								<b>Registration No</b>:<strong th:text="${invoice.company.registrationNumber}"></strong>
+							</h6>
+						</div>
+						<div class="col-md-3 mt-4">
+							<h6>
+								<b>PAN</b>: <strong th:text="${invoice.company.panNumber}"></strong>
+							</h6>
+						</div>
+
+						<div class="col-md-5 mt-4">
+							<h6 class="text-right">
+								<b>GSTIN</b>: <strong th:text="${invoice.company.gstinNumber}"></strong>
+							</h6>
+						</div>
+						<div class="col-md-12 mt-2">
+							<hr class="print-hr"
+								style="height: 2px; border-width: 2px; color: gray; background-color: black">
+						</div>
+						<div class="col-md-6 ">
+							<h5 class=" mt-3">From:</h5>
+						</div>
+					
+
+						<div class="col-md-12 mt-4">
+							<table class="table table-bordered tbl1 " id="tbl3">
+								<thead>
+									<tr>
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th colspan="8"><h6
+												th:text="${invoice.company.companyName}"></h6>
+											<h6 th:text="${invoice.company.address}"></h6>
+											<h6 th:text="${invoice.company.pincode}"></h6>
+											<h6
+												th:text="${invoice.company.state + ', ' + invoice.company.country}"></h6>
+											<h6 th:text="${invoice.company.phoneNumber}"></h6></th>
+										<th colspan="4"><h6>
+												Bill Date:<strong class="float-right"
+													th:text="${invoice.invoiceDate}"></strong>
+											</h6>
+											<h6>
+												Bill No:<strong class="float-right"
+													th:text="${invoice.invoiceNumber}"></strong>
+											</h6>
+											<h6>
+												GSTIN:<strong class="float-right"
+													th:text="${invoice.company.gstinNumber}"></strong>
+											</h6>
+											<h6>
+												Registration No:<strong class="float-right"
+													th:text="${invoice.company.registrationNumber}"></strong>
+											</h6> 
+										<!-- 	<h6>
+												IECODE:<strong class="float-right"
+													th:text="${invoice.company.ieCode}"></strong>
+											</h6> -->
+											<!-- <h6>
+												CIN:<strong class="float-right"
+													th:text="${invoice.company.cinNumber}"></strong>
+											</h6> --></th>
+
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+
+						<div class="col-md-12 ">
+							<h5 class=" mt-3">To</h5>
+							<h5 class="" th:text="${invoice.party.partyName}"></h5>
+							<h5 class="" th:text="${invoice.party.address}"></h5>
+							<h5 class="" th:text="${invoice.party.pincode}"></h5>
+						</div>
+
+						<div th:if="${igst} and ${hsn} == true" class="col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+								<thead>
+									<tr>
+										<th class="font-weight-bold">Items</th>
+										<th class="font-weight-bold">Quantity</th>
+										<th class="font-weight-bold">Units</th>
+										<th class="font-weight-bold">Description</th>
+										<th class="font-weight-bold">Deduction</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold d1">HSN</th>
+										<th class="font-weight-bold">IGST(%)</th>
+										<th class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'}?'Making Charges':'Labour Charges'"></th>
+										<th class="font-weight-bold">Other Charges</th>
+										<th class="font-weight-bold" th:text="'Total Amount ('+${invoice.currency}+')'"></th>
+									</tr>
+								</thead>
+								<tbody class="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										<td class="font-weight-bold" th:text="${item.deduction}"></td>
+										<td class="font-weight-bold amountt" th:text="${item.amount}" id=""></td>
+										<td class="font-weight-bold" th:text="${item.hsn}"></td>
+										<td class="font-weight-bold" th:text="${item.igst}"></td>
+										<td class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'} ? ${item.makingCharges} : ${item.labourCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.otherCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.totalAmount}"></td>
+									</tr>
+
+								</tbody>
+								<tr>
+
+									<th rowspan="5" colspan="6"></th>
+									<th colspan="4" class="text-right"
+										th:text="'Total Amount ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="" class="font-weight-bold ta"></td>
+								</tr>
+								<tr>
+
+									<th colspan="4" class="text-right">Total IGST:</th>
+									<td colspan="1" class="font-weight-bold"
+										th:text="${invoice.totalIgst}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total Amount <br><small> (Including Tax & other Charges)</small></th>
+									<td colspan="1" id="totalAmount" class="font-weight-bold"
+										th:text="${invoice.totalAmount}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Old Gold Exchange Value</th>
+									<td  th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="oldGoldExchange" class="font-weight-bold"
+										th:text="${invoice.oldGoldExchange}"></td>
+								</tr>
+								<tr>
+									<th  th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Discount</th>
+									<td  th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="discount" class="font-weight-bold"
+										th:text="${invoice.discount}"></td>
+								</tr>
+								<tr>
+									<th colspan="10" class="text-right"
+										th:text="'Grand Total ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="" class="font-weight-bold grandtotal"
+										th:text="${invoice.grandTotal}"></td>
+								</tr>
+
+							</table>
+						</div>
+						
+						<div th:if="${igst} and ${sac} == true" class="col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+								<thead>
+									<tr>
+										<th class="font-weight-bold">Items</th>
+										<th class="font-weight-bold">Quantity</th>
+										<th class="font-weight-bold">Units</th>
+										<th class="font-weight-bold">Description</th>
+										<th class="font-weight-bold">Deduction</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold">SAC</th>
+										<th class="font-weight-bold">IGST(%)</th>
+										<th class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'}?'Making Charges':'Labour Charges'"></th>
+										<th class="font-weight-bold">Other Charges</th>
+										<th class="font-weight-bold" th:text="'Total Amount ('+${invoice.currency}+')'"></th>
+									</tr>
+								</thead>
+								<tbody class="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										<td class="font-weight-bold" th:text="${item.deduction}"></td>
+										<td class="font-weight-bold amountt" th:text="${item.amount}" id=""></td>
+										<td class="font-weight-bold" th:text="${item.sac}"></td>
+										<td class="font-weight-bold" th:text="${item.igst}"></td>
+					                    <td class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'} ? ${item.makingCharges} : ${item.labourCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.otherCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.totalAmount}"></td>
+									</tr>
+
+								</tbody>
+								<tr>
+
+									<th rowspan="5" colspan="6"></th>
+									<th colspan="4" class="text-right"
+										th:text="'Total Amount ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" class="font-weight-bold ta"></td>
+								</tr>
+								<tr>
+
+									<th colspan="4" class="text-right">Total IGST:</th>
+									<td colspan="1" class="font-weight-bold"
+										th:text="${invoice.totalIgst}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total Amount <br><small> (Including Tax & other Charges)</small></th>
+									<td colspan="1" id="totalAmount" class="font-weight-bold"
+										th:text="${invoice.totalAmount}"></td>
+								</tr>
+								<tr>
+									<th  th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Old Gold Exchange Value</th>
+									<td  th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" class="font-weight-bold"
+										th:text="${invoice.oldGoldExchange}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Discount</th>
+									<td  th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" class="font-weight-bold"
+										th:text="${invoice.discount}"></td>
+								</tr>
+								<tr>
+									<th colspan="10" class="text-right"
+										th:text="'Grand Total ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" class="font-weight-bold grandtotal"
+										th:text="${invoice.grandTotal}"></td>
+								</tr>
+
+							</table>
+						</div>
+						
+						<div th:if="${cgstsgst} and ${hsn} == true"class="col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+								<thead>
+									<tr>
+										<th class="font-weight-bold">Items</th>
+										<th class="font-weight-bold">Quantity</th>
+										<th class="font-weight-bold">Units</th>
+										<th class="font-weight-bold">Description</th>
+										<th class="font-weight-bold">Deduction</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold">HSN</th>
+										<th class="font-weight-bold">SGST(%)</th>
+										<th class="font-weight-bold">CGST(%)</th>
+										<th class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'}?'Making Charges':'Labour Charges'"></th>
+										<th class="font-weight-bold">Other Charges</th>
+										<th class="font-weight-bold" th:text="'Total Amount ('+${invoice.currency}+')'"></th>
+									</tr>
+								</thead>
+								<tbody class="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										<td class="font-weight-bold" th:text="${item.deduction}"></td>
+										<td class="font-weight-bold amountt" th:text="${item.amount}" id=""></td>
+										<td class="font-weight-bold" th:text="${item.hsn}"></td>
+										<td class="font-weight-bold" th:text="${item.sgst}"></td>
+										<td class="font-weight-bold" th:text="${item.cgst}"></td>
+										<td class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'} ? ${item.makingCharges} : ${item.labourCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.otherCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.totalAmount}"></td>
+										
+									</tr>
+
+								</tbody>
+								<tr>
+
+									<th rowspan="6" colspan="7"></th>
+									<th colspan="4" class="text-right"
+										th:text="'Total Amount ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="" class="font-weight-bold ta"
+										th:text="${totalAmount}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total SGST:</th>
+									<td colspan="1" id="tsgst" class="font-weight-bold"
+										th:text="${invoice.totalSgst}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total CGST:</th>
+									<td colspan="1" id="tcgst" class="font-weight-bold"
+										th:text="${invoice.totalCgst}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total Amount <br><small> (Including Tax & other Charges)</small></th>
+									<td colspan="1" id="totalAmount" class="font-weight-bold"
+										th:text="${invoice.totalAmount}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Old Gold Exchange Value</th>
+									<td  th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="oldGoldExchange" class="font-weight-bold"
+										th:text="${invoice.oldGoldExchange}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Discount</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="discount" class="font-weight-bold"
+										th:text="${invoice.discount}"></td>
+								</tr>
+								<tr>
+									<th colspan="11" class="text-right"
+										th:text="'Grand Total ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="grandtotal" class="font-weight-bold grandtotal"
+										th:text="${invoice.grandTotal}"></td>
+								</tr>
+
+							</table>
+						</div>
+						
+						<div th:if="${cgstsgst} and ${sac} == true" class="col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+								<thead>
+									<tr>
+										<th class="font-weight-bold">Items</th>
+										<th class="font-weight-bold">Quantity</th>
+										<th class="font-weight-bold">Units</th>
+										<th class="font-weight-bold">Description</th>
+										<th class="font-weight-bold">Deduction</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold">SAC</th>
+										<th class="font-weight-bold">SGST(%)</th>
+										<th class="font-weight-bold">CGST(%)</th>
+										<th class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'}?'Making Charges':'Labour Charges'"></th>
+										<th class="font-weight-bold">Other Charges</th>
+										<th class="font-weight-bold" th:text="'Total Amount ('+${invoice.currency}+')'"></th>
+									</tr>
+								</thead>
+								<tbody class="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										<td class="font-weight-bold" th:text="${item.deduction}"></td>
+										<td class="font-weight-bold amountt" th:text="${item.amount}" id=""></td>
+										<td class="font-weight-bold" th:text="${item.sac}"></td>
+										<td class="font-weight-bold" th:text="${item.sgst}"></td>
+										<td class="font-weight-bold" th:text="${item.cgst}"></td>
+										<td class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'} ? ${item.makingCharges} : ${item.labourCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.otherCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.totalAmount}"></td>
+									</tr>
+
+								</tbody>
+								<tr>
+
+									<th rowspan="6" colspan="7"></th>
+									<th colspan="4" class="text-right"
+										th:text="'Total Amount ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="" class="font-weight-bold ta"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total SGST:</th>
+									<td colspan="1" id="tsgst" class="font-weight-bold"
+										th:text="${invoice.totalSgst}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total CGST:</th>
+									<td colspan="1" id="tcgst" class="font-weight-bold"
+										th:text="${invoice.totalCgst}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total Amount <br><small> (Including Tax & other Charges)</small></th>
+									<td colspan="1" id="totalAmount" class="font-weight-bold"
+										th:text="${invoice.totalAmount}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Old Gold Exchange Value</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="oldGoldExchange" class="font-weight-bold"
+										th:text="${invoice.oldGoldExchange}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Discount</th>
+									<td  th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="discount" class="font-weight-bold"
+										th:text="${invoice.discount}"></td>
+								</tr>
+								<tr>
+									<th colspan="11" class="text-right"
+										th:text="'Grand Total ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="grandtotal" class="font-weight-bold grandtotal"
+										th:text="${invoice.grandTotal}"></td>
+								</tr>
+
+							</table>
+						</div>
+						
+						
+						  <!--=================== half four with igst/cgst/sgst false =====================-->
+						  
+					 	 <div th:if="${igst} == false and ${hsn} == true" class="col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+								<thead>
+									<tr>
+										<th class="font-weight-bold">Items</th>
+										<th class="font-weight-bold">Quantity</th>
+										<th class="font-weight-bold">Units</th>
+										<th class="font-weight-bold">Description</th>
+										<th class="font-weight-bold">Deduction</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold">HSN</th>
+										<th class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'}?'Making Charges':'Labour Charges'"></th>
+										<th class="font-weight-bold">Other Charges</th>
+										
+										<th class="font-weight-bold"
+											th:text="'Total Amount ('+${invoice.currency}+')'"></th>
+									</tr>
+								</thead>
+								<tbody class="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										<td class="font-weight-bold" th:text="${item.deduction}"></td>
+										<td class="font-weight-bold amountt" th:text="${item.amount}" id=""></td>
+										<td class="font-weight-bold" th:text="${item.hsn}"></td>
+										<td class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'} ? ${item.makingCharges} : ${item.labourCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.otherCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.totalAmount}"></td>
+									</tr>
+
+								</tbody>
+								<tr>
+
+									<th rowspan="4" colspan="5"></th>
+									<th colspan="4" class="text-right"
+										th:text="'Total Amount ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="" class="font-weight-bold ta"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total Amount <br><small> (Including Tax & other Charges)</small></th>
+									<td colspan="1" id="totalAmount" class="font-weight-bold"
+										th:text="${invoice.totalAmount}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Old Gold Exchange Value</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="oldGoldExchange" class="font-weight-bold"
+										th:text="${invoice.oldGoldExchange}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Discount</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="discount" class="font-weight-bold"
+										th:text="${invoice.discount}"></td>
+								</tr>
+								<tr>
+									<th colspan="9" class="text-right"
+										th:text="'Grand Total ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="grandtotal" class="font-weight-bold grandtotal"
+										th:text="${invoice.grandTotal}"></td>
+								</tr>
+
+							</table>
+						</div>
+						
+						<div th:if="${igst} == false and ${sac} == true" class="col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+								<thead>
+									<tr>
+										<th class="font-weight-bold">Items</th>
+										<th class="font-weight-bold">Quantity</th>
+										<th class="font-weight-bold">Units</th>
+										<th class="font-weight-bold">Description</th>
+										<th class="font-weight-bold">Deduction</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold">SAC</th>
+										<th class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'}?'Making Charges':'Labour Charges'"></th>
+										<th class="font-weight-bold">Other Charges</th>
+										<th class="font-weight-bold" th:text="'Total Amount ('+${invoice.currency}+')'"></th>
+									</tr>
+								</thead>
+								<tbody class="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										<td class="font-weight-bold" th:text="${item.deduction}"></td>
+										<td class="font-weight-bold amountt" th:text="${item.amount}" id=""></td>
+										<td class="font-weight-bold" th:text="${item.sac}"></td>
+									<td class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'} ? ${item.makingCharges} : ${item.labourCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.otherCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.totalAmount}"></td>
+									</tr>
+
+								</tbody>
+								<tr>
+
+									<th rowspan="4" colspan="5"></th>
+									<th colspan="4" class="text-right"
+										th:text="'Total Amount ('+${invoice.currency}+'):'"></th>
+									<td colspan="1"  class="font-weight-bold ta"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total Amount <br><small> (Including Tax & other Charges)</small></th>
+									<td colspan="1" id="totalAmount" class="font-weight-bold"
+										th:text="${invoice.totalAmount}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Old Gold Exchange Value</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="oldGoldExchange" class="font-weight-bold"
+										th:text="${invoice.oldGoldExchange}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Discount</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="discount" class="font-weight-bold"
+										th:text="${invoice.discount}"></td>
+								</tr>
+								<tr>
+									<th colspan="9" class="text-right"
+										th:text="'Grand Total ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="grandtotal" class="font-weight-bold grandtotal"
+										th:text="${invoice.grandTotal}"></td>
+								</tr>
+
+							</table>
+						</div>
+						
+						<div th:if="${cgstsgst} == false and ${hsn} == true" class="col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+								<thead>
+									<tr>
+										<th class="font-weight-bold">Items</th>
+										<th class="font-weight-bold">Quantity</th>
+										<th class="font-weight-bold">Units</th>
+										<th class="font-weight-bold">Description</th>
+										<th class="font-weight-bold">Deduction</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold">HSN</th>
+										<th class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'}?'Making Charges':'Labour Charges'"></th>
+										<th class="font-weight-bold">Other Charges</th>
+										<th class="font-weight-bold" th:text="'Total Amount ('+${invoice.currency}+')'"></th>
+									</tr>
+								</thead>
+								<tbody class="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										<td class="font-weight-bold" th:text="${item.deduction}"></td>
+										<td class="font-weight-bold amountt" th:text="${item.amount}" id=""></td>
+										<td class="font-weight-bold" th:text="${item.hsn}"></td>
+										<td class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'} ? ${item.makingCharges} : ${item.labourCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.otherCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.totalAmount}"></td>
+									</tr>
+
+								</tbody>
+								<tr>
+
+									<th rowspan="4" colspan="5"></th>
+									<th colspan="4" class="text-right"
+										th:text="'Total Amount ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="" class="font-weight-bold ta"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total Amount <br><small> (Including Tax & other Charges)</small></th>
+									<td colspan="1" id="totalAmount" class="font-weight-bold"
+										th:text="${invoice.totalAmount}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Old Gold Exchange Value</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="oldGoldExchange" class="font-weight-bold"
+										th:text="${invoice.oldGoldExchange}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Discount</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="discount" class="font-weight-bold"
+										th:text="${invoice.discount}"></td>
+								</tr>
+								<tr>
+									<th colspan="9" class="text-right"
+										th:text="'Grand Total ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="grandtotal" class="font-weight-bold grandtotal"
+										th:text="${invoice.grandTotal}"></td>
+								</tr>
+
+							</table>
+						</div>
+						
+						<div th:if="${cgstsgst} == false and ${sac} == true" class="col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+								<thead>
+									<tr>
+										<th class="font-weight-bold">Items</th>
+										<th class="font-weight-bold">Quantity</th>
+										<th class="font-weight-bold">Units</th>
+										<th class="font-weight-bold">Description</th>
+										<th class="font-weight-bold">Deduction</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold">SAC</th>
+										<th class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'}?'Making Charges':'Labour Charges'"></th>
+										<th class="font-weight-bold">Other Charges</th>
+										
+										<th class="font-weight-bold"
+											th:text="'Total Amount ('+${invoice.currency}+')'"></th>
+									</tr>
+								</thead>
+								<tbody class="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										<td class="font-weight-bold" th:text="${item.deduction}"></td>
+										<td class="font-weight-bold amountt" th:text="${item.amount}" id=""></td>
+										<td class="font-weight-bold" th:text="${item.sac}"></td>
+										<td class="font-weight-bold" th:text="${invoice.billType == 'ServiceTaxBill'} ? ${item.makingCharges} : ${item.labourCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.otherCharges}"></td>
+										<td class="font-weight-bold" th:text="${item.totalAmount}"></td>
+									</tr>
+
+								</tbody>
+								<tr>
+
+									<th rowspan="4" colspan="5"></th>
+									<th colspan="4" class="text-right"
+										th:text="'Total Amount ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="" class="font-weight-bold ta"
+										th:text="${totalAmount}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total Amount <br><small> (Including Tax & other Charges)</small></th>
+									<td colspan="1" id="totalAmount" class="font-weight-bold"
+										th:text="${invoice.totalAmount}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Old Gold Exchange Value</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="oldGoldExchange" class="font-weight-bold"
+										th:text="${invoice.oldGoldExchange}"></td>
+								</tr>
+								<tr>
+									<th th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="4" class="text-right">Discount</th>
+									<td th:if="${invoice.billType != 'ServiceTaxBill'}" colspan="1" id="discount" class="font-weight-bold"
+										th:text="${invoice.discount}"></td>
+								</tr>
+								<tr>
+									<th colspan="9" class="text-right"
+										th:text="'Grand Total ('+${invoice.currency}+'):'"></th>
+									<td colspan="1" id="grandtotal" class="font-weight-bold grandtotal"
+										th:text="${invoice.grandTotal}"></td>
+								</tr>
+
+							</table>
+						</div>
+
+						<div class=" col-md-12">
+							<div class="row">
+								<!-- <div class=" col-md-3">
+									<h4 class=" text-capitalize ">Amount In Words:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold" id="amount"></strong>
+								</div> -->
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">Name of Beneficiary:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.company.companyName}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">Bank Name:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.bankDetails.bankName + ', ' + invoice.bankDetails.address}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">A/C No:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.bankDetails.accountNumber}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">IFSC Code:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.bankDetails.ifscCode}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">AD Code:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.bankDetails.adCode}"></strong>
+								</div>
+
+							</div>
+							
+						</div>
+					
+							
+							<div class="col-md-11  mt-2 p-4 float-right text-right"
+							th:if="${invoice.company.imageName} != null">
+								
+								<div class=" col-md-11  float-right text-right">
+									<div 
+										style="height: 150px; width: 150px; border-radius: 4px; overflow: hidden;float: right;">
+										<img 
+											th:src="@{'/invoice/getimage/'+${invoice.company.imageName}}"
+											height="150px" width="170px">
+									</div>
+									
+								</div>
+								<h5 class="">
+									<strong> Authorised Signatory</strong>
+								</h5>
+							</div>
+					</div>
+
+				</div>
+
+				<div class="row m-5">
+					<div class="col-lg-12 ">
+						<button class="btn-primary float-right" id="printButton"
+							onclick="printDiv('printableArea')">
+							<i class="fa fa-print" aria-hidden="true"> Print</i>
+						</button>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<script th:src="@{/js/dynamicField.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<!-- custom js -->
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+
+		calculateTotalTax();
+		function calculateTotalTax() {
+			var subTotal = parseFloat($('.subtotal').text());
+			var igst = parseFloat($('.igst').text());
+			var cgst = parseFloat($('.cgst').text());
+			var sgst = parseFloat($('.sgst').text());
+
+			var igstPercentage = (igst / 100) * subTotal;
+			var cgstPercentage = (cgst / 100) * subTotal;
+			var sgstPercentage = (sgst / 100) * subTotal;
+			if (typeof cgstPercentage === 'undefined' || isNaN(cgstPercentage)) {
+				cgstPercentage = 0;
+			}
+			if (typeof igstPercentage === 'undefined' || isNaN(igstPercentage)) {
+				igstPercentage = 0;
+			}
+			if (typeof sgstPercentage === 'undefined' || isNaN(sgstPercentage)) {
+				sgstPercentage = 0;
+			}
+			$('.igstVal').text(igstPercentage);
+			$('.cgstVal').text(cgstPercentage);
+			$('.sgstVal').text(sgstPercentage);
+		}		
+		//convert numbers to words
+		var num=parseInt($('.grandtotal').text()); 
+		console.log("grandtotal====",num);
+		convertToWords(num);
+	    function convertToWords(num){
+	    fetch(`https://api.funtranslations.com/translate/numbers.json?text=${num}`)
+	   .then(response => response.json())
+	   .then(data => {
+	    $('#amount').text(data.contents.translated+" Only");
+	    console.log("translated",data)
+	    })
+	    .catch(error => {
+	     console.log('An error occurred:', error);
+	     $('#amount').text("Loading");
+	     });
+	}
+	</script>
+	<script type="text/javascript">
+  $(document).ready(function(){
+	var val=0;
+ 	$(".it tr").each(function(){ 
+	   val= val+parseFloat( $(this).find(('.amountt')).text());	
+	    console.log("amount=====", val)
+    });
+ 	console.log("totalAmount ======",val)
+ 	$('.ta').text(val);
+ 	
+});
+</script>
+</body>
+</html>

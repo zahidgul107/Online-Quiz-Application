@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Print Invoice | Expenses Management</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/pyramidlogo.jpg}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- calendar file css -->
+<link rel="stylesheet" th:href="@{/js/semantic.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+
+
+<script type="text/javascript">
+	/* 	window.print(); */
+
+	function printDiv(divName) {
+		document.getElementById('printableArea').style.display = "block";
+		// Store the current CSS media type
+		/* var originalMediaType = document.body.style.media;
+		document.body.style.media = "print"; // Set the media type to 'print'
+
+		var printContents = document.getElementById(divName).innerHTML;
+		var originalContents = document.body.innerHTML;
+		document.body.innerHTML = printContents; */
+		window.print();
+		/* document.body.style.media = originalMediaType;
+		document.body.innerHTML = originalContents; */
+	}
+</script>
+<style>
+.tbl th, .tbl td {
+	border: 2px solid black !important;
+}
+
+.tbl1 {
+	border: 2px solid black !important;
+}
+
+@media print {
+	tr {
+		page-break-inside: avoid;
+	}
+	#printButton {
+		display: none !important;
+	}
+	.print-hr {
+		border: 1px solid black !important;
+	}
+}
+
+@page {
+	margin-top: 2rem !important;
+	margin-bottom: 0px !important;
+}
+ @media print {
+            .col-md-4 {
+                display: inline-block;
+                width: 30%; /* Adjust the width as needed */
+               /*  margin-right: 2%; 
+                vertical-align: top; */
+            }
+            h6 {
+                margin-top: 0; 
+            }
+             .col-md-7 {
+                display: inline-block;
+                width: 60%; 
+              
+            }
+             .col-md-5 {
+                display: inline-block;
+                width: 35%; 
+              
+            }
+             .col-md-3 {
+                display: inline-block;
+                width: 30%; 
+                margin-left:5%;
+                margin-top:5%;
+              
+            }
+             .col-md-9 {
+                display: inline-block;
+                width: 65%; 
+              
+            }
+            
+        }
+</style>
+</head>
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+
+				<div class="container-fluid" id="printableArea">
+
+					<div class="row mt-3">
+						<div class="col-md-7 mt-2">
+
+							<h3 class="mt-2">
+								<b class="text-uppercase"
+									th:text="${invoice.company.companyName}"></b>
+							</h3>
+							</div>
+							<!-- <div class="row">
+								<div class="col-md-3">
+									<img th:src="@{/images/pyramidlogo.jpg}" alt=""
+										style="width: 5.5rem;">
+								</div>
+								<div class="col-md-9 mt-2">
+									<h1>
+										<b th:text="${invoice.company.companyName}"></b>
+									</h1>
+								</div>
+							</div> -->
+						<!-- </div> -->
+
+
+						<div class="col-md-5 mt-3">
+							<h6 class="text-right">
+								<b><a th:href="${invoice.company.website}"
+									style="color: black; text-decoration: none;"
+									th:text="${invoice.company.website}"> </a></b> &nbsp;<i
+									class="fa fa-circle-o-notch" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>Email</b>:-&nbsp;<a
+									th:href="'mailto:' + ${invoice.company.email}"
+									style="color: black; text-decoration: none;"> <strong
+									th:text="${invoice.company.email}"></strong>
+								</a> &nbsp;<i class="fa fa-envelope-o" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>Tel</b>: <strong th:text="${invoice.company.phoneNumber}"></strong>
+								&nbsp;<i class="fa fa-phone" style="font-size: 1.1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>H.O</b>:&nbsp;<b th:text="${invoice.company.headOffice}"></b>
+								&nbsp;<i class="fa fa-university" style="font-size: 1rem;"></i>
+							</h6>
+							<h6 class="text-right">
+								<b>B.O</b>:&nbsp;<b th:text="${invoice.company.branchOffice}"></b>
+								&nbsp;<i class="fa fa-bank" style="font-size: 1rem;"></i>
+							</h6>
+						</div>
+                            </div>
+                            
+                            
+                            <div class="row mt-2 ">  
+						<div class="col-md-4">
+							<h6>
+								<b>CIN </b>:<strong th:text="${invoice.company.cinNumber}"></strong>
+							</h6>
+						</div>
+						<div class="col-md-4">
+							<h6>
+								<b>PAN</b>: <strong th:text="${invoice.company.panNumber}"></strong>
+							</h6>
+						</div>
+
+						<div class="col-md-4">
+							<h6 class="text-right">
+								<b>GSTIN</b>: <strong th:text="${invoice.company.gstinNumber}"></strong>
+							</h6>
+						</div>
+						
+						<div class="col-md-12 mt-2">
+							<hr class="print-hr"
+								style="height: 2px; border-width: 1px; color: gray; background-color: black">
+						</div>
+						<div class="col-md-6 ">
+							<h5 class=" mt-3">From:</h5>
+						</div>
+						<!-- <div class="col-md-8 ">
+							<h4 class=" mt-4" th:text="${invoice.company.companyName}"></h4>
+						</div>
+
+						<div class="col-md-4">
+							<h4 class="text-center mt-4">
+								Invoice:<strong th:text="${invoice.invoiceDate}"></strong>
+							</h4>
+						</div> -->
+
+						<div class="col-md-12 mt-2">
+							<table class="table table-bordered tbl1 " id="tbl3">
+								<thead>
+									<tr>
+
+									</tr>
+								</thead>
+								<tbody>
+
+
+
+									<tr>
+										<th colspan="8"><h6
+												th:text="${invoice.company.companyName}"></h6>
+											<h6 th:text="${invoice.company.address}"></h6>
+											<h6 th:text="${invoice.company.pincode}"></h6>
+											<h6
+												th:text="${invoice.company.state + ', ' + invoice.company.country}"></h6>
+											<h6 th:text="${invoice.company.phoneNumber}"></h6></th>
+										<th colspan="4"><h6>
+												Invoice Date:<strong class="float-right"
+													th:text="${invoice.invoiceDate}"></strong>
+											</h6>
+											<h6>
+												Invoice No:<strong class="float-right"
+													th:text="${invoice.invoiceNumber}"></strong>
+											</h6>
+											<h6>
+												GSTIN:<strong class="float-right"
+													th:text="${invoice.company.gstinNumber}"></strong>
+											</h6>
+											<h6>
+												IECODE:<strong class="float-right"
+													th:text="${invoice.company.ieCode}"></strong>
+											</h6>
+											<h6>
+												CIN:<strong class="float-right"
+													th:text="${invoice.company.cinNumber}"></strong>
+											</h6></th>
+
+									</tr>
+
+
+
+								</tbody>
+							</table>
+						</div>
+
+
+						<div class="col-md-12">
+							<h5 class=" mt-3">To</h5>
+							<h5 class="" th:text="${invoice.party.partyName}"></h5>
+							<h5 class="" th:text="${invoice.party.address}"></h5>
+							<h5 class="" th:text=" ${invoice.party.pincode}"></h5>
+							<h5 class="" th:text="${invoice.party.gstinNumber}" th:if="${invoice.party.gstinNumber}"></h5>
+						</div>
+
+
+
+
+
+						<div class=" col-md-12 table table-responsive">
+							<table class="table table-bordered mt-3 tbl">
+								<thead>
+
+
+
+									<tr>
+										<th class="font-weight-bold">Items</th>
+										<th class="font-weight-bold">Quantity</th>
+										<th class="font-weight-bold">units</th>
+										<th class="font-weight-bold w-100">Description</th>
+										<th class="font-weight-bold">Amount</th>
+										<th class="font-weight-bold">SAC</th>
+										<th class="font-weight-bold">HSN</th>
+										<th class="font-weight-bold">IGST(%)</th>
+										<th class="font-weight-bold">CGST(%)</th>
+										<th class="font-weight-bold">SGST(%)</th>
+										<th class="font-weight-bold"
+											th:text="'Total Amount ('+${invoice.currency}+')'"></th>
+									</tr>
+								</thead>
+								<tbody id="it">
+
+									<tr th:each="item : ${invoice.invoiceItems}">
+
+										<td class="font-weight-bold" th:text="${item.item}"></td>
+										<td class="font-weight-bold" th:text="${item.quantity}"></td>
+										<td class="font-weight-bold" th:text="${item.units}"></td>
+										<td class="font-weight-bold" th:text="${item.description}"></td>
+										<td class="font-weight-bold" th:text="${item.amount}"
+											id="amountt"></td>
+										<td class="font-weight-bold" th:text="${item.sac}"></td>
+										<td class="font-weight-bold" th:text="${item.hsn}"></td>
+										<td class="font-weight-bold" th:text="${item.igst}"></td>
+										<td class="font-weight-bold" th:text="${item.cgst}"></td>
+										<td class="font-weight-bold" th:text="${item.sgst}"></td>
+										<td class="font-weight-bold" th:text="${item.totalAmount}"></td>
+									</tr>
+
+								</tbody>
+								<tr>
+
+									<th rowspan="4" colspan="6 "></th>
+									<th colspan="4" class="text-right"
+										th:text="'Total Amount ('+${invoice.currency}+'):'"></th>
+									<td colspan="2" id="ta" class="font-weight-bold"
+										th:text="${totalAmount}"></td>
+								</tr>
+								<tr>
+
+									<th colspan="4" class="text-right">Total IGST:</th>
+									<td colspan="2" id="tigst" class="font-weight-bold"
+										th:text="${invoice.totalIgst}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total SGST:</th>
+									<td colspan="2" id="tsgst" class="font-weight-bold"
+										th:text="${invoice.totalSgst}"></td>
+								</tr>
+								<tr>
+									<th colspan="4" class="text-right">Total CGST:</th>
+									<td colspan="2" id="tcgst" class="font-weight-bold"
+										th:text="${invoice.totalCgst}"></td>
+								</tr>
+
+								<tr>
+									<th colspan="10" class="text-right"
+										th:text="'Grand Total ('+${invoice.currency}+'):'"></th>
+									<td colspan="2" id="grandtotal" class="font-weight-bold"
+										th:text="${invoice.totalAmount}"></td>
+								</tr>
+
+							</table>
+						</div>
+
+
+
+
+
+
+						<div class=" col-md-9">
+						
+					<!-- 		<div class="row">
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">Amount In Words:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold" id="amount"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">Name of Beneficiary:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.company.companyName}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">Bank Name:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.bankDetails.bankName + ', ' + invoice.bankDetails.address}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">A/C No:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.bankDetails.accountNumber}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">IFSC Code:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.bankDetails.ifscCode}"></strong>
+								</div>
+								<div class=" col-md-3">
+									<h4 class=" text-capitalize ">AD Code:</h4>
+								</div>
+								<div class=" col-md-9">
+									<strong class=" text-capitalize font-weight-bold"
+										th:text="${invoice.bankDetails.adCode}"></strong>
+								</div>
+
+							</div> -->
+							
+							  <table class="table table-borderless mt-2">
+							  <h5 class="" th:if="${invoice.lutApplicable == 'yes'}" >
+								Note:-<span style="font-size:13px;"> Export under LUT Number :</span> &nbsp;<strong style="font-size:13px;" class="ml-2" th:text="${invoice.lutNumber}"></strong>
+							</h5>
+							<h5 class="">
+								Amount In Words:&nbsp;<strong class="ml-2 text-capitalize font-weight-bold"  id="amount"></strong>
+							</h5>
+							<h5 class="">
+								Name of Benificiary:&nbsp;<strong class="ml-2 font-weight-bold" th:text="${invoice.company.companyName}"></strong>
+							</h5>
+							<h5 class="">
+								Bank Name:&nbsp;&nbsp;&nbsp;<strong class="ml-2 font-weight-bold" th:text="${invoice.bankDetails.bankName + ', ' + invoice.bankDetails.address}"></strong>
+							</h5>
+							<h5 class="">
+								A/C No: &nbsp;&nbsp;&nbsp;<strong class="ml-2 font-weight-bold" th:text="${invoice.bankDetails.accountNumber}"></strong>
+							</h5>
+							<h5 class="">
+								IFSC Code:&nbsp;&nbsp;&nbsp;<strong class="ml-2  font-weight-bold" th:text="${invoice.bankDetails.ifscCode}"></strong>
+							</h5>
+							<h5 class="">
+								AD Code:&nbsp;&nbsp;&nbsp;<strong class="ml-2  font-weight-bold" th:text="${invoice.bankDetails.adCode}"></strong>
+							</h5>
+                 </table> 
+						
+						</div>
+
+							<div class="col-md-3 "
+							th:if="${invoice.company.imageName} != null">
+								
+								<!-- <div class="col-md-4"
+									
+										style="height: 150px; width: 150px; border:none; overflow: hidden;"> -->
+										<img 
+											th:src="@{'/invoice/getimage/'+${invoice.company.imageName}}"
+											height="150px" width="170px" style=" border:none; overflow: hidden;">
+									
+									
+								<!-- </div> -->
+								 <h6 class="">
+									<strong> Authorised Signatory</strong>
+								</h6> 
+							</div>
+						
+
+
+					</div>
+
+				</div>
+
+				<div class="row m-5">
+					<div class="col-lg-12 ">
+						<button class="btn-primary float-right" id="printButton"
+							onclick="printDiv('printableArea')">
+							<i class="fa fa-print" aria-hidden="true"> Print</i>
+						</button>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<script th:src="@{/js/dynamicField.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<!-- custom js -->
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+
+		calculateTotalTax();
+		function calculateTotalTax() {
+			var subTotal = parseFloat($('.subtotal').text());
+			var igst = parseFloat($('.igst').text());
+			var cgst = parseFloat($('.cgst').text());
+			var sgst = parseFloat($('.sgst').text());
+
+			var igstPercentage = (igst / 100) * subTotal;
+			var cgstPercentage = (cgst / 100) * subTotal;
+			var sgstPercentage = (sgst / 100) * subTotal;
+			if (typeof cgstPercentage === 'undefined' || isNaN(cgstPercentage)) {
+				cgstPercentage = 0;
+			}
+			if (typeof igstPercentage === 'undefined' || isNaN(igstPercentage)) {
+				igstPercentage = 0;
+			}
+			if (typeof sgstPercentage === 'undefined' || isNaN(sgstPercentage)) {
+				sgstPercentage = 0;
+			}
+			$('.igstVal').text(igstPercentage);
+			$('.cgstVal').text(cgstPercentage);
+			$('.sgstVal').text(sgstPercentage);
+
+		}
+		
+		
+		//convert numbers to words
+		var num=parseInt($('#grandtotal').text()); 
+		console.log(num);
+		convertToWords(num);
+		
+	    function convertToWords(num){
+
+	  
+	    fetch(`https://api.funtranslations.com/translate/numbers.json?text=${num}`)
+	   .then(response => response.json())
+	   .then(data => {
+	    $('#amount').text(data.contents.translated+" Only");
+	    })
+	    .catch(error => {
+	     console.log('An error occurred:', error);
+	     });
+
+
+	}
+	</script>
+	<script type="text/javascript">
+$(document).ready(function(){
+	var val=0;
+ 	$("#it tr").each(function(){ 
+	   val= val+parseFloat( $(this).find(('#amountt')).text());	  
+    });
+ 	$('#ta').text(val);
+ 	
+});
+
+var cell1 = document.getElementById('ta');
+var cell2 = document.getElementById('grandtotal');
+var cell3 = document.getElementById('tigst');
+var cell4 = document.getElementById('tcgst');
+var cell5 = document.getElementById('tsgst');
+
+// Format cell1 content to three digits after the decimal point
+cell1.textContent = parseFloat(ta.textContent).toFixed(3);
+// Format cell2 content to three digits after the decimal point
+cell2.textContent = parseFloat(grandtotal.textContent).toFixed(3);
+cell3.textContent = parseFloat(tigst.textContent).toFixed(3);
+cell4.textContent = parseFloat(tcgst.textContent).toFixed(3);
+cell5.textContent = parseFloat(tsgst.textContent).toFixed(3);
+</script>
+
+</body>
+</html>

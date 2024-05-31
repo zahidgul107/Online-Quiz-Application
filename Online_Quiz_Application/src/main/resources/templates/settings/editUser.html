@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Add Employee | Expenses</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2>Update User</h2>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					
+					    <div class="row w-50 mx-auto">
+			<div th:if="${fail} != null" th:utext="${fail}"
+				class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+				role="alert" style="width: fit-content;"></div>
+			<div th:if="${success} != null" th:utext="${success}"
+				class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+				role="alert" style="width: fit-content;"></div>
+
+
+		</div>
+			   
+                   		<div class="center verticle_center ">
+				<div class="login_section">
+					<div class="login_form">
+
+						<form th:object="${user}" id="myform"
+						th:action="@{/user/updateUser}" th:method="post" enctype="multipart/form-data">
+							<fieldset>
+								<input type="hidden" th:field="*{id}"> 
+								
+								<div class="row">
+								<div class=" col-md-6 text-center pt-5">
+									<label for="file" class="btn btn-outline-danger"
+										data-bs-toggle="tooltip" data-bs-placement="top"
+										data-bs-title="Image Size should be less than 50kb">Upload
+										Profile Photo</label> <input type="file" name="profilePhoto" id="file"
+										placeholder=" " class="form-control file "
+										accept="image/jpeg,image/png,image/jpg"
+										style="height: 2.8rem; display: none;">
+								</div>
+								<div class=" col-md-6 " th:if="${user.imageName} != null">
+									<div class=" col-md-4 offset-md-4">
+										<div
+											style="border: 2px solid black; height: 150px; width: 150px; border-radius: 4px; overflow: hidden;">
+											<input type="hidden" th:field="*{imageName}">
+											<img
+												id="ImagePreview"
+												th:src="@{'/user/getimage/'+${user.imageName}}"
+												height="150px" width=" 150px">		
+										</div>
+									</div>
+								</div>
+								
+								<div class=" col-md-6 " th:if="${user.imageName} == null">
+										<div
+											style="border: 2px solid black; height: 150px; width: 150px; border-radius: 4px; overflow: hidden;">
+
+											<img alt="ImagePreview" class="imgPreview" id="ImagePreview"
+												height="150px" width=" 150px">
+										</div>
+								</div>
+								</div>
+								
+								
+								
+								
+								<div class="field">
+									<label class="label_field">Name</label> <input
+										type="text"    th:field="*{name}" placeholder="Enter your Name" required />
+								</div>
+								
+								<div class="field">
+									<label class="label_field">User Name</label> <input
+										type="text"   th:field="*{username}" placeholder="Enter User name" required />
+								</div>
+								
+								<div class="field">
+									<label class="label_field">Password</label> <input
+										type="password"  th:value="*{password}" name="password" placeholder="Enter Password" required />
+								</div>
+							
+								<div class="field">
+									<label class="label_field">Email Address</label> <input
+										type="email"  th:field="*{email}"  placeholder=" Enter E-mail" required />
+								</div>
+								
+								<div class="field">
+									<label class="label_field">Phone Number</label> <input
+										type="text"  th:field="*{phoneNumber}" placeholder="Enter Pnone Number" required />
+								</div>
+	
+							</fieldset>
+							<div class="row">
+								<div class="container text-center mt-1">
+									<button type="submit" class="btn btn-outline-success">Update</button>
+								</div>
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script type="text/javascript">
+	//Preview Image Starts Here............//
+	var imageInput = document.getElementById('file');
+	var imagePreview = document.getElementById('ImagePreview');
+
+	imageInput.addEventListener('change', function() {
+		var file = this.files[0];
+		var reader = new FileReader();
+
+		reader.onload = function() {
+			imagePreview.src = reader.result;
+		}
+
+		reader.readAsDataURL(file);
+	});
+
+	//Preview Image ends Here............//
+	</script>
+</body>
+
+</html>

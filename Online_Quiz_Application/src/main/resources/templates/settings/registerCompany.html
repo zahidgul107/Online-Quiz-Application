@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Register Company</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<!-- calendar file css -->
+<link rel="stylesheet" th:href="@{/js/semantic.min.css}" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+<body class="inner_page login">
+	<!-- <div th:insert="fragments/header :: myHeader"></div> -->
+	<div class="full_container">
+		<div class="login_section">
+			<div class="logo_login">
+				<div class="center">
+					<h4 class="text-white">Register Company</h4>
+				</div>
+			</div>
+			<div class="container">
+				<div class="center verticle_center full_height">
+
+					<div class="login_form">
+
+						<form th:object="${company}" th:action="@{/saveCompany}"
+							method="post">
+
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label for="inputEmail4">Company Name</label> <input
+										type="text" class="form-control" id="inputEmail4"
+										name="companyName" placeholder="companyName">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="cinNumber">CIN_Number</label> <input type="text"
+										name="cinNumber" class="form-control" id="inputPassword4"
+										placeholder="cinNumber">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="cinNumber">PAN_Number</label> <input type="text"
+										name="panNumber" class="form-control" id="inputPassword4"
+										placeholder="panNumber">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="cinNumber">GSTIN_Number</label> <input type="text"
+										name="gstinNumber" class="form-control" id="inputPassword4"
+										placeholder="gstinNumber">
+								</div>
+
+							</div>
+							<div class="field margin_0">
+								<button type="submit" class="main_bt">Submit</button>
+							</div>
+
+
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/custom.js}"></script>
+</body>
+</html>

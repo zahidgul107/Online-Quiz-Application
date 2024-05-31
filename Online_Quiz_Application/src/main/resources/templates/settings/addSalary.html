@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Salary | Expenses Management</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2 th:text="${edit}?'Update Salary':'Add Salary'"></h2>
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+
+
+						</div>
+
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+					
+						<form th:object="${salary}" th:method="post"
+							data-bvalidator-validate="true"
+							th:action="@{${edit != null} ? '/salary/updateSalary' : '/salary/addSalary'}">
+
+							<div class="form-row">
+								<input type="hidden" th:field="*{id}">
+								<input type="hidden" th:field="*{employee.id}">
+								<div class="form-group col-md-6">
+									<label for="employee"> Employee Name </label> <input type="text"
+										 class="form-control" id="emp" th:value="*{employee.employeeName}"
+										 placeholder=" Enter Employee" disabled="disabled">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="salaryMonth">Salary Month</label> <input type="date"
+										class="form-control" id="salaryMonth" th:field="*{salaryMonth}"
+										name="salaryMonth" placeholder="Enter salary Month" required="required">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="basicSalary">Basic Salary</label> <input type="number"
+										name="basicSalary" class="form-control" id="bSalary"
+										th:field="*{basicSalary}" placeholder=" Enter Basic Salary" required="required">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="salaryPerDay">Salary Rate / Day</label> <input
+										type="number" class="form-control" id="salaryPerDay"
+										th:field="*{salaryPerDay}" name="salaryPerDay"
+										placeholder="Enter Salary Per Day" required="required">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="totalWorkingDays">Total Working Days</label> <input
+										type="number" name="totalWorkingDays" class="form-control"
+										id="tWorkingDays" th:field="*{totalWorkingDays}"
+										placeholder="Enter Working Days" required="required">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="leaveDays"> Absent / Leave Days</label> <input type="number"
+										name="" class="form-control" id="lDays"
+										th:field="*{leaveDays}" placeholder="Leave Days" required="required">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="overtime">OverTime</label> <input
+										type="number" name="overtime" class="form-control"
+										th:field="*{overtime}" id="otime"
+										placeholder=" Enter Over time" required="required">
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="overtimePerHour">OverTime Rate/Hour</label> <input
+										type="number" name="overtimeRatePerHour" class="form-control"
+										id="otPerHour" th:field="*{overtimeRatePerHour}"
+										placeholder=" Enter Overtime Amount" required="required">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="hra">HRA</label> <input type="number"
+										name="hra" class="form-control" th:field="*{hra}"
+										id="hra" placeholder=" Enter HRA" required="required">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="da">DA</label> <input type="number"
+										name="da" class="form-control" th:field="*{da}"
+										id="da" placeholder=" Enter DA" required="required">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="ta">TA</label> <input type="number"
+										name="ta" class="form-control" th:field="*{ta}"
+										id="ta" placeholder=" Enter TA" required="required">
+								</div>
+								
+								
+								<div class="form-group col-md-6">
+									<label for="epfEmployerShare">Employer EPF Share</label> <input type="number"
+										name="epfEmployerShare" class="form-control" th:field="*{epfEmployerShare}"
+										id="epfEmpShare" placeholder=" Enter Employer Epf Share" required="required">
+								</div>
+								
+								
+
+								<div class="form-group col-md-6">
+									<label for="loan">Loan Amount</label> <input
+										type="number" name="loan" class="form-control"
+										id="loan" th:field="*{loan}"
+										placeholder=" Enter Loan Amount" required="required">
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="pf">PF Amount</label> <input type="number"
+										name="pf" class="form-control" id="pf"
+										th:field="*{pf}" placeholder=" Enter Pf Amount" required="required">
+								</div>
+								
+									<div class="form-group col-md-6">
+									<label for="tds">TDS(%)</label> <input
+										type="number" name="tds" class="form-control"
+										id="tds" th:field="*{tds}"
+										placeholder=" Enter TDS" required="required" step="any">
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="pt">Professional Tax</label> <input type="number"
+										name="pt" class="form-control" id="pt"
+										th:field="*{professionalTax}" placeholder=" Enter Professional Tax Amount" required="required">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="trrn">TRRN</label> <input type="text"
+										name="trrn" class="form-control" id="pt"
+										th:field="*{trrn}" placeholder="Enter TRRN" required="required">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="crn">CRN</label> <input type="text"
+										name="crn" class="form-control" id="pt"
+										th:field="*{crn}" placeholder="Enter CRN" required="required">
+								</div>
+								
+								
+								<div class="form-group col-md-6">
+									<label for="overtimeAmount">Overtime Amount</label> <input type="number"
+										name="overtimeAmount" class="form-control" th:field="*{overtimeAmount}"
+										id="overtimeAmount" placeholder="" required="required" readonly="readonly">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="netPayableMonthly">Net Salary Payable
+										Monthly</label> <input type="Number" name="netPayableMonthly"
+										class="form-control" id="netPayMonthly"
+										th:value="*{netPayableMonthly}" placeholder=""
+										required="required" readonly="readonly">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="netAmount">Net Amount</label> <input type="Number"
+										name="netAmount" class="form-control" id="netAmt"
+										th:value="*{netAmount}" placeholder="" required="required"
+										readonly="readonly">
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label>Employee Deposit Bank Account</label> <select
+										id="bankdetails" class="form-control"  th:field="*{empBankDetails}">
+										<option value="">Select Bank Account Number </option>
+										<option th:each="empBank : ${empBankList}"
+											th:text="${empBank.bankName}+'('+${ empBank.accountNumber}+')'" th:value="${empBank.id}"></option>
+									</select>
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label>Company Debit Bank Account</label> <select
+										id="bankdetails" class="form-control"  th:field="*{bankDetails}">
+										<option value="">Select Bank Account Number </option>
+										<option th:each="bank : ${bankList}" th:value="${bank.id}"
+											th:text="${bank.bankName}+'('+${ bank.accountNumber}+')'"></option>
+									</select>
+								</div>
+								
+								<div class="form-group col-md-6">
+									<label for="paymentReferenceNo ">Payment Reference Number</label> <input type="text"
+										name="paymentReferenceNo" class="form-control" id="paymentReferenceNo"
+										th:field="*{paymentReferenceNo}" placeholder=" Enter Reference Number " required="required">
+								</div>
+									<div class="form-group col-md-6">
+									<label for="Date">Payment Date:</label>
+									<input type="date" id="datepicker4" class="form-control" name="paymentDate"
+										th:field="*{paymentDate}" required />
+								</div>
+								
+
+
+							</div>
+
+							<div class="row">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary"
+										th:text=" ${edit}?'Update Salary':'Add Salary'"></button>
+								</div>
+							</div>
+
+
+						</form>
+
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE<br>
+								<!-- <br> Distributed By: <a
+									href="https://github.com/SalmanQuadir1/">ASTE</a> -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$("#bSalary").change(function() {	
+		NetPayableMonthlyCalculate();
+		NetAmountCalculate();		
+	});
+	
+	$("#loan").change(function() {	
+		NetPayableMonthlyCalculate();	
+	});
+	
+	$("#pf").change(function() {	
+		NetPayableMonthlyCalculate();
+	});
+	
+	$("#tds").change(function() {	
+		NetPayableMonthlyCalculate();
+	});
+	
+	$("#pt").change(function() {	
+		NetPayableMonthlyCalculate();
+	});
+	
+	$("#epfEmpShare").change(function() {	
+		NetAmountCalculate();
+	});
+	
+	$("#otPerHour").change(function() {	
+		OvertimeAmountCalculate();
+	});
+	
+	$("#otime").change(function() {	
+		OvertimeAmountCalculate();
+		NetAmountCalculate();
+	});
+	
+	$("#overtimeAmount").change(function() {
+		NetAmountCalculate();
+	});
+	
+	$("#hra").change(function() {	
+		NetAmountCalculate();
+	});
+	
+	$("#da").change(function() {	
+		NetAmountCalculate();
+	});
+	
+	$("#ta").change(function() {	
+		NetAmountCalculate();
+	});
+	
+	  function NetAmountCalculate(){
+		  
+		    var bSalary= $("#bSalary").val();
+			var epf=$("#epfEmpShare").val();
+			var otv=$("#overtimeAmount").val();
+			var hra =$("#hra").val();
+			var da=$("#da").val();
+			var ta=$("#ta").val();
+			
+			var netamount=parseFloat(bSalary)+parseFloat(epf)+parseFloat(otv)+parseFloat(hra)+parseFloat(da)+parseFloat(ta)
+			console.log("netamount=="+netamount);
+			$("#netAmt").val(netamount);
+	  }
+	  
+	  function OvertimeAmountCalculate(){
+		  
+		    var otPerHour=parseFloat($("#otPerHour").val());
+			var otime=parseFloat($("#otime").val());
+			var otamount=Math.round(otPerHour*otime);
+			console.log("value=="+otamount);
+			$("#overtimeAmount").val(otamount);
+	  }
+	  
+	  function NetPayableMonthlyCalculate(){
+		  
+			var bSalary=$("#bSalary").val();
+			var tds=parseFloat($("#netAmt").val())*parseFloat($("#tds").val())/100;
+			console.log("tdssssss====="+tds);
+			var deduction=parseFloat($("#loan").val())+parseFloat($("#pf").val())+tds+parseFloat($("#pt").val());
+			var netValue=bSalary-deduction;	
+			console.log("netValue=="+netValue);
+			$("#netPayMonthly").val(netValue);
+	  }
+	  
+	  $("#salaryMonth,#datepicker4").flatpickr({
+          format: "Y-m-d",
+          altFormat: "Y-m-d",
+          altInput: true,
+          allowInput: true
+         });
+	
+});
+</script>
+</body>
+
+</html>

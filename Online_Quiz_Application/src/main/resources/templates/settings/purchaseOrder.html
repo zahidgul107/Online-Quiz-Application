@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
+<!-- site metas -->
+<title>Purchase Order | Expenses Management</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<link rel="stylesheet" th:href="@{/css/flatpickr.min.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="dashboard dashboard_1">
+	<div class="full_container">
+		<div class="inner_container">
+			<!-- Sidebar  -->
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			<!-- end sidebar -->
+			<!-- right content -->
+			<div id="content">
+				<!-- topbar -->
+				<div th:replace="fragments/header :: myHeader"></div>
+
+				<!-- end topbar -->
+				<!-- dashboard inner -->
+				<div class="midde_cont">
+					<div class="container-fluid">
+						<div class="row column_title">
+							<div class="col-md-12">
+								<div class="page_title">
+									<h2
+										th:text="${edit}?'Update Purchase Order':'Add Purchase Order'"></h2>
+
+								</div>
+							</div>
+						</div>
+						<div class="row w-50 mx-auto">
+							<div th:if="${fail} != null" th:utext="${fail}"
+								class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+							<div th:if="${success} != null" th:utext="${success}"
+								class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+								role="alert" style="width: fit-content;"></div>
+
+
+						</div>
+
+					</div>
+					<div class="card form p-4 border-0 shadow-lg">
+						<form th:object="${purchaseOrder}" method="POST"
+							data-bvalidator-validate="true"
+							th:action="@{${edit != null} ? '/po/updatePurchase' : '/po/createPurchase'}">
+
+							<div class="form-row">
+								<input type="hidden" th:field="*{id}"> <input
+									type="hidden" th:field="*{company.id}">
+								<div class="form-group col-md-6">
+									<label for="">PO Number:</label> <input type="text"
+										class="form-control" th:field="*{poNumber}" name="" required />
+
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">PO Date:</label> <input type="date"
+										class="form-control picker" th:field="*{date}" name="" required />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label>Select Customer/Party</label> 
+									<select th:field="*{party}"  class="form-select form-control"
+										aria-label="Default select example" required="required">
+										<option value="">Select Customer</option>
+										<option th:each="par : ${partyList}"
+											th:text="${par.partyName} + ' (' + ${par.phoneNumber} + ')'" th:value="${par.id}" />
+									</select>
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">Start Date:</label> <input type="date"
+										class="form-control picker" th:field="*{startDate}" name="" required />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">End Date:</label> <input type="date"
+										class="form-control picker" th:field="*{endDate}" name=""  />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">Cancel Date:</label> <input type="date"
+										class="form-control picker" th:field="*{cancelDate}" name=""  />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">Shipped Via:</label> <input type="text"
+										class="form-control" th:field="*{shippedVia}" name="" required />
+								</div>
+
+								<!-- <div class="form-group col-md-6">
+									<label>Select Currency</label> <select th:field="*{currency}"
+										name="" class="form-select form-control"
+										aria-label="Default select example" required=>
+										<option value="">Select Currency</option>
+										<option th:value="INR">INR(&#8377;)</option>
+										<option th:value="DOLLAR">DOLLAR(&#36;)</option>
+									</select>
+								</div> -->
+
+								<div class="form-group col-md-6">
+									<label>Select Currency</label> <select th:field="*{currency}"
+										id="currencySelect" class="form-select form-control"
+										aria-label="Default select example" required>
+										<option value="">Select Currency</option>
+										<option th:text="${purchaseOrder.currency}"
+											th:value="${purchaseOrder.currency}">
+									</select>
+								</div>
+
+							</div>
+                                <br><br>
+
+							<div style="overflow: auto;" class="ctTable">
+								<table class="table 1 countryTable">
+									<thead>
+										<tr>
+											<th scope="col">Unit</th>
+											<th scope="col">Description</th>
+											<th scope="col">Unit price</th>
+											<th scope="col">Amount</th>
+											<th scope="col">Actions</th>
+										</tr>
+									</thead>
+									<tbody class='tbody1'>
+										<tr th:if="${edit} == true" class="tblRow"
+											th:each="poItems, stat: ${poItemList}">
+											
+											<td>
+											<input type="hidden" th:value="${poItems.id}"/>
+											<input type="hidden" th:value="${poItems.purchaseOrder.id}"/>
+											<input type="number" id="unit" class="unit"
+												th:attr="name='poItems[' + ${stat.index} + '].unit'"
+												th:value="${poItems.unit}" required /></td>
+											<td><textarea class="description" rows="1" cols="50"
+													th:attr="name='poItems[' + ${stat.index} + '].description'"
+													th:text="${poItems.description}" required></textarea></td>
+											<td><input type="number" class="unitPrice"
+												th:attr="name='poItems[' + ${stat.index} + '].unitPrice'"
+												th:value="${poItems.unitPrice}" required /></td>
+											<td><input type="number" class="amount"
+												th:attr="name='poItems[' + ${stat.index} + '].amount'"
+												th:value="${poItems.amount}" required readonly /></td>
+											<td><i class="fa fa-trash text-danger removeState"></i></td>
+										</tr>
+
+
+
+									</tbody>
+								</table>
+								<button type="button" class="btn btn-info  "
+									id="addItemButtonCt">Add Item</button>
+							</div>
+                                 <br><br>
+							<div class="form-row">
+
+								<div class="form-group col-md-6">
+									<label for="">Subtotal:</label> <input type="number"
+										class="form-control" id="subtotal" th:field="*{subTotal}"
+										name="" readonly required />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">CGST:</label> <input type="number" id="cgst"
+										class="form-control" th:field="*{cgst}" name=""  />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">SGST:</label> <input type="number" id="sgst"
+										class="form-control" th:field="*{sgst}" name=""  />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">IGST:</label> <input type="number" id="igst"
+										class="form-control" th:field="*{igst}" name=""  />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">Total Amount:</label> <input type="number"
+										id="totalAmount" class="form-control"
+										th:field="*{totalAmount}" name="" readonly required />
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="">Approved By:</label> <input type="text"
+										class="form-control" th:field="*{approvedBy}" name="" required />
+								</div>
+
+							</div>
+
+							<div class="row">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary"
+										th:text=" ${edit}?'Update Purchase Order':'Add Purchase Order'"></button>
+								</div>
+							</div>
+
+						</form>
+
+					</div>
+
+					<!-- footer -->
+					<div class="container-fluid">
+						<div class="footer">
+							<p>
+								Copyright © 2023 by ASTE
+								
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- end dashboard inner -->
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/js/owl.carousel.js}"></script>
+	<!-- chart js -->
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/analyser.js}"></script>
+	<script th:src="@{/js/flatpickr.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+
+
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/chart_custom_style1.js}"></script>
+	<script th:src="@{/js/custom.js}"></script>
+	<script th:src="@{/js/tooltip.js}"></script>
+	<script th:src="@{/customJs/countryList.js}"></script>
+
+	<script type="text/javascript">
+		//Calculate amount on unitPrice
+		$(document).on('keyup', '.unitPrice', function() {
+			var tr = $(this).closest('tr');
+			var units = parseFloat($(tr).find('.unit').val());
+			var unitPrice = parseFloat($(this).val());
+
+			// Check if cgst is undefined or NaN
+			if (typeof units === 'undefined' || isNaN(units)) {
+				units = 0;
+			}
+
+			// Check if sgst is undefined or NaN
+			if (typeof unitPrice === 'undefined' || isNaN(unitPrice)) {
+				unitPrice = 0;
+			}
+			var amount = units * unitPrice;
+			$(tr).find('.amount').val(amount);
+
+		});
+
+		$(document).on('keyup', '.unit', function() {
+			var tr = $(this).closest('tr');
+			var unit = parseInt($(this).val());
+			console.log('unit.....',unit);
+			var unitPrice = parseInt($(tr).find('.unitPrice').val());
+			console.log('unitPrice.....',unitPrice);
+
+
+			
+			// Check if cgst is undefined or NaN
+			if (typeof unit === 'undefined' || isNaN(unit) || unit == '') {
+				unit = 0;
+			}
+
+			// Check if sgst is undefined or NaN
+			else if (typeof unitPrice === 'undefined' || isNaN(unitPrice) || unitPrice == '') {
+				unitPrice = 0;
+			}else{
+				var amo = parseFloat(unit * unitPrice);
+				$(tr).find('.amount').val(amo);
+			}
+
+
+		});
+		//calculate sumTotal
+		function calculateTotalSum() {
+			var sumTotal = 0;
+			$(".amount").each(function() {
+				var totalAmount = parseFloat($(this).val());
+				if (!isNaN(totalAmount)) {
+					sumTotal += totalAmount;
+
+				}
+				$('#subtotal').val(sumTotal);
+
+			});
+			calculateTotalAmount();
+
+		}
+
+		$(document).on("keyup", '.unitPrice,.unit', calculateTotalSum);
+
+		function calculateTotalAmount() {
+			var subtotal = parseFloat($('#subtotal').val()) || 0;
+			console.log("subtotal  " + subtotal);
+			var cgst = ((parseFloat($('#cgst').val()) || 0) / 100) * subtotal;
+			var sgst = ((parseFloat($('#sgst').val()) || 0) / 100) * subtotal;
+			var igst = ((parseFloat($('#igst').val()) || 0) / 100) * subtotal;
+
+			if (typeof cgst === 'undefined' || isNaN(cgst)
+					&& typeof igst === 'undefined' || isNaN(igst)
+					&& typeof sgst === 'undefined' || isNaN(sgst)) {
+				cgst = 0;
+				sgst = 0;
+				igst = 0;
+			}
+
+			var totalAmount = subtotal + cgst + sgst + igst;
+
+			$('#totalAmount').val(totalAmount.toFixed(2));
+
+		}
+
+		// Remove Row from a table
+		$('tbody').on(
+				'click',
+				'.removeState',
+				function() {
+					$(this).closest('tr').remove();
+
+					calculateTotalSum(); // Update the subtotal when a row is removed
+					calculateTotalAmount();
+					if ($('.tbody1 tr').length < 1) {
+						$('#totalAmount').val(0);
+
+					}
+					$(".tbody1").find(".tblRow")
+							.each(
+									function(index, elem) {
+
+										var unit = $(this).children().find(
+												".unit");
+										$(unit).attr('name',
+												'poItems[' + index + '].unit');
+										var description = $(this).children()
+												.find(".description");
+										$(description).attr(
+												'name',
+												'poItems[' + index
+														+ '].description');
+										var unitPrice = $(this).children()
+												.find(".unitPrice");
+										$(unitPrice).attr(
+												'name',
+												'poItems[' + index
+														+ '].unitPrice');
+										var amount = $(this).children().find(
+												".amount");
+										$(amount)
+												.attr(
+														'name',
+														'poItems[' + index
+																+ '].amount');
+									});
+				});
+
+		$("#addItemButtonCt")
+				.click(
+						function() {
+							var table = $("table .tbody1");
+							var itemIndex = $("table .tbody1 tr").length;
+
+							var row = $("<tr class='tblRow'>");
+							row
+									.append('<td><input type="number" id="unit" class="unit" name="poItems[' + itemIndex + '].unit" required /></td>');
+							row
+									.append('<td><textarea class="description" rows="1" cols="50" name="poItems[' + itemIndex + '].description" required></textarea></td>');
+							row
+									.append('<td><input type="number" class="unitPrice" name="poItems[' + itemIndex + '].unitPrice" required /></td>');
+							row
+									.append('<td><input type="number" class="amount" name="poItems[' + itemIndex + '].amount" required readonly /></td>');
+							row
+									.append('<td><i class="fa fa-trash text-danger removeState"></td>');
+							table.append(row);
+
+						});
+
+		/* API for currency */
+		$(document).ready(function() {
+			$.ajax({
+				url : 'https://openexchangerates.org/api/currencies.json',
+				method : 'GET',
+				dataType : 'json',
+				success : function(data) {
+					const currencies = Object.keys(data);
+					const selectElement = $('#currencySelect');
+
+					currencies.forEach(function(currency) {
+						const optionElement = $('<option>');
+						optionElement.val(currency);
+						optionElement.text(`${currency} (${data[currency]})`);
+						selectElement.append(optionElement);
+					});
+				},
+				error : function(xhr, status, error) {
+					console.error('Error fetching currency data:', error);
+				}
+			});
+
+			$('#currencySelect').change(function() {
+				const selectedCurrency = $(this).val();
+				console.log('Selected Currency:', selectedCurrency);
+			});
+			
+		
+				$(".picker").flatpickr({
+					format : "Y-m-d",
+					altFormat : "Y-m-d",
+					altInput : true,
+					allowInput : true
+				});
+		});
+
+		$('#cgst').keyup(function() {
+			calculateTotalAmount();
+		});
+
+		$('#sgst').keyup(function() {
+			calculateTotalAmount();
+		});
+
+		$('#igst').keyup(function() {
+			calculateTotalAmount();
+		});
+	</script>
+
+
+</body>
+
+</html>

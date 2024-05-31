@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Register</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- site icon -->
+<link rel="icon" th:href="@{/images/fevicon.png}" type="image/png" />
+<!-- bootstrap css -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<!-- site css -->
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<!-- responsive css -->
+<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+<!-- color css -->
+<link rel="stylesheet" th:href="@{/css/colors.css}" />   
+<!-- select bootstrap -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.css}" />
+<!-- scrollbar css -->
+<link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}" />
+<!-- custom css -->
+<link rel="stylesheet" th:href="@{/css/custom.css}" />
+<!-- calendar file css -->
+<link rel="stylesheet" th:href="@{/js/semantic.min.css}" />
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+<body class="inner_page login">
+     <div th:insert="fragments/registerHeader :: regHeader"></div>
+	<div class="full_container">
+		<div class="container" style="margin-top:6rem; margin-bottom:3rem;">
+			<div class="row w-50 mx-auto">
+			<div th:if="${fail} != null" th:utext="${fail}"
+				class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+				role="alert" style="width: fit-content;"></div>
+			<div th:if="${success} != null" th:utext="${success}"
+				class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+				role="alert" style="width: fit-content;"></div>
+
+
+		</div>
+			<div class="center verticle_center full_height">
+				<div class="login_section">
+				
+					<div class="logo_login">
+						<div class="center">
+							<h4 class="text-white text-uppercase" style="letter-spacing: 3px;">Update User</h4>
+						</div>
+					</div>
+					
+					
+					<div class="login_form">
+
+						<form th:object="${user}" id="myform"
+						th:action="@{/user/update}" th:method="post">
+							<fieldset>
+								<input type="hidden" th:field="*{id}"> 
+							
+								<div class="field">
+									<label class="label_field">Email Address</label> <input
+										type="email"  th:field="*{email}"  placeholder=" Enter E-mail" required="required" />
+								</div>
+								<div class="field">
+									<label class="label_field">User Name</label> <input
+										type="text"   th:field="*{username}" placeholder="Enter User name" required="required"/>
+								</div>
+								<div class="field">
+									<label class="label_field">Password</label> <input
+										type="password"  th:value="*{password}" name="password" placeholder="Enter Password" required="required"/>
+								</div>
+								<div class="field">
+									<label class="label_field">Name</label> <input
+										type="text"    th:field="*{name}" placeholder="Enter your Name" required="required"/>
+								</div>
+								<div class="field">
+									<label class="label_field">Phone Number</label> <input
+										type="text"  th:field="*{phoneNumber}" placeholder="Enter Pnone Number" required="required" />
+								</div>
+								
+								<!-- <div class="field">
+								
+									<button  type="submit" class="btn btn-outline-primary">Submit</button>
+								</div> -->
+							</fieldset>
+							
+							<div class="row">
+								<div class="container text-center mt-3">
+									<button type="submit" class="btn btn-outline-primary">Update</button>
+								</div>
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- wow animation -->
+	<script th:src="@{/js/animate.js}"></script>
+	<!-- select country -->
+	<script th:src="@{/js/bootstrap-select.js}"></script>
+	<!-- nice scrollbar -->
+	<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+	<script th:src="@{/js/alertClose.js}"></script>
+	<script>
+		var ps = new PerfectScrollbar('#sidebar');
+	</script>
+	<!-- custom js -->
+	<script th:src="@{/js/custom.js}"></script>	
+
+</body>
+</html>
