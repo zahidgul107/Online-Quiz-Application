@@ -1,61 +1,53 @@
 package com.quiz.app.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "username"),
+		@UniqueConstraint(columnNames = "email") })
 public class User {
-	
-	@GeneratedValue(strategy=GenerationType.AUTO)
+
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
-	@Column(name = "user_id")
 	private Long id;
-	
-	@Column(name = "name")
+
 	private String name;
-	
-	@Column(name = "phone_number")
+
+	@Digits(integer = 12, fraction = 0)
 	private Long phoneNumber;
-	
-	@Column(name = "username")
+
+	@NotBlank
+	@Size(max = 20)
 	private String username;
-	
-	@Column(name = "E_MAIL")
+
+	@NotBlank
+	@Size(max = 50)
+	@Email
 	private String email;
-	
-	@Column(name = "password")
+
+	@NotBlank
+	@Size(max = 120)
 	private String password;
 
-	@Transient
-	@Column(name = "retype_password")
-	private String retypePassword;
-	
-	@Column(name = "reset_token")
-    private String resetToken;
+	private String resetToken;
 
-    @Column(name = "reset_token_expiration")
-    private LocalDateTime resetTokenExpiration;
-    
-    @Column(name = "user_profile")
-    private String imageName;
-	
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<Role> roles;
+	private LocalDateTime resetTokenExpiration;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Role role;
 
 	public Long getId() {
 		return id;
@@ -105,22 +97,14 @@ public class User {
 		this.password = password;
 	}
 
-	public String getRetypePassword() {
-		return retypePassword;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setRetypePassword(String retypePassword) {
-		this.retypePassword = retypePassword;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
-	public List<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-	
 	public String getResetToken() {
 		return resetToken;
 	}
@@ -137,20 +121,18 @@ public class User {
 		this.resetTokenExpiration = resetTokenExpiration;
 	}
 
-	public String getImageName() {
-		return imageName;
+	public User() {
 	}
 
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
+	public User(String name, @Digits(integer = 12, fraction = 0) Long phoneNumber,
+			@NotBlank @Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email,
+			@NotBlank @Size(max = 120) String password, Role role) {
+		this.name = name;
+		this.phoneNumber = phoneNumber;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.role = role;
 	}
-
-	
-	
-	
-	
-	
-	
-	
 
 }
