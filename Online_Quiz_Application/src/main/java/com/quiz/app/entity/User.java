@@ -46,7 +46,7 @@ public class User {
 
 	private LocalDateTime resetTokenExpiration;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Role role;
 
 	public Long getId() {
